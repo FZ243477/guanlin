@@ -1,0 +1,304 @@
+Array
+(
+    [1579693780] => Array
+        (
+            [store_id] => 4
+            [buy_user_id] => 441
+            [nickname] => 15251912865
+            [order_id] => 228
+            [total_fee] => 3839
+            [money] => 537.46
+            [level] => 1
+            [create_time] => 1579693780
+        )
+
+    [msg] => 111
+)
+
+Array
+(
+    [1579693787] => Array
+        (
+            [0] => app\common\model\StoreRebate Object
+                (
+                    [connection:protected] => Array
+                        (
+                        )
+
+                    [parent:protected] =>
+                    [query:protected] =>
+                    [name:protected] => StoreRebate
+                    [table:protected] =>
+                    [class:protected] => app\common\model\StoreRebate
+                    [error:protected] =>
+                    [validate:protected] =>
+                    [pk:protected] =>
+                    [field:protected] => Array
+                        (
+                        )
+
+                    [except:protected] => Array
+                        (
+                        )
+
+                    [disuse:protected] => Array
+                        (
+                        )
+
+                    [readonly:protected] => Array
+                        (
+                        )
+
+                    [visible:protected] => Array
+                        (
+                        )
+
+                    [hidden:protected] => Array
+                        (
+                        )
+
+                    [append:protected] => Array
+                        (
+                        )
+
+                    [data:protected] => Array
+                        (
+                            [id] => 17
+                            [store_id] => 4
+                            [buy_user_id] => 441
+                            [nickname] => 15251912865
+                            [order_id] => 228
+                            [total_fee] => 3839.00
+                            [rebate_status] => 0
+                            [money] => 537.46
+                            [level] => 1
+                            [create_time] => 1579693780
+                            [confirm] => 0
+                            [status] => 0
+                            [confirm_time] => 0
+                            [remark] =>
+                            [update_time] =>
+                        )
+
+                    [origin:protected] => Array
+                        (
+                            [id] => 17
+                            [store_id] => 4
+                            [buy_user_id] => 441
+                            [nickname] => 15251912865
+                            [order_id] => 228
+                            [total_fee] => 3839.00
+                            [rebate_status] => 0
+                            [money] => 537.46
+                            [level] => 1
+                            [create_time] => 1579693780
+                            [confirm] => 0
+                            [status] => 0
+                            [confirm_time] => 0
+                            [remark] =>
+                            [update_time] =>
+                        )
+
+                    [relation:protected] => Array
+                        (
+                        )
+
+                    [auto:protected] => Array
+                        (
+                        )
+
+                    [insert:protected] => Array
+                        (
+                        )
+
+                    [update:protected] => Array
+                        (
+                        )
+
+                    [autoWriteTimestamp:protected] =>
+                    [createTime:protected] => create_time
+                    [updateTime:protected] => update_time
+                    [dateFormat:protected] => Y-m-d H:i:s
+                    [type:protected] => Array
+                        (
+                        )
+
+                    [isUpdate:protected] => 1
+                    [replace:protected] =>
+                    [force:protected] =>
+                    [updateWhere:protected] =>
+                    [failException:protected] =>
+                    [useGlobalScope:protected] => 1
+                    [batchValidate:protected] =>
+                    [resultSetType:protected] => array
+                    [relationWrite:protected] =>
+                )
+
+        )
+
+    [msg] => 111
+)
+
+Array
+(
+    [1579693920] => Array
+        (
+            [0] => app\common\model\StoreRebate Object
+                (
+                    [connection:protected] => Array
+                        (
+                        )
+
+                    [parent:protected] =>
+                    [query:protected] =>
+                    [name:protected] => StoreRebate
+                    [table:protected] =>
+                    [class:protected] => app\common\model\StoreRebate
+                    [error:protected] =>
+                    [validate:protected] =>
+                    [pk:protected] =>
+                    [field:protected] => Array
+                        (
+                        )
+
+                    [except:protected] => Array
+                        (
+                        )
+
+                    [disuse:protected] => Array
+                        (
+                        )
+
+                    [readonly:protected] => Array
+                        (
+                        )
+
+                    [visible:protected] => Array
+                        (
+                        )
+
+                    [hidden:protected] => Array
+                        (
+                        )
+
+                    [append:protected] => Array
+                        (
+                        )
+
+                    [data:protected] => Array
+                        (
+                            [id] => 17
+                            [store_id] => 4
+                            [buy_user_id] => 441
+                            [nickname] => 15251912865
+                            [order_id] => 228
+                            [total_fee] => 3839.00
+                            [rebate_status] => 0
+                            [money] => 537.46
+                            [level] => 1
+                            [create_time] => 1579693780
+                            [confirm] => 0
+                            [status] => 1
+                            [confirm_time] => 0
+                            [remark] =>
+                            [update_time] =>
+                        )
+
+                    [origin:protected] => Array
+                        (
+                            [id] => 17
+                            [store_id] => 4
+                            [buy_user_id] => 441
+                            [nickname] => 15251912865
+                            [order_id] => 228
+                            [total_fee] => 3839.00
+                            [rebate_status] => 0
+                            [money] => 537.46
+                            [level] => 1
+                            [create_time] => 1579693780
+                            [confirm] => 0
+                            [status] => 1
+                            [confirm_time] => 0
+                            [remark] =>
+                            [update_time] =>
+                        )
+
+                    [relation:protected] => Array
+                        (
+                        )
+
+                    [auto:protected] => Array
+                        (
+                        )
+
+                    [insert:protected] => Array
+                        (
+                        )
+
+                    [update:protected] => Array
+                        (
+                        )
+
+                    [autoWriteTimestamp:protected] =>
+                    [createTime:protected] => create_time
+                    [updateTime:protected] => update_time
+                    [dateFormat:protected] => Y-m-d H:i:s
+                    [type:protected] => Array
+                        (
+                        )
+
+                    [isUpdate:protected] => 1
+                    [replace:protected] =>
+                    [force:protected] =>
+                    [updateWhere:protected] =>
+                    [failException:protected] =>
+                    [useGlobalScope:protected] => 1
+                    [batchValidate:protected] =>
+                    [resultSetType:protected] => array
+                    [relationWrite:protected] =>
+                )
+
+        )
+
+    [msg] => 111
+)
+
+Array
+(
+    [1579693920] => Array
+        (
+            [0] => Array
+                (
+                    [store_id] => 4
+                    [cate] => 0
+                    [money] => 3839.00
+                    [type] => 0
+                    [remark] => 销售额
+                    [add_time] => 2020-01-22 19:52:00
+                )
+
+            [1] => Array
+                (
+                    [store_id] => 4
+                    [cate] => 1
+                    [money] => 3839.00
+                    [type] => 0
+                    [remark] => 积分
+                    [add_time] => 2020-01-22 19:52:00
+                )
+
+            [2] => Array
+                (
+                    [store_id] => 4
+                    [cate] => 2
+                    [money] => 537.46
+                    [type] => 0
+                    [remark] => 佣金
+                    [add_time] => 2020-01-22 19:52:00
+                )
+
+        )
+
+    [msg] => 111
+)
+

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>悦品荟商城 - 评论</title>
+    <meta name="keywords" content="悦品荟商城">
+    <meta name="description" content="悦品荟商城">
+
+    <link href="__CSS__/bootstrap.min.css" rel="stylesheet">
+    <link href="__CSS__/font-awesome.css-v=4.4.0.css" rel="stylesheet">
+    <link href="__CSS__/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="__CSS__/style.min.css" rel="stylesheet">
+    
+    <link href="__CSS__/plugins/blueimp/css/blueimp-gallery.min.css" tppabs="css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+    <include file="Public:base" />
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+    <div class="row animated fadeInRight">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>评论详情</h5> 
+                </div>
+                <div class="ibox-content">
+                    <div>
+                        <div class="feed-activity-list">
+                            <div class="feed-element">
+                                <a href="javascript:void(0)"  class="pull-left">
+                                    <img alt="image" class="img-circle" src="{$info.wx_img}">
+                                </a>
+                                <div class="media-body ">
+                                    <small class="pull-right">{$info.add_time}</small>
+                                    <strong>{$info.wx_name}</strong> 评论了 商品：<strong>{$info.goods_name}</strong>. <br>
+                                    <small class="text-muted">订单号：{$info.order_no}</small>
+                                    <div class="well">
+                                        {$info.content}
+                                    </div>
+                                    <div class="photos profile_photos">
+                                        <notempty name='info.img_list'>
+                                            <volist name="info.img_list" id="vo">
+                                                <a href="{$IMG_URL}{$vo}" title="图片" data-gallery="">
+                                                    <img src="{$IMG_URL}{$vo}" class="feed-photo">
+                                                </a>
+                                            </volist>
+    				                        <div id="blueimp-gallery" class="blueimp-gallery">
+    				                            <div class="slides"></div>
+    				                            <h3 class="title"></h3>
+    				                            <a class="prev" style="display: block;">‹</a>
+    				                            <a class="next" style="display: block;">›</a>
+    				                            <a class="close">×</a>
+    				                            <a class="play-pause"></a>
+    				                            <ol class="indicator"></ol>
+    				                        </div>
+                                        </notempty>
+                                    </div>
+                                    <!-- <eq name="info.is_return" value='1'>
+                                        <div class="well">
+                                           <strong>你回复了{$info.wx_name}：</strong>{$info.return_msg}
+                                        </div>
+                                    <else/>
+                                        <div class="profile_reback">
+                                        	<div class="input-group">
+    		                                    <input type="text" id="message" class="form-control" placeholder="请填写您想对用户说的话~~~">
+    		                                    <span class="input-group-btn"> <button type="button" class="btn btn-primary return">发送
+    		                                        </button> </span>
+    		                                </div>
+                                        </div>
+                                        
+                                        <div class="actions profile_reback_btn">
+                                            <a href="javascript:void(0)" class="btn btn-xs btn-white"><i class="fa fa-pencil"></i> 回复</a>
+                                        </div>
+                                    </eq> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+              
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>评论商品
+                    </h5>
+                    
+                </div>
+                <div class="ibox-content">
+                    
+                    <table class="table table-hover products_table">
+                        <thead>
+                        <tr>
+                            <th>产品图片</th>
+                            <th>产品名称</th>
+                            <!--<th>规格</th>-->
+                            <th>单价（元）</th>
+                            <th>数量</th>
+                            <!-- <th>优惠</th>
+                            <th>运费（元）</th>
+                            <th>总计（元）</th> -->
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                        	
+                            <td>
+                            	<div class="proImg"><img src="{$IMG_URL}{$info.goods_img}"></div>
+                            </td>
+                            <td><h5>{$info.goods_name}</h5></td>
+                            <!--<td>{$info.goods_info}</td>-->
+                            <td>{$info.goods_price}</td>
+                            <td>{$info.goods_nums}</td>
+                            <!-- <td>0</td>
+                            <td>0</td>
+                            <td>25.00</td> -->
+                            <td><a href="{:U('/Stores/Order/detail',array('id'=>$info['order_id']))}" class="btn btn-primary btn-sm">查看订单详情</a></td>
+                        </tr>
+                        
+                        
+                        </tbody>
+                    </table>
+                    
+                </div>
+                
+                <div class="orderDot_back">
+                	<a href="javascript:history.back();" type="button" class="btn btn-primary btn-sm">返回评论列表</a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<script src="__JS__/jquery_min.js"></script>
+<script src="__JS__/bootstrap.min.js"></script>
+<script src="__JS__/plugins/peity/jquery.peity.min.js"></script>
+<script src="__JS__/content.min.js"></script>
+<script src="__JS__/plugins/iCheck/icheck.min.js"></script>
+<script src="__JS__/peity-demo.min.js"></script>
+
+<script src="__JS__/plugins/blueimp/jquery.blueimp-gallery.min.js" tppabs="js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+
+
+
+<script>
+	$(document).ready(function(){
+		$(".profile_reback_btn").click(function(){
+			$(this).siblings(".profile_reback").slideDown(250);
+		})
+	})
+    $('.return').click(function(){
+        var message = $('#message').val();
+        if(message == ''){
+            alert('内容为空');
+            return false;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "{:U('Stores/Order/sendComment')}",
+            data: {
+               message:message,
+               commentId:"{$info.id}"
+            },
+            dataType: "json",
+            success: function(g){
+                if(g.status==1){
+                   alert(g.info);
+                   setTimeout(function(){
+                     window.location.href = g.url;
+                   },500);    
+                }else{
+                    alert(g.info);
+                    setTimeout(function(){
+                     window.location.href = g.url;
+                   },200);   
+                }
+            }
+        });
+    })
+</script>
+
+</body>
+
+</html>

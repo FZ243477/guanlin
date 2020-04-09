@@ -1,0 +1,28 @@
+<div class="footermain">
+    <div class="footer_box">
+        <div class="copy"> {:getSetting('system.copyright')} {:getSetting('system.records')}</div>
+    </div>
+</div>
+
+<script src="home_url/js/jquery.min.js" tppabs="home_url/js/jquery.min.js"></script>
+<script src="home_url/js/bootstrap.min.js" tppabs="home_url/js/bootstrap.min.js"></script>
+<script src="home_url/js/plugins/metisMenu/jquery.metisMenu.js" tppabs="home_url/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="home_url/js/plugins/slimscroll/jquery.slimscroll.min.js" tppabs="home_url/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="home_url/js/plugins/layer/layer.min.js" tppabs="home_url/js/plugins/layer/layer.min.js"></script>
+<script src="home_url/js/hplus.min.js" tppabs="home_url/js/hplus.min.js"></script>
+<script src="home_url/js/contabs.min.js" tppabs="home_url/js/contabs.min.js"></script>
+<script src="home_url/js/plugins/pace/pace.min.js" tppabs="home_url/js/plugins/pace/pace.min.js"></script>
+<script type="text/javascript">
+	$("a.J_menuItem").click(function(){
+        var hf=$(this).attr("href");
+        // alert(hf);
+        $("iframe.J_iframe[src='" +hf+ "']").attr('src', $("iframe.J_iframe[src='" +hf+ "']").attr('src'));
+        // $('body').click();
+        //$('.open>.dropdown-menu').hide();
+    });
+    $(".J_menuTabs").on("click", ".J_menuTab",function(){
+        var hf=$(this).attr("data-id");
+        $("iframe.J_iframe[src='" +hf+ "']").attr('src', $("iframe.J_iframe[src='" +hf+ "']").attr('src'));
+    })
+
+</script>

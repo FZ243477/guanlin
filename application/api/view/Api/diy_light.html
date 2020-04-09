@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta charset="UTF-8">
+    <title>悦品荟</title>
+    <style>
+        body{
+            margin: 0;
+        }
+        .iframdome {
+            width:100%;
+            /*height:1700px;*/
+            border:none;
+        }
+        .share {
+            position: absolute;
+        	bottom: 460px;
+    		right: 33px;
+            font-size: 16px;
+            color: #fff;
+			display:none;
+        }
+		.share .back{
+			background: #000;
+    		border-radius: 50%;
+   	 		width: 40px;
+    		height: 40px;
+			text-align: center;
+    		line-height: 50px;
+		}
+		.share .back_test{
+			 text-align: center;
+			 padding-top: 5px;
+		}
+		.share .back_img {
+			width: 24px;
+		}
+    </style>
+</head>
+<body>
+
+<div class="share" >
+	<div class="back">
+		<img class="back_img" src="/static/common/images/cig_share.png"/>
+	</div>
+	<div class="back_test">分享</div>
+</div>
+<!-- html代码中引入JS SDK -->
+
+<script type="text/javascript" src="/static/index/js/jquery.min.js"></script>
+<!--<script src="https://qhstaticssl.kujiale.com/newt/100165/text/javascript/1566386872132/design.js"></script>-->
+<!--<script src=" https://qhstaticssl.kujiale.com/newt/100165/application/javascript/1567496449468/design.js"></script>-->
+<!--<script src="https://qhstaticssl.kujiale.com/newt/100165/application/javascript/1568087017481/design-1.1.0.js"></script>-->
+<script src="https://qhstaticssl.kujiale.com/newt/100165/application/javascript/1568277139342/design-1.1.1.js"></script>
+<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+<script>
+    // 跳转到小程序的一个页面
+    //wx.miniProgram.navigateTo({"url": '/path/to/page'})
+</script>
+<script>
+
+    var vm = {
+        url:"{:getSetting('system.host')}",
+        token:"{:input('token')}"
+    };
+
+    $('.share').click(function () {
+        //console.log('11');
+        wx.miniProgram.navigateTo({"url": '/pages/poster/poster?id={$planid}'})
+    });
+    let yu;
+    function onReady() {
+		$('.share').show();
+        //yu.open();
+        //$('.iframdome').css('height', $(window).height());
+        console.log('ready')
+    }
+    //var palnid = "{:input('planid')}";
+    let src = '{$iframe}';
+    let dom = document.body;
+    let class_name = 'iframdome';
+
+    window.onload = () => {
+        yu = new DesignSDK(
+            {
+                class: class_name,
+                src,
+                dom,
+                custom: {
+                    toolbarIconStyle: {
+                        height: '40px',
+						width:'40px'
+                    },
+                    toolbarTextStyle: {
+                        fontSize: '16px'
+                    },
+                    purChaseListName: '下单'
+                },
+                events: {
+                    onBuy,
+                    onReady,
+                    onProductDetail,
+                    getProductInfo,
+                    onLogin
+                }
+            });
+			 yu.open();
+			 $('.iframdome').css('height', $(window).height());
+    }
+
+    //that.init_();
+    // $('.iframdome').css('width', $(window).width())
+
+    function onLogin() {
+        if (!vm.token) {
+            wx.miniProgram.switchTab({"url": '/pages/user/index'});
+        }
+    }
+
+
+    function onBuy (brandgoodCodes) {
+        /* if (!vm.token) {
+             vm.toLogin('请登录');
+             return false;
+         }*/
+        $.ajax({
+            url: vm.url + '/api/Diy/onBuy',
+            type: "POST",
+            dataType: "json",
+            data: {
+                goods_code:brandgoodCodes,
+                token:vm.token,
+            },
+            success:function(res){
+                if (res.status == 1) {
+                    // var url = vm.src_url+'/Diy/orderList?cart_type=5';
+                    // window.open(url);
+                    wx.miniProgram.navigateTo({"url": '/pages/qingdan/qingdan?cart_type=5'});
+                } else if (res.status == -1) {
+                    wx.miniProgram.switchTab({"url": '/pages/user/index'});
+                    // vm.toLogin(res.msg);
+                }else {
+                    // layer.alert(res.msg,{icon:3});
+                }
+            }
+        })
+        // console.log(brandgoodCodes);
+    }
+
+
+    function onProductDetail (brandgoodCode) {
+        $.ajax({
+            url: vm.url + '/api/Diy/onProductDetail',
+            type: "POST",
+            dataType: "json",
+            data: {
+                goods_code:brandgoodCode,
+            },
+            success:function(res){
+                if (res.status == 1) {
+                    var param = 'id='+res.data.goods_id;
+                    if (res.data.sku_id) {
+                        param += '&sku_id='+res.data.sku_id;
+                    }
+
+                    wx.miniProgram.navigateTo({"url": '/pages/goods_detail/index?id='+res.data.goods_id})
+                    //var url = vm.src_url+'/Goods/goodsDetail?'+param;
+                    //window.open(url);
+                }
+            }
+        });
+        // console.log(brandgoodCode);
+    }
+    function getProductInfo (brandgoodCodes) {
+        var p =  new Promise(function (resolve,reject) {
+            $.ajax({
+                url: vm.url + '/api/Diy/getProductInfo',
+                type: "POST",
+                dataType: "json",
+                data: {
+                    goods_code:brandgoodCodes,
+                },
+                success:function(res){
+                    //console.log(res);
+                    if (res.status == 1) {
+                        resolve(res.data)
+                    }
+                }
+            });
+        }).catch(function (res) {
+            //console.log(res)
+        });
+        return p;
+    }
+</script>
+</body>
+</html>

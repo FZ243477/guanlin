@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+	<title>{:getSetting('system.title')} </title>
+    <link href="home_url/css/bootstrap.min.css" tppabs="bootcss/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="home_url/css/font-awesome.css-v=4.4.0.css" tppabs="staticfile/font-awesome/4.4.0/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="home_url/css/plugins/iCheck/custom.css" tppabs="css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="home_url/css/style.min.css" tppabs="css/style.min.css" rel="stylesheet">
+    <link href="home_url/css/jbox-min.css" tppabs="css/style.min.css" rel="stylesheet">
+	{include file="base:base" /}
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="tabs-container">
+	                <!--<ul class="nav nav-tabs">
+						<li class="active">
+							<a href="{:url('Bill/moneyDetail')}"> 账户明细</a>
+						</li>
+						<li>
+							<a href="{:url('Bill/integralDetail')}">积分明细</a>
+						</li>
+	                    
+	                </ul>-->
+	                <div class="tab-content">
+	                	 <div class="row" style="padding-top:20px;background:#fff;margin-left: 0;margin-right: 0;">
+	                        <div class="col-sm-12 m-b-xs">
+	                            
+	                        <form method="get" action=""  class="form-inline">
+		                        
+		                        <div class="form-group">
+		                            <label for="exampleInputPassword2" class="sr-only">姓名</label>
+		                            <input type="text" name="realname" value="{$realname}" placeholder="姓名" id="exampleInputPassword2" class="form-control">
+		                        </div>
+		                        <div class="form-group">
+		                            <label for="exampleInputPassword" class="sr-only">手机号</label>
+		                            <input type="text" name="telephone" value="{$telephone}" placeholder="手机号" id="exampleInputPassword" class="form-control">
+		                        </div>
+		                        <div class="form-group">
+		                            <select name="status" style="width:135px;height:35px;">
+										<option value="">当前状态</option>
+										<option value="0" {eq name='status' value='0'}selected{/eq}>交易中</option>
+										<option value="1" {eq name='status' value='1'}selected{/eq}>交易成功</option>
+										<option value="2" {eq name='status' value='2'}selected{/eq}>交易失败</option>
+		                            </select>
+		                        </div>
+		                        <div class="form-group">
+                                        <input placeholder="开始日期" name="starttime" value="{$starttime}" class="form-control layer-date" id="start" autocomplete="off"><b>　至　</b>
+                                        <input placeholder="结束日期" name="endtime" value="{$endtime}" class="form-control layer-date" id="end" autocomplete="off">
+                                </div>
+		                        <button class="btn btn-primary" type="submit">筛选</button>
+		                        <a href="{:url('Bill/outexcel')}?telephone={$telephone}&realname={$realname}&starttime={$starttime}&endtime={$endtime}&status={$status}" class="btn btn-primary" >导出</a>
+		                    </form>
+	                        <div class="panel-body">
+	                            
+	                            <div class="ibox-content-del">
+				                   
+				                    <div class="table-responsive">
+				                        <table class="table table-hover products_table">
+				                            <thead>
+				                            <tr>
+				                            	<th width="255px">用户信息</th>
+				                                <th>支付流水信息</th>
+				                                <th>消费类型信息</th>
+				                                <th>描述信息</th>
+				                                <th>状态</th>
+				                                <th>添加时间</th>
+				                            </tr>
+				                            </thead>
+				                            <tbody>
+				                            	{volist name="res" id="vo"}
+						                            <tr>
+						                            	<td>
+						                                    <p><b>用户姓名：</b>
+							                                {if condition="$vo.user_name eq null"}未填写
+							                                {else /} {$vo.user_name}
+							                                {/if}
+								                            </p>
+								                            <p><b>用户手机号：</b>{$vo.telephone}</p>
+						                                </td>
+						                                <td>
+															<p><b>流水账号：</b>{$vo.transaction}</p>
+								                            <p><b>支付类型：</b>
+								                                {if condition="$vo.pay_way eq 0"} 微信支付
+								                                {elseif condition="$vo.pay_way eq 1"/} 支付宝支付
+								                                {elseif condition="$vo.pay_way eq 2"/} 微信支付
+								                                {elseif condition="$vo.pay_way eq 3"/} 银联支付
+								                                {elseif condition="$vo.pay_way eq 4"/} 余额支付
+								                                {elseif condition="$vo.pay_way eq 5"/} 积分支付
+								                                {else /} 未知来源
+								                                {/if}</p>
+						                                </td>
+						                                <td>
+															<p><b>明细类型：</b>
+							                                    {if condition="$vo.cate eq 1"} 订单消费
+							                                    {elseif condition="$vo.cate eq 2"/}充值
+							                                    {elseif condition="$vo.cate eq 3"/}提现
+							                                    {elseif condition="$vo.cate eq 4"/}佣金
+							                                    {elseif condition="$vo.cate eq 5"/}订单退款
+							                                    {elseif condition="$vo.cate eq 6"/}系统修改
+							                                    {else /} 未知类型
+							                                    {/if}
+							                                </p>
+							                                <p><b>交易金额：</b>
+							                                {if condition="$vo.type eq 1"} + {$vo.money}
+							                                {elseif condition="$vo.type eq 2"/} - {$vo.money}
+							                                {else /} 未知类型
+							                                {/if}</p>
+							                               <!-- <p><b>交易前金额：</b>￥ {$vo.money_before}</p>
+							                                <p><b>交易后金额：</b>￥ {$vo.money_after}</p>-->
+						                                </td>
+						                                <td>
+						                                	<p><b>描述：</b>{$vo.remark} </p>
+						                                </td>
+						                                <td>
+						                                	<p>
+							                             	{if condition="$vo.status eq 0"} 交易中
+							                                {elseif condition="$vo.status eq 1"/}交易成功
+							                                {elseif condition="$vo.status eq 2"/}交易失败
+							                                {else /} 未知状态
+							                                {/if}
+							                            	</p>
+							                            </td>
+						                                <td>{$vo.add_time}</td>
+						                            </tr>
+						                        {/volist}
+						                        {empty name="res"}
+						                        	<tr><td style='text-align:center' colspan='5'>暂无数据</td></tr>
+						                        {/empty}
+				                            </tbody>
+				                        </table>
+				                        <div class="page">
+					                            {$res->render()}
+					                    </div>
+				                        
+				                    </div>
+				                </div>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>   
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="home_url/js/jquery_min.js"></script>
+<script src="home_url/js/bootstrap.min.js"></script>
+<script src="home_url/js/plugins/peity/jquery.peity.min.js"></script>
+<script src="home_url/js/content.min.js"></script>
+<script src="home_url/js/plugins/iCheck/icheck.min.js"></script>
+<script src="home_url/js/peity-demo.min.js"></script>
+<script src="home_url/js/plugins/layer/laydate/laydate.js"></script>
+
+<script>
+	
+$(document).ready(function () {
+ 
+    var start = {
+        elem: "#start",
+        format: "YYYY-MM-DD",
+        max: laydate.now(),
+        min: "2000-01-01",
+        istime: true,
+        istoday: false,
+        choose: function (datas) {
+            end.min = datas;
+            end.start = datas
+        }
+    };
+    var end = {
+        elem: "#end",
+        format: "YYYY-MM-DD",
+        max: laydate.now(),
+        min: "2000-01-01",
+        istime: true,
+        istoday: false,
+        choose: function (datas) {
+            start.min = datas
+        }
+    };
+    laydate(start);
+    laydate(end);
+
+    $(".checkbox").on('click', function (event) {
+			var i = 1;
+			$(".checkbox").each(function(){
+				if(true != $(this).is(':checked')){
+					i = 0;
+				}
+			});
+			if (i == 1) {
+				$('td.pro_lasttd input').prop('checked', true);
+			} else {
+				$('td.pro_lasttd input').prop('checked', false);
+			}
+		});
+		$('td.pro_lasttd input').on('click', function(event){
+			if(true == $(this).is(':checked')){
+				$('.checkbox').prop('checked', true);
+			} else {
+				$('.checkbox').prop('checked', false);
+			}
+		});
+});
+</script>
+
+</body>
+
+</html>

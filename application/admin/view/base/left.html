@@ -1,0 +1,53 @@
+<!--左侧导航开始-->
+<link href="home_url/css/iconfont.css" rel="stylesheet">
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="nav-close"><i class="fa fa-times-circle"></i>
+    </div>
+    <div class="sidebar-collapse">
+        <ul class="nav" id="side-menu">
+            <li class="nav-header">
+                <div class="dropdown profile-element">
+                    <span><img alt="image" class="img-circle" src="{$manager.head_image}" width="64" height="64" /></span>
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="clear">
+                           <span class="block m-t-xs"><strong class="font-bold">{$manager.manager_name}</strong></span>
+                            <span class="text-muted text-xs block">{$manager.manager_cate_name}<b class="caret"></b></span>
+                            </span>
+                    </a>
+                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                        <li>
+                            <a class="J_menuItem" href="{:url('Manager/updatepwd')}">修改密码</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="{:url('admin/logout')}">安全退出</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="logo-element"><img src="{$manager.head_image}" width="40"/>
+                </div>
+            </li>
+            {foreach name="left_menu" item="vo"}
+            <li>
+                <a {notempty name="vo.sub_menu"} href="javascript:void(0);"
+                   {else/}class="J_menuItem" href="{:url($vo['control'].'/'.$vo['act'])}"
+                {/notempty}>
+                <i class="fa {$vo.icon}"></i> <span class="nav-label">{$vo.name}</span>
+                {notempty name="vo.sub_menu"}
+                <span class="fa arrow"></span>
+                {/notempty}
+                </a>
+                {notempty name="vo.sub_menu"}
+                <ul class="nav nav-second-level">
+                    {foreach name="vo.sub_menu" item="v"}
+                    <li><a class="J_menuItem" href="home_host/{$v['control']}/{$v['act']}">{$v.name}</a></li>
+                    {/foreach}
+                </ul>
+                {/notempty}
+            </li>
+            {/foreach}
+
+        </ul>
+    </div>
+</nav>
+<!--左侧导航结束-->

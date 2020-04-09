@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{:getSetting('system.title')} </title>
+
+    <link href="home_url/css/bootstrap.min.css" rel="stylesheet">
+    <link href="home_url/css/font-awesome.css-v=4.4.0.css" rel="stylesheet">
+    <link href="home_url/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="home_url/css/style.min.css" rel="stylesheet">
+    <!--编辑器 1-->
+    <script type="text/javascript" charset="utf-8" src="home_url/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="home_url/ueditor/ueditor.all.js"></script>
+    <script type="text/javascript" charset="utf-8" src="home_url/ueditor/lang/zh-cn/zh-cn.js"></script>
+    <!--编辑器 2-->
+
+    <style>
+        ul.group-list {
+            width: 96%;min-width: 1000px; margin: auto 5px;list-style: disc outside none;
+        }
+        ul.group-list li {
+            white-space: nowrap;float: left;
+            width: 150px; height: 25px;
+            padding: 3px 5px;list-style-type: none;
+            list-style-position: outside;border: 0px;
+            margin-right: 10px;
+        }
+        th.title {
+            background: #F3F3F3;border-bottom: 1px solid #D7D7D7;font-weight: bold; white-space: nowrap;
+        }
+    </style>
+</head>
+{include file="base:base" /}
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>{empty name='cache'}添加{else/}修改{/empty}运费规则</h5>
+                </div>
+                <div class="ibox-content">
+                    <form enctype="multipart/form-data" method="post" id="add_step" class="form-horizontal">
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>标题：</label>
+
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="title" style="width:60%" value="{$cache.title}">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>邮费（订单金额*n%）：</label>
+
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="freight_fee" style="width:60%" value="{$cache.freight_fee}">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>选择省市：</label>
+
+                            <div class="col-sm-6">
+                                <table class="table table-bordered table-striped dataTable">
+                                    <tbody >
+                                    {foreach name="province" item="vo" key="index"}
+                                    <tr class="province" data-key="{$index}">
+                                        <td class="title left" style="padding-right:50px;">
+                                            <b>{$vo.name}：</b>
+                                            <label class="right" >
+                                                <input type="checkbox" class="cka_select" {eq name="vo.selected" value="1"}checked="checked" data-type="1"{else/}data-type="0"{/eq} name="data[province][]"   data-key="{$index}"  value="{$vo.id}"  >全选
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr class="city" data-key="{$index}" style="display: none">
+                                        <td>
+                                            <ul class="group-list">
+                                                {foreach name="vo.city" item="v"}
+                                                <li>
+                                                    <label>
+                                                        <input type="checkbox" class="ca_select" data-key="{$index}" name="data[city][]" {eq name="v.selected" value="1"}checked="checked"{/eq} value="{$v.id}">{$v.name}
+                                                    </label>
+                                                </li>
+                                                {/foreach}
+                                                <div class="clear-both"></div>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                    {/foreach}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                       
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <input type="hidden" name="id"  value="{$cache.id}">
+                                <a href="javascript:history.back();" class="btn btn-white" type="submit">返回</a>
+                                <a class="btn btn-primary save" href="javascript:void(0)" >保存</a>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="home_url/js/jquery.min.js"></script>
+<script src="home_url/js/bootstrap.min.js"></script>
+<script src="home_url/js/plugins/peity/jquery.peity.min.js"></script>
+<script src="home_url/js/content.min.js"></script>
+<script src="home_url/js/plugins/iCheck/icheck.min.js"></script>
+<script src="home_url/js/peity-demo.min.js"></script>
+<script src="home_url/js/plugins/layer/laydate/laydate.js"></script>
+<script>
+    var url = '';
+    $('.save').click(function(){
+        var post = $('#add_step').serializeArray();
+        $.post("{:url('Freight/freightHandle')}",post, function(data){
+            if(data.status){
+                dialog.showTips(data.msg,"","{:url('Freight/freightList')}");
+            }else{
+                alert(data.msg);
+            }
+        }, "json");
+        return false;
+    });
+</script>
+<script>
+    $('.province').click(function () {
+        var key = $(this).attr('data-key');
+        console.log(key);
+        $('.city[data-key="'+key+'"]').toggle();
+    });
+    $('.province label').click(function (event) {
+        //阻止向上冒泡
+        event.stopPropagation();
+    });
+    $('.cka_select').click(function () {
+
+        var key = $(this).attr('data-key');
+        var type = parseInt($(this).attr('data-type'));
+        if (type === 0) {
+            $('.ca_select[data-key="'+key+'"]').attr('checked', 'checked');
+        } else {
+            $('.ca_select[data-key="'+key+'"]').removeAttr('checked');
+        }
+        $(this).attr('data-type', 1-type);
+    });
+    $('.ca_select').click(function () {
+        var key = $(this).attr('data-key');
+        // console.log(key);
+        var is_checked = 1;
+        $('.ca_select[data-key="'+key+'"]').each(function () {
+            if (!$(this).is(':checked')) {
+                is_checked = 0;
+            }
+        });
+        var cka_select = $('.cka_select[data-key="'+key+'"]');
+        console.log(is_checked);
+        cka_select.attr('data-type', is_checked);
+        if (is_checked === 1) {
+            cka_select.attr('checked', 'checked');
+        } else {
+            cka_select.removeAttr('checked');
+        }
+
+    });
+</script>
+<!--拖拽图片排序-->
+<!--
+<div class="xuanze_showimge fl  multi-img-details input-group multi-img-details ui-sortable dad-active dad-container"  id="J_imageView_1">
+    <foreach name="cache.package_banner" item="v">
+        <div class="goods_imgs">
+            <img src="" height="80"  class="mgr10 mgt10 ">
+            <input type="hidden" name="package_banner" class="package_banner"  value="">
+            <em class="close" title="删除这张图片" onclick="delImgs(this)">×</em>
+        </div>
+</foreach>
+</div>
+<link rel="stylesheet" href="home_url/upload_img/uploadImg.css"/>
+<link rel="stylesheet" href="home_url/upload_img/jquery.dad.css"/>
+<script src="home_url/upload_img/jquery.dad.min.js"></script>
+<script language="javascript">
+    $('.J_imageView_1').dad({
+        draggable: 'img'//拖拽区域
+    });
+</script>-->
+<!--拖拽图片排序-->
+
+<script type="text/javascript" src="home_url/js/jquery.js"></script>
+<script type="text/javascript" src="home_url/js/jquery-form.js"></script>
+<script type="text/javascript">
+
+
+    $(function () {
+
+        /*图片上传*/
+        $(".xuanze").wrap("<form class='myupload' action='{:url('Index/addImage')}' method='post' enctype='multipart/form-data'></form>");
+        $(".xuanze").change(function(){ //选择文件
+
+            var obj = $(this);
+            var type = obj.attr('data-type'); // single 单图 multiple 多图
+            var xuanze_progress = obj.parents('.form-group').find('.xuanze_progress');
+            var xuanze_percent = obj.parents('.form-group').find('.xuanze_percent');
+            var xuanze_showimge = obj.parents('.form-group').find('.xuanze_showimge');
+            var name = obj.attr('data-name');
+            obj.parents('.myupload').ajaxSubmit({
+                dataType:  'json', //数据格式为json
+                beforeSend: function() { //开始上传
+                    xuanze_progress.show(); //显示进度条
+                    var percentVal = '0%';
+                    xuanze_percent.html(percentVal);
+                },
+                uploadProgress: function(event, position, total, percentComplete) {
+                    var percentVal = percentComplete + '%'; //获得进度
+                    xuanze_percent.html(percentVal); //显示上传进度百分比
+                },
+                success: function(g) { //成功
+                    if (type == 'multiple') { //多图
+                        var img = '<div class="goods_imgs">' +
+                            '<img src="'+ g.data.file_name +'" height="80"  class="mgr10 mgt10 ">' +
+                            '<input type="hidden" name="'+ name +'" class="'+ name +'"  value="'+ g.data.file_name +'">' +
+                            '<em class="close" title="删除这张图片" onclick="delImgs(this)">×</em>' +
+                            '</div>';
+
+                        xuanze_showimge.append(img);
+
+                        $('.J_imageView_1').dad({
+                            draggable: 'img'//拖拽区域
+                        });
+                    } else { // 单图
+                        var img = '<img src="'+ g.data.file_name +'" height="80">' +
+                            '<input type="hidden" name="'+ name +'" class="'+name+'" value="'+ g.data.file_name +'">';
+                        xuanze_showimge.html(img);
+                    }
+
+                    xuanze_progress.hide();
+                },
+                error:function(xhr){ //上传失败
+                    console.log(xhr.status)
+                }
+            });
+        });
+
+    });
+
+    function delImgs(obj){
+        dialog.showTips("删除这张图片？","firm",function (){
+            $(obj).next("input").remove();
+            $(obj).remove();
+        })
+    }
+</script>
+</body>
+
+</html>

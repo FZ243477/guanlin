@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>悦品荟商城 - 评价</title>
+    <meta name="keywords" content="悦品荟商城">
+    <meta name="description" content="悦品荟商城">
+
+    <link href="__CSS__/bootstrap.min.css" rel="stylesheet">
+    <link href="__CSS__/font-awesome.css-v=4.4.0.css" rel="stylesheet">
+    <link href="__CSS__/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="__CSS__/style.min.css" rel="stylesheet">
+	<include file="Public:base" />
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                
+                
+                <div class="tabs-container">
+	                
+	                
+	                        <div class="panel-body">
+	                            
+	                            <div class="ibox-content-del">
+				                    <div class="row">
+				                        <div class="col-sm-12 m-b-xs">
+				                            
+				                        <form method="get" action="{:U('/Stores/Order/pingjia')}" role="form" class="form-inline order_search">
+					                        <!-- <div class="form-group">
+					                            <label for="exampleInputEmail2" class="sr-only">ID</label>
+					                            <input type="email" placeholder="ID" id="exampleInputEmail2" class="form-control">
+					                        </div> -->
+					                        <div class="form-group">
+					                            <label for="exampleInputEmail2" class="sr-only">评价人</label>
+					                            <input type="text" name="name" value="{$name}" placeholder="评价人" id="exampleInputEmail2" class="form-control">
+					                        </div>
+					                        <div class="form-group">
+					                            <label for="exampleInputPassword2" class="sr-only">订单号</label>
+					                            <input type="text" name="order_no" value="{$order_no}" placeholder="订单号" id="exampleInputPassword2" class="form-control">
+					                        </div>
+					                        <div class="form-group">
+					                            <label for="exampleInputPassword2" class="sr-only">评论内容</label>
+					                            <input type="text" name="content" value="{$content}" placeholder="评论内容关键词" id="exampleInputPassword3" class="form-control">
+					                        </div>
+
+					                        <button class="btn btn-primary" type="submit">筛选</button>
+					                    </form>
+  
+				                        </div>
+				                    </div>
+				                    <div class="table-responsive">
+				                        <table class="table table-hover products_table">
+				                            <thead>
+				                            <tr>
+				                            	<th></th>
+				                                <th>ID</th>
+				                                <th>下单人信息</th>
+				                                <th>订单编号</th>
+				                                <th>星级</th>
+				                                <th>评价内容</th>
+				                                <th>评价时间</th>
+				                                <th>操作</th>
+				                            </tr>
+				                            </thead>
+				                            <tbody>
+				                            	<volist name="list" id="vo">
+						                            <tr>
+						                            	<td>
+						                                    <input type="checkbox" class="i-checks" name="input" value="{$vo.id}">
+						                                </td>
+						                                <td>{$vo.id}</td>
+						                                <td>{$vo.wx_name}</td>
+						                                <td>{$vo.order_no}</td>
+						                                <td>{$vo.score}星</td>
+						                                <td><h5 style="max-width: 350px;">{$vo.content}</h5></td>
+						                                <td>{$vo.add_time|date='Y-m-d H:i',###}</td>
+						                                <td>
+						                                    <a href="{:U('/Stores/Order/pingjiadot',array('id'=>$vo['id']))}" class="btn btn-primary btn-sm">查看详情</a> 
+						                                    <button type="button" class="btn btn-default btn-sm" onclick="btn_del({$vo['id']})">删除</button>
+						                                </td>
+						                            </tr>
+						                        </volist>
+						                        <empty name="list">
+						                        	<tr><td colspan="8" style="text-align: center;">暂无数据</td></tr>
+						                        </empty>
+
+				                            <tr>
+				                                <td colspan="8" class="pro_lasttd">
+				                                	<label><input type="checkbox" class="i-checks" name="inputs"><span>全选</span></label>
+				                                	<div class="pro_table_contro">
+				                                		<!-- <a class="btn btn-xs btn-white" onclick="btn_del()">删除</a> -->
+				                                		<button type="button" class="btn btn-default btn-sm" onclick="btn_del()">删除</button>
+				                                	</div>
+				                                </td>
+				                            </tr>
+				                            
+				                            </tbody>
+				                        </table>
+				                        
+				                        <div class="text-center">
+					                        <div class="btn-group">
+					                            {$page}
+					                        </div>
+					                    </div>
+				                        
+				                    </div>
+				
+				                </div>
+				            
+	                            
+	                        </div>
+	                    
+	                
+	
+	
+	            </div>
+                
+                
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="__JS__/jquery_min.js"></script>
+<script src="__JS__/bootstrap.min.js"></script>
+<script src="__JS__/plugins/peity/jquery.peity.min.js"></script>
+<script src="__JS__/content.min.js"></script>
+<script src="__JS__/plugins/iCheck/icheck.min.js"></script>
+<script src="__JS__/peity-demo.min.js"></script>
+
+<script src="__JS__/plugins/layer/laydate/laydate.js" tppabs="js/plugins/layer/laydate/laydate.js"></script>
+
+<script>
+	
+$(document).ready(function () {
+	$('td.pro_lasttd input').on('ifChecked', function(event){
+	    $('input').iCheck('check'); 
+	});
+	$('td.pro_lasttd input').on('ifUnchecked', function(event){
+	    $('input').iCheck('uncheck'); 
+	});
+
+	$(".checkbox").on('click', function (event) {
+		var i = 1;
+		$(".checkbox").each(function(){
+			if(true != $(this).is(':checked')){
+				i = 0;
+			}
+		});
+		if (i == 1) {
+			$('td.pro_lasttd input').prop('checked', true);
+		} else {
+			$('td.pro_lasttd input').prop('checked', false);
+		}
+	});
+	$('td.pro_lasttd input').on('click', function(event){
+		if(true == $(this).is(':checked')){
+			$('.checkbox').prop('checked', true);
+		} else {
+			$('.checkbox').prop('checked', false);
+		}
+	});
+});
+
+function btn_del(id){
+    if(confirm('确定要删除吗？')){
+        if(!id){
+            var str="";
+		    var id="";
+		    $("input[name='input']:checkbox").each(function(){
+		        if(true == $(this).is(':checked')){
+		            str+=$(this).val()+"_";
+		        }
+		    });
+		    if(str.substr(str.length-1)== '_'){
+		        id = str.substr(0,str.length-1);
+		    }
+		    if(id.length ==0){
+                alert('请选择要删除的数据');return false;
+            }
+        }
+        $.ajax({
+            url: "{:U('/stores/Order/delComment')}",
+            type: "post",
+            dataType: "json",
+            data: {
+                id: id,
+            }
+        }).done(function (res) {
+             alert(res.info);
+            if(res.status==1){
+              window.location.reload();
+            }
+        })
+    }
+}
+</script>
+
+</body>
+
+</html>

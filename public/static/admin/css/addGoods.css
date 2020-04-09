@@ -1,0 +1,8 @@
+.w1 {
+    float: left;
+}
+
+.Father_Item li {float: left;}
+table#sku_table {font-size:11px;color:#333333;border-width: 1px;border-color: #666666;border-collapse: collapse;}
+table#sku_table th {border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #dedede;}
+table#sku_table td {border-width: 1px;padding: 8px;border-style: solid;border-color: #666666;background-color: #ffffff;}

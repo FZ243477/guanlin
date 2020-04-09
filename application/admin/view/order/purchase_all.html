@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>悦品荟商城 - 订单</title>
+    <meta name="keywords" content="悦品荟商城">
+    <meta name="description" content="悦品荟商城">
+
+    <link href="home_url/css/bootstrap.min.css" rel="stylesheet">
+    <link href="home_url/css/font-awesome.css-v=4.4.0.css" rel="stylesheet">
+    <link href="home_url/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="home_url/css/style.min.css" rel="stylesheet">
+    {include file="base:base" /}
+    <style>
+        .table>tbody>tr>td,
+        .table>tbody>tr>th,
+        .table>tfoot>tr>td,
+        .table>tfoot>tr>th,
+        .table>thead>tr>td,
+        .table>thead>tr>th {
+            border: 1px solid #e7eaec !important;
+            line-height: 1.42857;
+            padding: 8px;
+            vertical-align: middle;
+            text-align: center;
+        }
+        .table_l {
+            /*width: 85%;*/
+            padding-left: 0;
+            max-height: 500px;
+            overflow: auto;
+        }
+        .table_r {
+            padding-right: 0;
+            max-height: 500px;
+            overflow: auto;
+        }
+        .table_l table {
+            width: 3500px;
+            margin-bottom: 0;
+        }
+        .table_r table {
+            margin-bottom: 17px;
+        }
+        .move_left {
+            float: left;
+        }
+        .table_r table tr th {
+            width: 30px;
+        }
+        .table_l table tr th{
+            width: 50px;
+            overflow: auto;
+        }
+        .table_l table tr td,
+        .table_r table tr td,
+        .table_l table tr th,
+        .table_r table tr th {
+            height: 53px;
+        }
+        .table_r table tr td a {
+            background-color: #00753e;
+            border-color: #00753e;
+            color: #FFF;padding: 6px 12px;
+        }
+        .table_r::-webkit-scrollbar { width: 0 !important }
+        .table_r { -ms-overflow-style: none; }
+        .table_r { overflow: -moz-scrollbars-none; }
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="tabs-container">
+                    <ul class="nav nav-tabs">
+                        <li class="tabs_a fl">
+                        <a href="{:url('Order/purchase')}?store_id={$store_id}" class="tabs_a fl">待采购({$count|default='0'})</a>
+                        </li>
+                        <li class="active tabs_a fl">
+                        <a href="{:url('Order/purchaseAll', ['is_purchase' => 1])}?store_id={$store_id}" class="active tabs_a fl">已采购({$count1|default='0'})</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="row" style="padding-top:20px;background:#fff;margin-left: 0;margin-right: 0;">
+                            <form method="get" action="" class="form-inline order_search">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail2" class="sr-only">供应商</label>
+                                    <select class="form-control" name="store_id">
+									<option value="0">全部</option>
+                                        {foreach name="store" item="vo"}
+                                        <option value="{$vo.id}" {eq name="vo.id" value="$store_id"}selected{/eq}>{$vo.store_name}</option>
+                                        {/foreach}
+                                    </select>
+                                </div>
+                                <!--<div class="form-group">
+                                    <label for="exampleInputEmail2" class="sr-only">下单人</label>
+                                    <input type="text" name="name" value="{$name}" placeholder="下单人/收货人/手机号" id="exampleInputEmail2" class="form-control">
+                                </div>-->
+                                <div class="form-group">
+                                    <label for="exampleInputPassword2" class="sr-only">采购单号</label>
+                                    <input type="text" name="order_no" value="{$order_no}" placeholder="采购单号" id="exampleInputPassword2" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <select name="partner_id" id="" class="form-control">
+                                        <option value="">选择城市合伙人</option>
+                                        <option value="0" {eq name="partner_id" value="0"}selected{/eq}>主平台</option>
+                                        {foreach name="partner" item="v"}
+                                        <option value="{$v.id}" {eq name="partner_id" value="$v.id"}selected{/eq}>{$v.username}</option>
+                                        {/foreach}
+                                    </select>
+                                </div>
+                                <!--<div class="form-group">
+                                    <input placeholder="下单起始日期" name="starttime" autocomplete="off" value="{$starttime}" class="form-control layer-date" id="start" style="width:130px" autocomplete="off">
+                                    <input placeholder="下单结束日期" name="endtime" autocomplete="off" value="{$endtime}" class="form-control layer-date" id="end" style="width:130px" autocomplete="off">
+                                </div>-->
+                                <button class="btn btn-primary" name="is_export" value="0" type="submit">筛选</button>
+                                <button class="btn btn-primary" name="is_export" value="1" type="submit">导出</button>
+                            </form>
+                            <div id="tab-1" class="tab-pane">
+                                <div class="panel-body">
+                                    <div class="ibox-content-del">
+
+                                        <div class="table-responsive ">
+                                            <table class="table table-hover products_table" >
+                                                <colgroup>
+<!--                                                    <col width="2%">-->
+                                                    <col width="8%">
+                                                    <col width="10%">
+                                                    <col width="8%">
+                                                    <col width="10%">
+                                                    <col width="10%">
+                                                    <col width="10%">
+                                                    <col width="10%">
+                                                    <col width="8%">
+                                                    <col width="8%">
+                                                    <col width="8%">
+                                                </colgroup>
+                                                <thead>
+                                                <tr>
+<!--                                                    <th></th>-->
+                                                    <th>采购单号</th>
+                                                    <th>供应商</th>
+                                                    <th>采购订单总价</th>
+                                                    <th>商品编号</th>
+                                                    <th>商品名称</th>
+                                                    <th>SKU</th>
+                                                    <th>备注</th>
+                                                    <th>成本价</th>
+                                                    <th>数量</th>
+                                                    <th>订单号</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {foreach name="order_list" item="vo"}
+                                                {foreach name="vo.order_goods" item="v" key="k"}
+                                                <tr>
+													{eq name="k" value="0"}
+                                                    <!--<td  rowspan="{$vo.order_goods|count}" >
+                                                        <input type="checkbox" class="i-checks checkbox" name="input" value="{$vo.order_goods_id}">
+                                                    </td>-->
+                                                    <td rowspan="{$vo.order_goods|count}">{$vo.purchase_no}</td>
+                                                    <td rowspan="{$vo.order_goods|count}">{$vo.store_name}</td>
+                                                    <td rowspan="{$vo.order_goods|count}">{$vo.purchase_price}</td>
+                                                    {/eq}
+                                                    <td>{$v.goods_code}</td>
+                                                    <td>{$v.goods_name}</td>
+                                                    <td>{$v.sku_info}</td>
+                                                    <td>{$v.goods_remark}</td>
+                                                    <td>{$v.cost_price}</td>
+                                                    <td>{$v.goods_num}</td>
+                                                    <td>{$v.parent_no}</td>
+                                                </tr>
+                                                {/foreach}
+                                                {/foreach}
+                                                {empty name="order_list"}
+                                                <tr><td colspan="10" style="text-align: center;">暂无数据</td></tr>
+                                                {/empty}
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="page">
+                                          <!--  <div class="pro_lasttd">
+                                                <label ><input type="checkbox" class="i-checks all"  name="inputs"><span>全选</span></label>
+                                                <div class="pro_table_contro">
+                                                    <a href="javascript:void(0);" class="btn btn-primary btn-sm purchase">采购</a>
+                                                </div>
+                                            </div>-->
+                                            <div >
+                                                {$order_list->render()}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="home_url/js/jquery.min.js"></script>
+<script src="home_url/js/bootstrap.min.js"></script>
+<script src="home_url/js/plugins/peity/jquery.peity.min.js"></script>
+<script src="home_url/js/content.min.js"></script>
+<script src="home_url/js/plugins/iCheck/icheck.min.js"></script>
+<script src="home_url/js/peity-demo.min.js"></script>
+<script src="home_url/js/plugins/layer/laydate/laydate.js"></script>
+<script>
+
+    $(document).ready(function () {
+        $('.table_l').parents('.row').css('max-height', $(document).height()*0.6)
+        $('.table_l').css('max-height', $(document).height()*0.6)
+        $('.table_r').css('max-height', $(document).height()*0.6)
+        var i = 2;
+        $('.table_r').hover(function () {
+            i = 1;
+        },function () {
+            i = 0;
+        });
+        $('.table_l').hover(function () {
+            i = 2;
+        },function () {
+            i = 0;
+        });
+        $(".table_r").scroll(function(event) {
+            if (i == 1) {
+                $(".table_l").scrollTop( $(this).scrollTop());
+            }
+        });
+        $(".table_l").scroll(function(event) {
+            if (i == 2) {
+                $(".table_r").scrollTop( $(this).scrollTop());
+            }
+        });
+        var start = {
+            elem: "#start",
+            format: "YYYY-MM-DD",
+            max: laydate.now(),
+            min: "2000-01-01",
+            istime: true,
+            istoday: false,
+            choose: function (datas) {
+                end.min = datas;
+                end.start = datas
+            }
+        };
+        var end = {
+            elem: "#end",
+            format: "YYYY-MM-DD",
+            // max: laydate.now(),
+            // min: laydate.now(),
+            istime: true,
+            istoday: false,
+            choose: function (datas) {
+            }
+        };
+        laydate(start);
+        laydate(end);
+
+        $(".checkbox").on('click', function (event) {
+            var i = 1;
+            $(".checkbox").each(function(){
+                if(true != $(this).is(':checked')){
+                    i = 0;
+                }
+            });
+            if (i == 1) {
+                $('.pro_lasttd input').prop('checked', true);
+            } else {
+                $('.pro_lasttd input').prop('checked', false);
+            }
+        });
+        $('.pro_lasttd input').on('click', function(event){
+            if(true == $(this).is(':checked')){
+                $('.checkbox').prop('checked', true);
+            } else {
+                $('.checkbox').prop('checked', false);
+            }
+        });
+
+        $('.purchase').click(function () {
+
+            var order_goods_id = '';
+
+            $(".checkbox").each(function(){
+                if(true == $(this).is(':checked')){
+                    order_goods_id += order_goods_id?"-"+$(this).val():$(this).val();
+                }
+            });
+
+            if(!order_goods_id){
+                alert('请选择要采购的订单');
+                return false;
+            }
+
+            dialog.showTips('确定要采购吗？', "firm", function(){
+
+                $.ajax({
+                    url: "{:url('Order/setPurchase')}",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        order_goods_id: order_goods_id,
+                    }
+                }).done(function (res) {
+                    if (res.status == 1) {
+                        dialog.showTips(res.msg,"", 1);
+                    } else {
+                        alert(res.msg);
+                    }
+
+                })
+            })
+        })
+    });
+
+
+
+
+
+</script>
+</body>
+</html>

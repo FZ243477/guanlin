@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>悦品荟商城 - 订单</title>
+	<meta name="keywords" content="悦品荟商城">
+	<meta name="description" content="悦品荟商城">
+
+	<link href="home_url/css/bootstrap.min.css" rel="stylesheet">
+	<link href="home_url/css/font-awesome.css-v=4.4.0.css" rel="stylesheet">
+	<link href="home_url/css/plugins/iCheck/custom.css" rel="stylesheet">
+	<link href="home_url/css/style.min.css" rel="stylesheet">
+	{include file="base:base" /}
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="ibox">
+				<div class="tabs-container">
+					<ul class="nav nav-tabs">
+						<li class="{eq name="status" value=""}active{/eq} tabs_a fl">
+						<a href="{:url('Order/orderList')}" class="{eq name="status" value=""}active{/eq} tabs_a fl">所有订单({$count|default='0'})</a>
+						</li>
+						<li class="{eq name="status" value="1"}active{/eq} tabs_a fl">
+						<a href="{:url('Order/orderList', ['status' => 1])}" class="{eq name="status" value="1"}active{/eq} tabs_a fl">待付款({$count1|default='0'})</a>
+						</li>
+						<li class="{eq name="status" value="6"}active{/eq} tabs_a fl">
+						<a href="{:url('Order/orderList', ['status' => 6])}" class="{eq name="status" value="1"}active{/eq} tabs_a fl">线下付款({$count6|default='0'})</a>
+						</li>
+						<li class="{eq name="status" value="7"}active{/eq} tabs_a fl">
+						<a href="{:url('Order/orderList', ['status' => 7])}" class="{eq name="status" value="1"}active{/eq} tabs_a fl">待付尾款({$count7|default='0'})</a>
+						</li>
+						<li class="{eq name="status" value="2"}active{/eq} tabs_a fl">
+						<a href="{:url('Order/orderList',['status' => 2])}" class="{eq name="status" value="2"}active{/eq} tabs_a fl">待确认({$count2|default='0'})</a>
+						</li>
+						<li class="{eq name="status" value="3"}active{/eq} tabs_a fl">
+						<a href="{:url('Order/orderList',['status' => 3])}" class="{eq name="status" value="3"}active{/eq} tabs_a fl">待收货({$count3|default='0'})</a>
+						</li>
+						<li class="{eq name="status" value="4"}active{/eq} tabs_a fl">
+						<a href="{:url('Order/orderList',['status' => 4])}" class="{eq name="status" value="4"}active{/eq} tabs_a fl">收货完成({$count4|default='0'})</a>
+						</li>
+						<li class="{eq name="status" value="5"}active{/eq} tabs_a fl">
+						<a href="{:url('Order/orderList',['status' => 5])}" class="{eq name="status" value="5"}active{/eq} tabs_a fl">评价完成({$count5|default='0'})</a>
+						</li>
+						<li class="{eq name="status" value="0"}active{/eq} tabs_a fl">
+						<a href="{:url('Order/orderList',['status' => 0])}" class="{eq name="status" value="0"}active{/eq} tabs_a fl">已取消({$count0|default='0'})</a>
+						</li>
+						<li class="{eq name="status" value="13"}active{/eq} tabs_a fl">
+						<a href="{:url('Order/orderList',['status' => 13])}" class="{eq name="status" value="0"}active{/eq} tabs_a fl">退款订单({$count13|default='0'})</a>
+						</li>
+					</ul>
+					<ul class="nav nav-tabs">
+						<li class="{eq name="status" value="11"}active{/eq} tabs_a fl">
+						<a href="{:url('Order/orderList',['status' => 11])}" class="{eq name="status" value="100"}active{/eq} tabs_a fl">退款中商品({$count11|default='0'})</a>
+						</li>
+						<li class="{eq name="status" value="12"}active{/eq} tabs_a fl">
+						<a href="{:url('Order/orderList',['status' => 12])}" class="{eq name="status" value="8"}active{/eq} tabs_a fl">退款完成商品({$count12|default='0'})</a>
+						</li>
+					</ul>
+					<div class="tab-content">
+						<div class="row" style="padding-top:20px;background:#fff;margin-left: 0;margin-right: 0;">
+							<form method="get" action="" class="form-inline order_search">
+								<div class="form-group">
+									<label for="exampleInputEmail2" class="sr-only">下单人</label>
+									<input type="text" name="name" value="{$name}" placeholder="下单人姓名|收货人姓名|下单人手机号|收货人手机号" id="exampleInputEmail2" class="form-control">
+								</div>
+								<div class="form-group">
+									<label for="exampleInputPassword2" class="sr-only">订单号</label>
+									<input type="text" name="order_no" value="{$order_no}" placeholder="订单号" id="exampleInputPassword2" class="form-control">
+								</div>
+
+								<div class="form-group">
+									<input placeholder="下单起始日期" name="starttime" autocomplete="off" value="{$starttime}" class="form-control layer-date" id="start" style="width:130px" autocomplete="off">
+									<input placeholder="下单结束日期" name="endtime" autocomplete="off" value="{$endtime}" class="form-control layer-date" id="end" style="width:130px" autocomplete="off">
+								</div>
+								<button class="btn btn-primary" type="submit">筛选</button>
+								<a href="javascript:void(0);" onclick="exportOrder()" class="btn  btn-primary" >导出</a>
+							</form>
+							<div id="tab-1" class="tab-pane">
+								<div class="panel-body">
+									<div class="ibox-content-del">
+										<div class="table-responsive">
+											<table class="table table-hover products_table">
+												<thead>
+												<tr>
+													<th width="300px">下单人信息</th>
+													<th>商品信息</th>
+													<th>金额信息</th>
+													<th>订单类别</th>
+													<th width="120px">订单状态</th>
+													<th>下单时间/跟新时间</th>
+													<th>操作</th>
+												</tr>
+												</thead>
+												<tbody>
+												{foreach name="order_list" item="vo"}
+												<tr>
+													<td>
+														<p><b>下单人姓名：</b>
+															{if condition="$vo.user_name eq null"}未填写
+															{else /} {$vo.user_name}
+															{/if}
+														</p>
+														<p><b>下单手机号：</b>{$vo.tel}</p>
+													</td>
+													<td>
+														{foreach name="vo['goods']" item="vos" }
+														<p><b>商品图片：</b><img src="{$vos.goods_pic}" width="50px"></p>
+														<p><b>商品名称：</b>{$vos.goods_name} </p>
+														<p><b>商品数量：</b>{$vos.goods_num}{$vos.goods_unit}</p>
+														<p><b>商品单价：</b>￥{$vos.goods_price}</p>
+														<div style="margin: 15px 0;"></div>
+
+														{switch name="vos.is_refund"}
+														{case value="1"}
+														{if condition="$vos.is_apply_refund eq 1"}
+														<a href="javascript:;" style="text-align:center;">状态:退货退款已完成</a>
+														{/if}
+
+														{if condition="$vos.is_apply_refund eq 2"}
+														<a href="javascript:;" style="text-align:center;">状态:退款已完成</a>
+														{/if}
+
+														{if condition="$vos.is_apply_refund eq 3"}
+														<a href="javascript:;" style="text-align:center;">状态:换货已完成</a>
+														{/if}
+														{/case}
+														{case value="2"}
+														{if condition="$vos.is_apply_refund eq 1"}
+														<a href="javascript:;" style="text-align:center;">状态:退货退款申请已驳回</a>
+														<br/>
+														<a href="javascript:;" style="color:#d9534f;font-weight:900;">驳回原因:{$vos.refund_reason}</a>
+														{/if}
+
+														{if condition="$vos.is_apply_refund eq 2"}
+														<a href="javascript:;" style="text-align:center;">状态:退款申请已驳回</a>
+														<br/>
+														<a href="javascript:;" style="color:#d9534f;font-weight:900;">驳回原因:{$vos.refund_reason}</a>
+														{/if}
+
+														{if condition="$vos.is_apply_refund eq 3"}
+														<a href="javascript:;" style="text-align:center;">状态:换货申请已驳回</a>
+														<br/>
+														<a href="javascript:;" style="color:#d9534f;font-weight:900;">驳回原因:{$vos.refund_reason}</a>
+														{/if}
+														{/case}
+														{case value="3"}
+														{if condition="$vos.is_apply_refund eq 1"}
+														<a href="javascript:;" class="btn btn-mini btn-danger" onclick="J_refuse_refund(this)"
+														   data-order_no="{$vo.order_no}"
+														   data-order_id="{$vos.refund_refund_order_id}"
+														   data-pay_way_name="{$vo.pay_way_name}"
+														   data-pay_price="{$vos.refund_refund_price}"
+														   data-refund_type="{$vos.refund_refund_type}"
+														   data-refund_reason="{$vos.refund_refund_reason}"
+														   data-refund_instructionse="{$vos.refund_refund_instructions}"
+														   data-refund_add_time="{$vos.refund_refund_add_time}"
+														   data-refund_pic1="{$vos.refund_refund_pic1}"
+														   data-refund_pic2="{$vos.refund_refund_pic2}"
+														   data-refund_pic3="{$vos.refund_refund_pic3}"
+														   data-refund_pic4="{$vos.refund_refund_pic4}"
+														   data-refund_pic5="{$vos.refund_refund_pic5}"
+														   data-refund_order_syn="{$vos.refund_refund_order_syn}"
+														> 退货退款审核</a>
+														{/if}
+
+														{if condition="$vos.is_apply_refund eq 2"}
+														<a href="javascript:;" class="btn btn-mini btn-success" onclick="J_refund(this)"  data-order_no="{$vo.order_no}" data-pay_price="{$vos.refund_money}" data-pay_way_name="{$vo.pay_way_name}"  data-order_id="{$vos.refund_refund_order_id}">线上退款</a>
+														<a href="javascript:;" class="btn btn-mini btn-danger" onclick="J_refuse_refund(this)"
+														   data-order_no="{$vo.order_no}"
+														   data-order_id="{$vos.refund_refund_order_id}"
+														   data-hw_status="{$vos.refund_refund_hw_status}"
+														   data-pay_way_name="{$vo.pay_way_name}"
+														   data-pay_price="{$vos.refund_refund_price}"
+														   data-refund_type="{$vos.refund_refund_type}"
+														   data-refund_reason="{$vos.refund_refund_reason}"
+														   data-refund_instructionse="{$vos.refund_refund_instructions}"
+														   data-refund_add_time="{$vos.refund_refund_add_time}"
+														   data-refund_pic1="{$vos.refund_refund_pic1}"
+														   data-refund_pic2="{$vos.refund_refund_pic2}"
+														   data-refund_pic3="{$vos.refund_refund_pic3}"
+														   data-refund_pic4="{$vos.refund_refund_pic4}"
+														   data-refund_pic5="{$vos.refund_refund_pic5}"
+														> 退款审核</a>
+														{/if}
+
+														{if condition="$vos.is_apply_refund eq 3"}
+														<a href="javascript:;" class="btn btn-mini btn-danger" onclick="J_refuse_refund(this)"
+														   data-order_no="{$vo.order_no}"
+														   data-order_id="{$vos.refund_refund_order_id}"
+														   data-pay_price="{$vos.refund_refund_price}"
+														   data-pay_way_name="{$vo.pay_way_name}"
+														   data-refund_type="{$vos.refund_refund_type}"
+														   data-refund_reason="{$vos.refund_refund_reason}"
+														   data-refund_instructionse="{$vos.refund_refund_instructions}"
+														   data-refund_add_time="{$vos.refund_refund_add_time}"
+														   data-refund_pic1="{$vos.refund_refund_pic1}"
+														   data-refund_pic2="{$vos.refund_refund_pic2}"
+														   data-refund_pic3="{$vos.refund_refund_pic3}"
+														   data-refund_pic4="{$vos.refund_refund_pic4}"
+														   data-refund_pic5="{$vos.refund_refund_pic5}"
+														   data-refund_order_syn="{$vos.refund_refund_order_syn}"
+														> 换货审核</a>
+														{/if}
+														{/case}
+														{case value="4"}
+														{if condition="$vos.is_apply_refund eq 1"}
+														<a href="javascript:;" class="btn btn-mini btn-success" onclick="J_refund(this)"  data-order_no="{$vo.order_no}" data-pay_price="{$vos.refund_money}" data-pay_way_name="{$vo.pay_way_name}" data-order_id="{$vos.id}">线上退货退款</a>
+<!--														<a href="javascript:;" class="btn btn-mini btn-success" onclick="J_refund_syn(this)"   data-return_order_syn="{$vos.refund_refund_order_syn}" data-refund_express_company="{$vos.refund_express_company}" data-refund_express_ma="{$vos.refund_express_ma}">查看物流单号</a>-->
+														<a href="javascript:;" style="text-align:center;">状态:退货退款申请已同意</a>
+														{/if}
+
+														{if condition="$vos.is_apply_refund eq 2"}
+														<a href="javascript:;" class="btn btn-mini btn-success" onclick="J_refund(this)"  data-order_no="{$vo.order_no}" data-pay_price="{$vos.refund_money}" data-pay_way_name="{$vo.pay_way_name}" data-order_id="{$vos.refund_refund_order_id}">线上退款</a>
+														<a href="javascript:;" style="text-align:center;">状态:退款申请已同意</a>
+														{/if}
+
+														{if condition="$vos.is_apply_refund eq 3"}
+														<a href="javascript:;" onclick="HH_refuse_submit(this)" class="btn btn-mini btn-success"  data-order_no="{$vo.order_no}" data-pay_price="{$vos.refund_money}" data-pay_way_name="{$vo.pay_way_name}" data-order_id="{$vos.id}" >换货完成</a>
+														<!--<a href="javascript:;" class="btn btn-mini btn-success" onclick="J_refund_syn(this)"   data-return_order_syn="{$vos.refund_refund_order_syn}" data-refund_express_company="{$vos.refund_express_company}" data-refund_express_ma="{$vos.refund_express_ma}">查看物流单号</a>-->
+														<a href="javascript:;" style="text-align:center;">状态:换货申请已同意</a>
+														{/if}
+														{/case}
+														{/switch}
+														{/foreach}
+													</td>
+													<td>
+														<p><b>商品总金额：</b>￥{$vo.total_price} </p>
+														<p><b>支付费用：</b>￥{$vo.pay_price}</p>
+														<p><b>支付时间：</b>{$vo.pay_time} </p>
+														<p><b>总计费用：</b>￥{$vo.total_fee} </p>
+													</td>
+													<td>
+														<p><b>主订单号：</b>{$vo.only_order_no} </p>
+														<p><b>子订单号：</b>{$vo.order_no} </p>
+														<b>订单来源：</b>
+														{if condition="$vo.source eq 0"} 小程序
+														{elseif condition="$vo.source eq 1"} APP端
+														{elseif condition="$vo.source eq 2"/} PC端
+														{elseif condition="$vo.source eq 3"/} 手机端
+														{else/} 未知来源
+														{/if}</p>
+														<p><b>订单类型：</b>
+															{if condition="$vo.type eq 1"} 积分订单
+															{elseif condition="$vo.type eq 2"/} 团购订单
+															{elseif condition="$vo.type eq 0"/}普通订单
+															{else/} 未知
+															{/if}</p>
+														<p><b>支付方式：</b>
+															{if condition="$vo.pay_way eq 1"} 支付宝支付
+															{elseif condition="$vo.pay_way eq 2"/}微信支付
+															{elseif condition="$vo.pay_way eq 3"/}银联支付
+															{elseif condition="$vo.pay_way eq 4"/}线下支付
+															{elseif condition="$vo.pay_way eq 5"/}积分支付
+															{else/} 未知
+															{/if}
+														</p>
+													</td>
+													<td>
+														{$vo.order_status_desc}
+													</td>
+													<td>{$vo.order_time}<br>{$vo.update_time}</td>
+													<td>
+														<a href="{:url('Order/detail',array('order_id'=>$vo['id'],'user_id'=>$vo['user_id']))}" class="btn btn-primary btn-sm">查看详情</a><br/><br/>
+														{switch name="vo.order_status"}
+														{case value="2"}
+														<a href="javascript:void(0);" class="btn btn-primary btn-sm j-editClass" data-id="{$vo.id}">确认订单</a>
+<!--														<a href="javascript:void(0);" class="btn btn-primary btn-sm j-editClass" data-id="{$vo.id}">发货</a>-->
+														{/case}
+														{case value="11"}
+<!--														<a href="{:url('Order/detail',array('id'=>$vo['id']))}" class="btn btn-primary btn-sm">退款</a>-->
+														{/case}
+														{/switch}
+													</td>
+												</tr>
+												{/foreach}
+												{empty name="order_list"}
+												<tr><td colspan="10" style="text-align: center;">暂无数据</td></tr>
+												{/empty}
+												</tbody>
+											</table>
+											<div class="page">
+												{$order_list->render()}
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true" style="">
+		<div class="modal-dialog">
+			<div class="modal-content animated bounceInRight">
+				<div class="modal-header" style="padding: 10px 15px;">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+					</button>
+					<h5 class="model_tit">订单发货</h5>
+				</div>
+
+				<div class="modal-body modal-prodot-body">
+
+					<div class="model_body">
+						<div class="model_address">
+
+							<form class="form-horizontal">
+								<div class="form-group clearfix">
+									<label class="col-sm-2 control-label">备注</label>
+
+									<div class="col-sm-6">
+										<textarea type="text" class="form-control"  id="action_note1" cols="100" rows="4" style="text-align: left;resize:none;margin-bottom: 10px" ></textarea>
+									</div>
+								</div>
+
+								<div class="form-group clearfix">
+									<label class="col-sm-2 control-label">发货方式</label>
+									<div class="col-sm-6">
+										<label><input type="radio" class="form-control" name="sure_status" style="width: 14px" checked value="1">发货给仓库</label>
+										<label><input type="radio" class="form-control" name="sure_status" style="width: 14px" value="0">发货给用户</label>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" onclick ="return orderAction1()" >确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal inmodal" id="refusetuikuan" tabindex="-1" role="dialog" aria-hidden="true" style="">
+		<div class="modal-dialog">
+			<div class="modal-content animated bounceInRight">
+				<div class="modal-header" style="padding: 10px 15px;">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+					</button>
+					<h5 class="model_tit">订单发货</h5>
+				</div>
+
+				<div class="modal-body modal-prodot-body">
+
+					<div class="model_body">
+						<div class="model_address">
+
+							<form class="form-horizontal">
+								<div class="form-group clearfix">
+									<label class="col-sm-3 control-label"><span class="colorRed"></span>服务类型：</label>
+									<div class="col-sm-6" style="margin-top: 7px;"><span class="fi-help-text" id="refund_type"></span></div>
+								</div>
+								<div class="form-group clearfix">
+									<label class="col-sm-3 control-label"><span class="colorRed"></span>支付方式：</label>
+									<div class="col-sm-6" style="margin-top: 7px;"><span class="fi-help-text" id="rtk_pay_way_name"></span></div>
+								</div>
+
+								<div class="form-group clearfix" id="refund_hw_status_text" style="display:none;">
+									<label class="col-sm-3 control-label"><span class="colorRed"></span>是否收到货：</label>
+									<div class="col-sm-6" style="margin-top: 7px;">
+										<span class="fi-help-text" id="refund_hw_status"></span>
+									</div>
+								</div>
+
+								<div class="form-group clearfix" id="show_open_price">
+									<label class="col-sm-3 control-label"><span class="colorRed"></span>退款金额：</label>
+									<div class="col-sm-6" style="margin-top: 7px;"><span class="fi-help-text" id="rtk_pay_price"></span></div>
+								</div>
+
+								<div class="form-group clearfix">
+									<label class="col-sm-3 control-label"><span class="colorRed"></span>原因：</label>
+									<div class="col-sm-6" style="margin-top: 7px;">
+										<span class="fi-help-text" id="refund_reason">
+										</span>
+									</div>
+								</div>
+
+
+								<div class="form-group clearfix">
+									<label class="col-sm-3 control-label"><span class="colorRed"></span>原因说明：</label>
+									<div class="col-sm-6" style="margin-top: 7px;">
+										<span class="fi-help-text" id="refund_instructions">
+										</span>
+									</div>
+								</div>
+
+								<!--<div class="form-group clearfix">
+									<label class="col-sm-3 control-label"><span class="colorRed"></span>上传的图片：</label>
+									<div class="col-sm-6" style="margin-top: 7px;">
+										<span class="fi-help-text">
+
+										</span>
+									</div>
+								</div>-->
+
+								<div class="form-group clearfix">
+									<label class="col-sm-3 control-label"><span class="colorRed"></span>申请时间：</label>
+									<div class="col-sm-6" style="margin-top: 7px;">
+										<span class="fi-help-text" id="refund_add_time" style="margin-top: 7px;">
+										</span>
+									</div>
+								</div>
+
+								<div class="form-group clearfix">
+									<label class="col-sm-3 control-label"><span class="colorRed"></span>拒绝原因：</label>
+									<div class="col-sm-6" style="margin-top: 7px;">
+										<textarea rows="3" cols="40" style="padding: 5px" name="refuse_refund_reason"></textarea>
+										<span class="fi-help-text"></span>
+									</div>
+								</div>
+								<input type="hidden" value="" id="new_refuse_order_no" />
+								<input type="hidden" value="" id="new_refuse_order_id" />
+
+							</form>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="modal-footer">
+					<a href="javascript:;" class="btn btn-primary" onclick="J_refuse_refund_submit(this)">拒绝</a>
+					<a href="javascript:;" class="btn btn-primary" onclick="TY_refuse_refund_submit(this)" id="TY_refuse_refund_submit">同意</a>
+					<!--					<button type="button" class="btn btn-primary sendExpress">确定</button>-->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal inmodal" id="tuikuan" tabindex="-1" role="dialog" aria-hidden="true" style="">
+		<div class="modal-dialog">
+			<div class="modal-content animated bounceInRight">
+				<div class="modal-header" style="padding: 10px 15px;">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+					</button>
+					<h5 class="model_tit">退款</h5>
+				</div>
+
+				<div class="modal-body modal-prodot-body">
+
+					<div class="model_body">
+						<div class="model_address">
+
+							<form class="form-horizontal">
+
+								<div class="form-group clearfix">
+									<label class="col-sm-3 control-label"><span class="colorRed"></span>订单编号：</label>
+									<div class="col-sm-6" style="margin-top: 7px;"><span class="fi-help-text" id="tk_order_no"></span></div>
+								</div>
+								<div class="form-group clearfix">
+									<label class="col-sm-3 control-label"><span class="colorRed"></span>支付方式：</label>
+									<div class="col-sm-6" style="margin-top: 7px;"><span class="fi-help-text" id="tk_pay_way_name"></span></div>
+								</div>
+
+
+								<div class="form-group clearfix" id="show_open_price">
+									<label class="col-sm-3 control-label"><span class="colorRed"></span>支付金额：</label>
+									<div class="col-sm-6" style="margin-top: 7px;"><span class="fi-help-text" id="tk_pay_price"></span></div>
+								</div>
+
+								<div class="form-group clearfix">
+									<label class="col-sm-3 control-label"><span class="colorRed"></span>退款金额：</label>
+									<div class="col-sm-6" style="margin-top: 7px;">
+										<input type="text" value="" class="input" name="refund_money"
+											   id="xstk"
+											   maxlength="10"
+											   onkeyup="this.value=this.value.replace(/[^\d\.]+/g,'')"
+											   onblur="this.value=this.value.replace(/(\.\d{2})\d*$/,'\$1')">
+									</div>
+								</div>
+
+							</form>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="modal-footer">
+					<input type="hidden" value="" id="tk_order_id" />
+					<a href="javascript:;" class="btn btn-primary" onclick="J_Submit_refund(this)">退款</a>
+					<!--					<button type="button" class="btn btn-primary sendExpress">确定</button>-->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="home_url/js/jquery.min.js"></script>
+<script src="home_url/js/bootstrap.min.js"></script>
+<script src="home_url/js/plugins/peity/jquery.peity.min.js"></script>
+<script src="home_url/js/content.min.js"></script>
+<script src="home_url/js/plugins/iCheck/icheck.min.js"></script>
+<script src="home_url/js/peity-demo.min.js"></script>
+<script src="home_url/js/plugins/layer/laydate/laydate.js"></script>
+<script>
+	$(document).ready(function () {
+		var start = {
+			elem: "#start",
+			format: "YYYY-MM-DD",
+			max: laydate.now(),
+			min: "2000-01-01",
+			istime: true,
+			istoday: false,
+			choose: function (datas) {
+				end.min = datas;
+				end.start = datas
+			}
+		};
+		var end = {
+			elem: "#end",
+			format: "YYYY-MM-DD",
+			// max: laydate.now(),
+			// min: laydate.now(),
+			istime: true,
+			istoday: false,
+			choose: function (datas) {
+			}
+		};
+		laydate(start);
+		laydate(end);
+
+		$(".checkbox").on('click', function (event) {
+			var i = 1;
+			$(".checkbox").each(function(){
+				if(true != $(this).is(':checked')){
+					i = 0;
+				}
+			});
+			if (i == 1) {
+				$('td.pro_lasttd input').prop('checked', true);
+			} else {
+				$('td.pro_lasttd input').prop('checked', false);
+			}
+		});
+		$('td.pro_lasttd input').on('click', function(event){
+			if(true == $(this).is(':checked')){
+				$('.checkbox').prop('checked', true);
+			} else {
+				$('.checkbox').prop('checked', false);
+			}
+		});
+	});
+
+
+	//$('.editfenlei').hide();
+	var id ='';
+	//处理
+	$(".j-editClass").click(function(){
+		$("#wuliu_nums").val("");
+		//$('#wuliu_name').empty();
+		id = $(this).attr("data-id");
+		$('#myModal2').show();
+		//$('#albums-overlay').show();
+	});
+
+
+	function orderAction1() {
+		var action_note = $('#action_note1').val();
+		if (!action_note) {
+			alert('请填写备注');
+			return false;
+		}
+		var order_id = id;
+		var sure_status = $('input[name="sure_status"]:checked').val();
+		$.ajax({
+			type: "POST",
+			url: "{:url('Order/sureStatus')}",
+			data: {
+				sure_status:sure_status,
+				action_note:action_note,
+				order_id:order_id,
+			},
+			dataType: "json",
+			success: function(g){
+				if(g.status==1){
+					alert(g.msg);
+					setTimeout(function(){
+						window.location.href = g.url;
+					},500);
+				}else{
+					alert(g.msg);
+				}
+			}
+		});
+	}
+	$(".close").click(function(){
+		//id = $(this).attr("data-id");
+		$('.inmodal').hide();
+		//$('#albums-overlay').show();
+	});
+	$('.sendExpress').click(function(){
+		var wuliu_name = $('#wuliu_name').val();
+		var wuliu_nums = $('#wuliu_nums').val();
+
+		if(wuliu_name == 0){
+			alert('请选择物流!');
+			return false;
+		}
+
+		if(wuliu_nums == ''){
+			alert('物流单号为空!');
+			return false;
+		}
+		//alert(id);
+		$.ajax({
+			type: "POST",
+			url: "{:url('Order/fahuo')}",
+			data: {
+				express_name:wuliu_name,
+				express_no:wuliu_nums,
+				id:id
+			},
+			dataType: "json",
+			success: function(g){
+				if(g.status==1){
+					alert(g.msg);
+					setTimeout(function(){
+						window.location.reload();
+					},1500);
+					//window.location.reload();
+				}else{
+					alert(g.msg);
+					setTimeout(function(){
+						window.location.reload();
+					},1500);
+					//window.location.reload();
+				}
+			}
+		});
+	});
+
+
+
+	/*拒绝退款 1*/
+	function J_refuse_refund(obj) {
+		var refund_type = $(obj).attr('data-refund_type');
+		var hw_status = $(obj).attr('data-hw_status');
+		if(refund_type == 1){
+			var refund_type_name = "退货退款";
+		}else if(refund_type == 2){
+			var refund_type_name = "仅退款";
+			$("#refund_hw_status_text").css("display","block");
+			$("#TY_refuse_refund_submit").css("display","none");
+			if(hw_status == 1){
+				$("#refund_hw_status").text("已收到")
+			}else{
+				$("#refund_hw_status").text("未收到")
+			}
+		}else if(refund_type == 3){
+			var refund_type_name = "换货";
+			$("#show_open_price").css("display","none");
+		}
+		$('#refund_type').text(refund_type_name);
+		$('#rtk_pay_way_name').text($(obj).attr('data-pay_way_name'));
+		$('#rtk_pay_price').text($(obj).attr('data-pay_price'));
+		$('#refund_reason').text($(obj).attr('data-refund_reason'));
+		$('#refund_instructions').text($(obj).attr('data-refund_instructionse'));
+		$('#refund_pic1').attr("src",$(obj).attr('data-refund_pic1'));
+		$('#refund_pic2').attr("src",$(obj).attr('data-refund_pic2'));
+		$('#refund_pic3').attr("src",$(obj).attr('data-refund_pic3'));
+		$('#refund_pic4').attr("src",$(obj).attr('data-refund_pic4'));
+		$('#refund_pic5').attr("src",$(obj).attr('data-refund_pic5'));
+		$('#refund_add_time').text($(obj).attr('data-refund_add_time'));
+		$('#new_refuse_order_no').val($(obj).attr('data-order_no'));
+		$('#new_refuse_order_id').val($(obj).attr('data-order_id'));
+		$('#albums-overlay').show();
+		$('#refusetuikuan').show();
+	}
+
+	/*提交拒绝退款 1*/
+	function J_refuse_refund_submit(obj) {
+		var post = {};
+		post.order_no = $('#rtk_order_no').text();        //订单号
+		post.refuse_refund_reason = $("textarea[name=refuse_refund_reason]").val();        //订单号
+		if (!post.refuse_refund_reason) {
+			dialog.showTips('请填写拒绝退款理由', "warn");
+			return false;
+		}
+		dialog.showTips("确认拒绝退款吗?", "firm", function () {
+			$.post("{:url('Order/refuse_refund')}", post, function (result) {
+				dialog.showTips(result.msg, "", '1');
+				return false;
+			}, "json")
+		})
+	}
+	/*提交拒绝退款 2*/
+
+
+
+	/*线上退款 1*/
+	function J_refund(obj){
+		$('#tk_order_no').text($(obj).attr('data-order_no'));
+		$('#tk_pay_way_name').text($(obj).attr('data-pay_way_name'));
+		$('#tk_pay_price').text($(obj).attr('data-pay_price'));
+		$("#xstk").val($(obj).attr('data-pay_price'));
+		$("#tk_order_id").val($(obj).attr('data-order_id'));
+		$('#albums-overlay').show();
+		$('#tuikuan').show();
+	}
+	/*线上退款 2*/
+
+	/*提交线上退款 1*/
+	function J_Submit_refund(obj) {
+		var post={};
+		post.pay_price       = parseFloat($("#tk_pay_price").text());
+		post.refund_money    = parseFloat($("input[name=refund_money]").val());
+		post.order_no        = $('#tk_order_no').text();
+		post.refund_order_id    = $("#tk_order_id").val();
+		/*post.refund_password        = $('input[name=refund_password]').val();
+		if (!post.refund_password) {
+			dialog.showTips('请填写操作密码', "warn");
+			return false;
+		}*/
+		if (!post.refund_money) {
+			dialog.showTips('请填写退款金额', "warn");
+			return false;
+		}
+		if (post.refund_money > post.pay_price) {
+			dialog.showTips('退款金额不能大于支付金额', "warn");
+			return false;
+		}
+		dialog.showTips("确认退款吗?", "firm", function () {
+			$.post("{:url('Order/orderRefund')}", post, function (result) {
+				dialog.showTips(result.msg, "", '1');
+				return false;
+			}, "json")
+		})
+
+	}
+	/*提交线上退款 2*/
+
+	function J_refund_syn(obj){
+		var refund_order_syn = $(obj).attr('data-return_order_syn');
+		var refund_express_company = $(obj).attr('data-refund_express_company');
+		var refund_express_ma = $(obj).attr('data-refund_express_ma');
+		$('#refund_order_syn').text(refund_order_syn);
+		$('#refund_express_company').text(refund_express_company);
+		if (refund_order_syn && refund_express_company) {
+			$.post("{:url('Order/index')}", {refund_order_syn:refund_order_syn,refund_express_ma:refund_express_ma}, function (result) {
+				if (result[0] == 1) {
+					var html = '';
+					$.each(result[1],function(key, val){
+						html += '<div class="infor1 ">\n' +
+								'<div class="infor1_bodd">\n' +
+								'<h5>'+ val.context +'</h5>\n' +
+								'<p>'+ val.time +'</p>\n' +
+								'</div>\n' +
+								'<div class="infor1_on"></div>\n' +
+								'</div>';
+					});
+					$('#exp_wul').html(html);
+				}
+			}, "json");
+		}
+		$('#albums-overlay').show();
+		$('#refusesyn').show();
+
+	}
+
+
+	/*换货完成*/
+	function HH_refuse_submit(obj) {
+		var post = {};
+		post.order_id = $(obj).attr('data-order_id');
+		post.order_no = $(obj).attr('data-order_no');
+		dialog.showTips("确认完成吗?", "firm", function () {
+			$.post("{:url('Order/refund_consent_wc')}", post, function (result) {
+				dialog.showTips(result.msg, "", '1');
+				return false;
+			}, "json")
+		})
+	}
+	/*提交同意 1*/
+	function TY_refuse_refund_submit(obj) {
+		var post = {};
+		post.order_id = $('#new_refuse_order_id').val();
+		post.order_no = $('#new_refuse_order_no').val();
+		dialog.showTips("确认同意吗?", "firm", function () {
+			$.post("{:url('Order/refuse_refund_consent')}", post, function (result) {
+				dialog.showTips(result.msg, "", '1');
+				return false;
+			}, "json")
+		})
+	}
+
+	function exportOrder () {
+		var url = "{:url('Order/outexcel')}?status={$status}";
+		var name = $('#exampleInputEmail2').val();
+		var order_no = $('#exampleInputPassword2').val();
+		var starttime = $('#start').val();
+		var endtime = $('end').val();
+		if (name) {
+			url += "&name="+name;
+		}
+		if (order_no) {
+			url += "&order_no="+order_no;
+		}
+		if (starttime) {
+			url += "&starttime="+starttime;
+		}
+		if (endtime) {
+			url += "&endtime="+endtime;
+		}
+		window.location.href = url;
+
+	}
+</script>
+</body>
+</html>

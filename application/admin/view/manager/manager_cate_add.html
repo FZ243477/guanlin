@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{:getSetting('system.title')}</title>
+    <link href="home_url/css/bootstrap.min.css" rel="stylesheet">
+    <link href="home_url/css/font-awesome.css-v=4.4.0.css" rel="stylesheet">
+    <link href="home_url/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="home_url/css/style.min.css" rel="stylesheet">
+    <style>
+        ul.group-list {
+            width: 96%;min-width: 1000px; margin: auto 5px;list-style: disc outside none;
+        }
+        ul.group-list li {
+            white-space: nowrap;float: left;
+            width: 150px; height: 25px;
+            padding: 3px 5px;list-style-type: none;
+            list-style-position: outside;border: 0px;
+            margin-right: 10px;
+        }
+        th.title {
+            background: #F3F3F3;border-bottom: 1px solid #D7D7D7;font-weight: bold; white-space: nowrap;
+        }
+    </style>
+</head>
+{include file="base:base" /}
+<body class="gray-bg">
+<div id="app" v-cloak>
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5 v-if='list.id'>修改角色信息</h5>
+                        <h5 v-else>添加角色信息</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form action="" id="roleform" method="post">
+                            <input type="hidden" name="id" v-if='list.id' :value="list.id" />
+                            <input type="hidden" name="id" v-else value="" />
+                            <table class="table table-bordered table-striped">
+                                <tr>
+                                    <th>角色名称:</th>
+                                    <td>
+                                        <div class="col-xs-6">
+                                            <input type="text" class="form-control" name="data[manager_cate_name]" v-if='list.manager_cate_name' :value="list.manager_cate_name">
+                                            <input type="text" class="form-control" name="data[manager_cate_name]" v-else value="">
+                                        </div>
+                                    </td>
+                                    <th >角色描述:</th>
+                                    <td>
+                                        <div class="col-xs-6">
+                                            <input type="text" class="form-control" name="data[manager_cate_desc]" v-if='list.manager_cate_name' :value="list.manager_cate_desc">
+                                            <input type="text" class="form-control" name="data[manager_cate_desc]" v-else value="">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <h4 v-if="list.id != 1"><b>权限分配：</b>
+                                <input type="checkbox" @click="choosebox" v-if="is_all_true == 1" checked>
+                                <input type="checkbox" @click="choosebox" v-else>全选
+                            </h4>
+
+                            <table class="table table-bordered table-striped dataTable">
+
+                                <tbody v-if="list.id != 1" v-for="(vo, kk) in modules">
+
+                                <tr >
+                                    <td class="title left" style="padding-right:50px;">
+                                        <b>{{group[kk]['name']}}：</b>
+                                        <label class="right" v-if="vo.all_checked == 1"><input type="checkbox" @click="cka_select" value="1" :cka="'mod-'+kk"  checked>全选</label>
+                                        <label class="right" v-else><input type="checkbox" @click="cka_select" value="1" :cka="'mod-'+kk" >全选</label>
+                                    </td>
+                                </tr>
+                                <tr >
+                                    <td>
+                                        <ul class="group-list">
+                                            <li v-for="vv in vo.right_list">
+                                                <label >
+                                                    <input type="checkbox" v-if="vv.enable == 1" checked  name="right[]" :value="vv.id"  :ck="'mod-'+kk">{{vv.name}}
+                                                    <input type="checkbox" v-else name="right[]" :value="vv.id"  :ck="'mod-'+kk">{{vv.name}}
+                                                </label>
+                                            </li>
+                                            <div class="clear-both"></div>
+                                        </ul>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                                <tfoot>
+                                <tr align="center">
+                                    <td><input class="btn btn-default" type="reset" value="重置">&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input class="btn btn-primary save" type="button" @click="save_right" value="提交">
+                                    </td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="home_url/js/jquery.min.js"></script>
+<script src="home_url/js/bootstrap.min.js"></script>
+<script src="home_url/js/plugins/peity/jquery.peity.min.js"></script>
+<script src="home_url/js/content.min.js"></script>
+<script src="home_url/js/plugins/iCheck/icheck.min.js"></script>
+<script src="home_url/js/peity-demo.min.js"></script>
+
+<script src="home_url/js/vue/vue.min.js"></script>
+<script>
+    let Url = window.location.protocol + '//' + window.location.host + '/admin';
+    let s = window.location.href;
+    let arr = s.split('manager_id/');
+    let manager_id = arr[1];
+    let app = new Vue({
+        el: '#app',
+        data: {
+            list: [],
+            group:[],
+            modules:[],
+            groupSelected:0,
+            admin_url:'',
+            is_all_true:'',
+        },
+        created: function(){ //获得初始数据
+            let $_this = this;
+            let post = {
+                manager_id: manager_id,
+            };
+            $_this.admin_url = Url;
+            // $_this.msgListView($_this.list1P.pageNo)
+            // $_this.msgListView1($_this.list2P.pageNo)
+            $.ajax({
+                type: "POST",
+                url: Url + '/Manager/managerCateAdd',
+                data:post,
+                dataType: 'json',
+                success: function(data) {
+                    $_this.list = data.data.list;
+                    $_this.group = data.data.group;
+                    $_this.modules = data.data.modules;
+                    $_this.is_all_true = data.data.is_all_true;
+                    $_this.$nextTick(function () {
+                        if ($_this.list.group) {
+                            $_this.groupSelected = $_this.list.group;
+
+                        }
+                    })
+                }
+            })
+        },
+        mounted: function(){
+            // 如在这里开始渲染地图!!! initMap()
+        },
+        methods: {
+            choosebox: function (e){
+                let _this =  e.currentTarget;
+                let vt = $(_this).is(':checked');
+                if(vt){
+                    $('input[type=checkbox]').prop('checked',vt);
+                }else{
+                    $('input[type=checkbox]').removeAttr('checked');
+                }
+            },
+            cka_select: function(e){
+                let _this =  e.currentTarget;
+                let cks = $(":checkbox[ck='"+$(_this).attr("cka")+"']");
+                if($(_this).is(':checked')){
+                    cks.each(function(){$(this).prop("checked",true);});
+                }else{
+                    cks.each(function(){$(this).removeAttr('checked');});
+                }
+            },
+            save_right: function () {
+
+                let post = $('#roleform').serializeArray();
+                let name = $('input[name="data[manager_cate_name]"]').val();
+                if (!name) {
+                    alert('角色名称不能为空');
+                    return false;
+                }
+                $.ajax({
+                    url: Url + '/Manager/managerCateHandle',
+                    type: "post",
+                    dataType: "json",
+                    data: post,
+                    success:function(data){
+                        if (data.status == 1) {
+                            dialog.showTips(data.msg,"","{:url('Manager/managerCateList')}");
+                        } else {
+                            alert(data.msg);
+                        }
+                    }
+                });
+
+            },
+
+        }
+    })
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{:getSetting('system.title')} </title>
+
+    <link href="home_url/css/bootstrap.min.css" rel="stylesheet">
+    <link href="home_url/css/font-awesome.css-v=4.4.0.css" rel="stylesheet">
+    <link href="home_url/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="home_url/css/style.min.css" rel="stylesheet">
+
+    <!--编辑器 1-->
+    <script type="text/javascript" charset="utf-8" src="home_url/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="home_url/ueditor/ueditor.all.js"></script>
+    <script type="text/javascript" charset="utf-8" src="home_url/ueditor/lang/zh-cn/zh-cn.js"></script>
+    <!--编辑器 2-->
+    <style>
+        .contact_mobile_div {
+            position: relative;
+        }
+
+        .goods_logo {
+            width: 80px;
+        }
+
+        .contact_mobile_div a {
+            position: relative;
+            top: -34px;
+            left: 33%;
+        }
+
+        .div_content li, .div_content label, .div_content a {
+            padding: 0px 8px 0px 8px;
+        }
+
+        table#sku_table {
+            font-size: 11px;
+            color: #333333;
+            border-width: 1px;
+            border-color: #666666;
+            border-collapse: collapse;
+        }
+
+        table#sku_table th {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #dedede;
+        }
+
+        table#sku_table td {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #ffffff;
+        }
+
+        .goods_detail_banner em {
+            right: -13px !important;
+        }
+    </style>
+</head>
+{include file="base:base" /}
+<body class="gray-bg">
+<div id="app" v-cloak>
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5 v-if="list">修改商品信息</h5>
+                        <h5 v-else>添加商品信息</h5>
+                    </div>
+
+                    <div class="ibox-content" style="padding: 15px 20px 55px;">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="javascript:void(0);" class="tab_tongyong">通用信息</a>
+                            </li>
+                            <!-- <li><a href="#tab_goods_desc" data-toggle="tab">描述信息</a></li>-->
+                            <li class=""><a href="javascript:void(0);" class="tab_goods_images">商品相册</a>
+                            </li>
+                            <li class=""><a href="javascript:void(0);" class="tab_goods_param">商品参数</a>
+                            </li>
+                            <li class=""><a href="javascript:void(0);" class="tab_goods_spec">商品规格</a></li>
+
+                        </ul>
+
+                        <form enctype="multipart/form-data" method="post" id="add_step" class="form-horizontal">
+                            <div class="tab-content" style="">
+                                <div class="tab-pane active" id="tab_tongyong" style="">
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;">*</b>排序：</label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control sort" name="sort"
+                                                   onKeyUp="this.value=this.value.replace(/\D/g,'')" style="width:60%"
+                                                   v-model="list.sorts" :value="list.sorts?list.sorts:9999">
+                                            <span class="fi-help-text">数字越大，排名越靠前,如果为0，默认排序方式为创建时间</span>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                   <!-- <div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"><b
+                                                    style="color:red;">*</b>选择供应商：</label>
+
+                                            <div class="col-sm-9">
+                                                <select class="form-control" name="store_id" style="width:60%"
+                                                        v-model="list.store_id">
+                                                    <option value="0">-请选择供应商-</option>
+                                                    <option v-for="(vo, index) in store" :value="vo.id">
+                                                        {{vo.store_name}}
+                                                    </option>
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                        <div class="hr-line-dashed"></div>
+                                    </div>-->
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;">*</b>商品分类：</label>
+
+                                        <div class="col-sm-9">
+                                            <select class="form-control" name="cate_id" style="width:60%"
+                                                    v-model="cate_selected" @change="goods_cate_list(1)">
+                                                <option value="">-请选择商品分类-</option>
+
+                                                <option v-for="(vo, index) in goods_cate" :value="vo.id">
+                                                    {{vo.classname}}
+                                                </option>
+
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;"></b></label>
+
+                                        <div class="col-sm-9">
+                                            <select class="form-control" name="cate_two_id" style="width:60%"
+                                                    v-model="cate_selected1" @change="goods_cate_list(2)">
+                                                <option value="">-请选择商品分类-</option>
+
+                                                <option v-for="vo in goods_two" :value="vo.id">{{vo.classname}}</option>
+
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;"></b></label>
+
+                                        <div class="col-sm-9">
+                                            <select class="form-control" name="cate_three_id" style="width:60%"
+                                                    v-model="cate_selected2">
+                                                <option value="">-请选择商品分类-</option>
+
+                                                <option v-for="vo in goods_tree" :value="vo.id">{{vo.classname}}
+                                                </option>
+
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;">*</b>品牌系列：</label>
+
+                                        <div class="col-sm-9">
+                                            <select class="form-control" name="brand_id" style="width:60%"
+                                                    v-model="brand_selected" @change="goods_brand_list">
+                                                <option value="">-请选择商品品牌-</option>
+
+                                                <option v-for="(vo, index) in goods_brand" :value="vo.id">
+                                                    {{vo.classname}}
+                                                </option>
+
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;"></b></label>
+
+                                        <div class="col-sm-9">
+                                            <select class="form-control" name="brand_two_id" style="width:60%"
+                                                    v-model="brand_selected1">
+                                                <option value="">-请选择商品系列-</option>
+
+                                                <option v-for="vo in brand_two" :value="vo.id">{{vo.classname}}</option>
+
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;">*</b>商品编码：</label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" v-model="list.goods_code"
+                                                   name="goods_code" style="width:60%" :value="list.goods_code">
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;">*</b>商品名称：</label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" v-model="list.goods_name"
+                                                   name="goods_name" style="width:60%" :value="list.goods_name">
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;">*</b>商品简介：</label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" v-model="list.goods_desc"
+                                                   name="goods_desc" style="width:60%" :value="list.goods_desc">
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;"></b>商品关键词：</label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control goods_name"
+                                                   v-model="list.goods_keywords" name="goods_keywords" style="width:60%"
+                                                   :value="list.goods_keywords">
+                                            <span class="fi-help-text">商品关键词（| 分割）</span>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;">*</b>发货地：</label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" name="product" v-model="list.product" style="width:60%" :value="list.product">
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><span
+                                                style="color:red;">*</span>上架：</label>
+                                        <div class="col-sm-9">
+                                            <label><input type="radio" name="is_sale" v-model="list.is_sale" value="0">否</label>
+                                            <label><input type="radio" name="is_sale" v-model="list.is_sale" value="1">是</label>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;">*</b>服务承诺：</label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control goods_name" v-model="list.service"
+                                                   name="service" style="width:60%"
+                                                   :value="list.service?list.service:'付款后7-15天内发货，物流周期7-12天。 长途运输+同城配送+步梯≤3楼免费搬楼（电梯入户免费搬楼） +安装（拆包/拼接等）'">
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group" v-if="is_cost_price == 1">
+                                        <label class="col-sm-2 control-label"><b
+                                                style="color:red;"></b>供货价(含税金)：</label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" name="cost_price"
+                                                   v-model="list.cost_price" style="width:60%" :value="list.cost_price" oninput="checkNum(this)" >
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;">*</b>价格：</label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" name="price"
+                                                   oninput="checkNum(this)" v-model="list.price" style="width:60%"
+                                                   :value="list.price">
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;">*</b>库存：</label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control"
+                                                   oninput="value=value.replace(/[^\d]/g,'')" maxlength="10"
+                                                   name="stores" v-model="list.stores" style="width:60%"
+                                                   :value="list.stores">
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="pull-left">
+                                        <a href="javascript:void(0);"   class="btn btn-white tab_goods_images" >下一步</a>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tab_goods_images" style="">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style='color:red;'>*</b>列表图：</label>
+                                        <div class="col-sm-9">
+                                            <div class="col-sm-9">
+                                                <div class="info_head">
+                                                    <input type="file"
+                                                           class="file xuanze"
+                                                           name="upload_pic"
+                                                           style="position: absolute;z-index: 999;opacity: 0;width: 80px;height: 80px;cursor: pointer;"
+                                                           accept="image/jpg,image/jpeg,image/png"
+                                                           data-name="goods_logo"
+                                                           data-type="single">
+                                                    <img class='goods_logo' src="home_url/images/addimg.png"/>
+                                                    <div class="xuanze_showimge mgr10" data-nums='15'
+                                                         style="position:relative;">
+
+                                                        <div style='float:left;position:relative;height: 100px;width: 100px;'
+                                                             v-if="list.goods_logo">
+                                                            <img :src="list.goods_logo"
+                                                                 style="height:100px;width: 100px;" v-if="hashDetail"
+                                                                 :class="isChoose.goods_logo[0]==1?'active':''"
+                                                                 @click="imgScc('goods_logo', 0)">
+                                                            <input type="hidden" name="goods_logo"
+                                                                   v-model="list.goods_logo" class="goods_logo"
+                                                                   :value="list.goods_logo">
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="xuanze_progress fl mgr15" style="display:none">
+                                                    <img src="home_url/images/loadings.gif"
+                                                         style="width: 30px;height: 30px;"/>
+                                                    <span class="xuanze_percent">80%</span>
+                                                </div>
+                                                <div style="clear: both;"></div>
+                                                <span class="help-block m-b-none" style="color:red">宽：400 高：400</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style='color:red;'>*</b>上传主图：</label>
+                                        <div class="col-sm-9">
+                                            <div class="col-sm-9">
+                                                <div class="info_heads">
+                                                    <input type="file"
+                                                           class="file xuanze"
+                                                           name="upload_pic[]"
+                                                           multiple="multiple"
+                                                           style="position: absolute;z-index: 999;opacity: 0;width: 80px;height: 80px;cursor: pointer;"
+                                                           accept="image/jpg,image/jpeg,image/png"
+                                                           data-name="goods_banner_pic"
+                                                           data-type="multiple">
+                                                    <img class='goods_logo' src="home_url/images/addimg.png"/>
+
+                                                    <transition-group tag="div" class="multi-img-details">
+                                                        <div class="item goods_imgs"
+                                                             v-for="(item,index) in list.goods_big_banner"
+                                                             v-if="hashPic && index !=0" :key="index"
+                                                             style="width:80px;height:80px"
+                                                             draggable="true"
+                                                             @dragstart="handleDragStart($event, item, 'goods_big_banner')"
+                                                             @dragover.prevent="handleDragOver($event, item, 'goods_big_banner')"
+                                                             @dragenter="handleDragEnter($event, item, 'goods_big_banner')"
+                                                             @dragend="handleDragEnd($event, item, 'goods_big_banner')">
+                                                            <img :src="item" height="200" style="height: 200px"
+                                                                 v-if="hashDetail"
+                                                                 :class="isChoose.goods_big_banner[index]==1?'active':''"
+                                                                 @click="imgScc('goods_big_banner', index)">
+                                                            <input type="hidden" name="goods_banner_pic[]"
+                                                                   v-model="list.goods_big_banner[index]"
+                                                                   class="goods_banner_pic" :value="item">
+                                                            <em class="close" title="移除这张图片"
+                                                                onclick="delImgs(this)">×</em>
+                                                        </div>
+                                                    </transition-group>
+                                                    　
+
+
+                                                </div>
+                                                <div class="xuanze_progress fl mgr15" style="display:none">
+                                                    <img src="home_url/images/loadings.gif"
+                                                         style="width: 30px;height: 30px;"/>
+                                                    <span class="xuanze_percent">80%</span>
+                                                </div>
+                                                <div style="clear: both;"></div>
+                                                <span class="help-block m-b-none" style="color:red">
+                                   宽：800 高：800
+                                    </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group goods_detail_banner">
+                                        <label class="col-sm-2 control-label"><b style='color:red;'>*</b>商品详情图片：</label>
+                                        <div class="col-sm-9">
+                                            <div class="col-sm-9">
+                                                <div class="info_heads">
+                                                    <input type="file"
+                                                           class="file xuanze"
+                                                           multiple="multiple"
+                                                           name="upload_pic[]"
+                                                           style="position: absolute;z-index: 999;opacity: 0;width: 80px;height: 80px;cursor: pointer;"
+                                                           accept="image/jpg,image/jpeg,image/png"
+                                                           data-name="goods_detail_pic"
+                                                           data-type="multiple">
+                                                    <img class='goods_logo' src="home_url/images/addimg.png"/>
+
+                                                    <transition-group tag="div" class="multi-img-details">
+                                                        <div class="item goods_imgs"
+                                                             v-for="(item,index) in list.goods_detail_pic"
+                                                             v-if="hashPic && index !=0" :key="index"
+                                                             style="min-width:200px;height: 100%;"
+                                                             draggable="true"
+                                                             @dragstart="handleDragStart($event, item, 'goods_detail_pic')"
+                                                             @dragover.prevent="handleDragOver($event, item, 'goods_detail_pic')"
+                                                             @dragenter="handleDragEnter($event, item, 'goods_detail_pic')"
+                                                             @dragend="handleDragEnd($event, item, 'goods_detail_pic')">
+                                                            <img :src="item" class="mgr10 mgt10 "
+                                                                 style="min-width:200px;height: 100%;" v-if="hashDetail"
+                                                                 :class="isChoose.goods_detail_pic[index]==1?'active':''"
+                                                                 @click="imgScc('goods_detail_pic', index)">
+                                                            <input type="hidden" name="goods_detail_pic[]"
+                                                                   v-model="list.goods_detail_pic[index]"
+                                                                   class="goods_detail_pic" :value="item">
+                                                            <em class="close" title="移除这张图片"
+                                                                onclick="delImgs(this)">×</em>
+                                                        </div>
+                                                    </transition-group>
+                                                    　
+                                                </div>
+                                                <div class="xuanze_progress fl mgr15" style="display:none">
+                                                    <img src="home_url/images/loadings.gif"
+                                                         style="width: 30px;height: 30px;"/>
+                                                    <span class="xuanze_percent">80%</span>
+                                                </div>
+                                                <div style="clear: both;"></div>
+                                                <span class="help-block m-b-none" style="color:red">
+                                   宽：1920 高：720
+                                    </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="pull-left">
+                                        <a href="javascript:void(0);"   class="btn btn-white tab_tongyong">上一步</a>
+                                        <a href="javascript:void(0);"   class="btn btn-white tab_goods_param">下一步</a>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tab_goods_param" style="">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;">*</b>添加参数：</label>
+                                        <div class="col-sm-9">
+                                            <a href="javascript:void(0)" class="btn btn-primary"
+                                               onclick="J_add_param(this)"><i class="fa fa-plus"></i>参数</a>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style='color:red;'>*</b>
+                                            商品参数：
+                                        </label>
+
+                                        <div class="col-sm-9">
+                                            <table id="goodsparamtable" style='width: 80%;'>
+                                                <tr>
+                                                    <th>
+                                                        <div class="col-sm-6">参数</div>
+                                                    </th>
+                                                    <th style='margin-left: 20px;'>
+                                                        <div class="col-sm-4">内容</div>
+                                                    </th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+
+                                                <tr id='param_list' v-if="list.goods_param == ''">
+                                                    <td style='width: 10%;padding-top: 10px;'><input type="text"
+                                                                                                     class="form-control"
+                                                                                                     name="param_name[]"
+                                                                                                     value=""/></td>
+                                                    <td style='width: 10%;padding-top: 10px;'><input
+                                                            style='margin-left: 20px;' type="text" class="form-control"
+                                                            name="param_val[]" value=""/></td>
+                                                    <td style='width: 2%;padding-top: 10px;'><span
+                                                            class="thisparam gicon-remove" onclick="J_del_param(this)"
+                                                            title='删除'
+                                                            style="padding-top:2px;cursor:pointer;margin-left: 80%;">×</span>
+                                                    </td>
+                                                    <td style='width: 2%;padding-top: 10px;'><span
+                                                            class="thisparam gicon-arrow-up" onclick="J_up_param(this)"
+                                                            title='上移'
+                                                            style="padding-top:2px;cursor:pointer;margin-left: 40%;">↑</span>
+                                                    </td>
+                                                    <td style='width: 2%;padding-top: 10px;'><span
+                                                            class="thisparam gicon-arrow-down"
+                                                            onclick="J_down_param(this)" title='下移'
+                                                            style="padding-top:2px;cursor:pointer;">↓</span></td>
+                                                </tr>
+                                                <tr id='param_list' v-for="(vo, key) in list.goods_param">
+                                                    <td style='width: 10%;padding-top: 10px;'><input type="text"
+                                                                                                     class="form-control"
+                                                                                                     v-model="list.goods_param[key].param_name"
+                                                                                                     name="param_name[]"
+                                                                                                     :value="vo.param_name"/>
+                                                    </td>
+                                                    <td style='width: 10%;padding-top: 10px;'><input
+                                                            style='margin-left: 20px;'
+                                                            v-model="list.goods_param[key].param_val" type="text"
+                                                            class="form-control" name="param_val[]"
+                                                            :value="vo.param_val"/></td>
+                                                    <td style='width: 2%;padding-top: 10px;'><span
+                                                            class="thisparam gicon-remove" onclick="J_del_param(this)"
+                                                            title='删除'
+                                                            style="padding-top:2px;cursor:pointer;margin-left: 80%;">×</span>
+                                                    </td>
+                                                    <td style='width: 2%;padding-top: 10px;'><span
+                                                            class="thisparam gicon-arrow-up" onclick="J_up_param(this)"
+                                                            title='上移'
+                                                            style="padding-top:2px;cursor:pointer;margin-left: 40%;">↑</span>
+                                                    </td>
+                                                    <td style='width: 2%;padding-top: 10px;'><span
+                                                            class="thisparam gicon-arrow-down"
+                                                            onclick="J_down_param(this)" title='下移'
+                                                            style="padding-top:2px;cursor:pointer;">↓</span></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+                                        <!-- <div>
+                                            <a href="javascript:void(0)" class="btn btn-primary btn-mini" onclick="J_add_param(this)" title="添加"><i class="gicon-plus white"></i></a>
+                                        </div> -->
+                                    </div>
+                                    <div class="pull-left">
+                                        <a href="javascript:void(0);"   class="btn btn-white tab_goods_images">上一步</a>
+                                        <a href="javascript:void(0);"   class="btn btn-white tab_goods_spec">下一步</a>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tab_goods_spec" style="">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style='color:red;'>*</b>启用多规格：</label>
+
+                                        <div class="col-sm-9">
+                                            <div class="radio i-checks sku_select">
+                                                <label class="is_sku">
+                                                    <input type="radio" name="is_sku" value="1" v-model="list.is_sku"
+                                                           onclick="$('.sku_select_list').show()">
+
+                                                    <i></i> 是
+                                                </label>
+                                                <label class="is_sku">
+                                                    <input type="radio" name="is_sku" value="0" v-model="list.is_sku"
+                                                           onclick="$('.sku_select_list').hide()">
+                                                    <i></i> 否
+                                                </label>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-1 control-label"></label>
+                                        <div class="col-sm-11">
+                                            <div class="row sku_select_list" :style="list.is_sku==0?'display:none':''">
+                                                <!-- ajax 返回规格-->
+                                                <div id="ajax_spec_data" class="col-xs-10"></div>
+                                                <!--<div id="" class="col-xs-4" style="border:1px solid #ddd;">
+                                                    <table class="table table-bordered" id="goods_attr_table">
+                                                        <tr>
+                                                            <td><b>商品属性</b>：</td>
+                                                        </tr>
+                                                    </table>
+                                                </div>-->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="pull-left">
+                                        <input type="hidden" name="id"  :value="list.id">
+                                        <a href="javascript:void(0);"  class="btn btn-white tab_goods_param">上一步</a>
+                                        <button class="btn btn-primary"  title="" data-toggle="tooltip" type="button" data-original-title="保存" @click="save">保存</button>
+                                    </div>
+
+                                    <!--<div class="form-group">
+                                        <div class="col-sm-4 col-sm-offset-2">
+                                            <input type="hidden" name="id"  :value="list.id">
+                                            <a href="javascript:history.back();" class="btn btn-white" type="submit">返回</a>
+                                            <a class="btn btn-primary save" href="javascript:void(0)" @click="save">保存</a>
+                                        </div>
+                                    -->
+
+                                </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="home_url/js/jquery.min.js"></script>
+
+<!--拖拽图片排序-->
+<link rel="stylesheet" href="home_url/upload_img/uploadImg.css"/>
+<link rel="stylesheet" href="home_url/upload_img/jquery.dad.css"/>
+<script src="home_url/upload_img/jquery.dad.min.js"></script>
+
+<!--拖拽图片排序-->
+<script src="home_url/js/bootstrap.min.js"></script>
+<script src="home_url/js/plugins/peity/jquery.peity.min.js"></script>
+<script src="home_url/js/content.min.js"></script>
+<script src="home_url/js/plugins/iCheck/icheck.min.js"></script>
+<script src="home_url/js/peity-demo.min.js"></script>
+
+<script type="text/javascript" src="home_url/js/jquery-form.js"></script>
+
+<script type="text/javascript">
+    function delImgs(obj) {
+        $(obj).parent(".goods_imgs").remove();
+        $(obj).remove();
+
+    }
+
+    /*添加商品参数 1*/
+    function J_add_param(obj) {
+        var html = ' <tr>"<td style=\'width: 10%;padding-top: 10px;\'><input type="text" class="form-control" name="param_name[]" value=""/></td>\n' +
+            '<td style=\'width: 10%;\'><input style=\'margin-left: 20px;\' type="text" class="form-control" name="param_val[]" value=""/></td>\n' +
+            '<td style=\'width: 2%;padding-top: 10px;\'><span class="thisparam gicon-remove" onclick="J_del_param(this)" title=\'删除\' style="padding-top:2px;cursor:pointer;margin-left: 80%;">×</span></td>\n' +
+            '<td style=\'width: 2%;padding-top: 10px;\'><span class="thisparam gicon-arrow-up" onclick="J_up_param(this)" title=\'上移\' style="padding-top:2px;cursor:pointer;margin-left: 40%;">↑</span></td>\n' +
+            '<td style=\'width: 2%;padding-top: 10px;\'><span class="thisparam gicon-arrow-down" onclick="J_down_param(this)" title=\'下移\' style="padding-top:2px;cursor:pointer;">↓</span></td>' +
+            '</tr>';
+        // $(obj).parent().parent().find("#goodsparamtable").append(html);
+        $("#goodsparamtable tbody").append(html);
+        J_del_param();
+    }
+
+    /*添加商品参数 2*/
+
+    /*删除参数 1*/
+    function J_del_param(obj) {
+        $(obj).parent().parent().remove();
+    }
+
+    /*删除参数 2*/
+
+    /*上移参数 1*/
+    function J_up_param(obj) {
+        var _new = $(obj).parent().parent();
+        if (_new.index() > 1) {
+            _new.fadeOut().fadeIn();
+            _new.prev().before(_new);
+        }
+    }
+
+    /*上移参数 2*/
+
+    /*下移参数 1*/
+    function J_down_param(obj) {
+        var _new = $(obj).parent().parent();
+        if (_new.index() != 0) {
+            _new.fadeOut().fadeIn();
+            _new.next().after(_new);
+        }
+    }
+
+    $(".close").click(function () {
+        //id = $(this).attr("data-id");
+        $('.inmodal').hide();
+        //$('#albums-overlay').show();
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $(window).resize(function () {
+            $('.modal').css({
+                left: ($(window).width() - $('.modal').outerWidth()) / 2,
+                top: ($(window).height() - 350) / 2
+            });
+        });
+        //初始化函数
+        $(window).resize();
+    });
+    UE.getEditor('goods_detail');
+</script>
+
+<script src="home_url/js/vue/vue.min.js"></script>
+<script>
+    var Url = window.location.protocol + '//' + window.location.host + '/admin'
+    var s = window.location.href;
+    var arr = s.split('id/');
+    var id = arr[1];
+    $('#id').val(id);
+    var app = new Vue({
+        el: '#app',
+        data: {
+            list: [], //商品信息
+            is_cost_price: 0,
+            cate_selected: '',  //一级分类选择
+            cate_selected1: '', //二级分类选择
+            cate_selected2: '', //三级分类选择
+            goods_cate: [], //一级分类列表
+            goods_two: [], //二级分类列表
+            goods_tree: [], //三级分类列表
+            brand_selected: '', //一级品牌选择
+            brand_selected1: '', //二级品牌选择
+            goods_brand: [], //一级品牌列表
+            brand_two: [], //二级品牌列表
+            items: [
+                {key: 1, color: '#ffebcc'},
+                {key: 2, color: '#ffb86c'},
+                {key: 3, color: '#f01b2d'}
+            ],
+            dragging: {
+                goods_big_banner: null,
+                goods_detail_pic: null,
+            },
+            isChoose: {
+                goods_big_banner: [],
+                goods_detail_pic: [],
+                goods_logo: [],
+            },
+            store: {},
+            hashDetail: true,
+            hashPic: true,
+            // goodsType:[], //商品类型列表
+            // goods_type:0, //商品类型选择
+        },
+        created: function () { //获得初始数据
+            var that = this
+            // that.msgListView(that.list1P.pageNo)
+            // that.msgListView1(that.list2P.pageNo)
+            $.ajax({
+                type: "POST",
+                url: Url + '/Goods/goodsDetail',
+                data: {id: id},
+                dataType: 'json',
+                success: function (data) {
+                    that.list = data.data.list;
+                    that.store = data.data.store;
+                    that.is_cost_price = data.data.is_cost_price;
+                    that.list.sorts = that.list.sort >= 0 ? that.list.sort : 9999;
+                    that.list.is_sku = that.list.is_sku ? that.list.is_sku : 0;
+                    that.goodsType = data.data.goodsType;
+                    that.goods_cate = data.data.goods_cate;
+                    let goodsBigBanner = [];
+                    goodsBigBanner[0] = 'home_url/images/addimg.png';
+                    if (that.list.goods_big_banner) {
+                        let i = 1;
+                        that.list.goods_big_banner.forEach(item => {
+                            goodsBigBanner[i] = item;
+                            i++;
+                        });
+                    }
+                    that.list.goods_big_banner = goodsBigBanner;
+
+                    let goodsDetailPic = [];
+                    goodsDetailPic[0] = 'home_url/images/addimg.png';
+
+                    if (that.list.goods_detail_pic) {
+                        let j = 1;
+                        that.list.goods_detail_pic.forEach(item => {
+                            goodsDetailPic[j] = item;
+                            j++;
+                        });
+                    }
+                    that.list.goods_detail_pic = goodsDetailPic;
+
+                    //console.log(that.list.goods_big_banner);
+                    //console.log(that.list);
+                    that.changeType();
+                    /* if (that.list.goods_type) {
+                         that.goods_type = that.list.goods_type;
+                         that.changeType();
+                     }*/
+                    if (that.list.cate_id) {
+                        that.cate_selected = data.data.list.cate_id;
+                        if (that.goods_cate[that.cate_selected]) {
+                            that.goods_two = that.goods_cate[that.cate_selected]['cate_list'];
+                        }
+                    }
+                    if (that.list.cate_two_id) {
+                        that.cate_selected1 = data.data.list.cate_two_id;
+                        if (that.goods_two[that.cate_selected1]) {
+                            that.goods_tree = that.goods_two[that.cate_selected1]['cate_list'];
+                        }
+                    }
+                    if (that.list.cate_three_id) {
+                        that.cate_selected2 = data.data.list.cate_three_id;
+                    }
+
+                    that.goods_brand = data.data.goods_brand;
+                    if (that.list.brand_id) {
+                        that.brand_selected = data.data.list.brand_id;
+                        if (that.goods_brand[that.brand_selected]) {
+                            that.brand_two = that.goods_brand[that.brand_selected]['brand_list'];
+                        }
+                    }
+                    if (that.list.brand_id) {
+                        that.brand_selected1 = data.data.list.brand_two_id;
+                    }
+                    that.$nextTick(function () {
+                        $('#J_imageView_1').dad({
+                            draggable: 'img'//拖拽区域
+                        });
+                        $('#J_imageView_2').dad({
+                            draggable: 'img'//拖拽区域
+                        });
+                        $('.tab-content').css('margin-top', parseInt($('.nav-tabs').height()) + 'px');
+                        if (that.list.is_sku) {
+
+                        }
+
+
+                        $('.tab_tongyong').click(function(){
+                            topNav('tab_tongyong', 0);
+                        });
+                        $('.tab_goods_images').click(function(){
+                            topNav('tab_goods_images', 1);
+                        });
+                        $('.tab_goods_param').click(function(){
+                            topNav('tab_goods_param', 2);
+                        });
+                        $('.tab_goods_spec').click(function(){
+                            topNav('tab_goods_spec', 3);
+                        });
+                        function topNav(className, index) {
+                            $('.tab-pane').hide();
+                            $('#'+className).show();
+                            $('.nav-tabs li').removeClass('active');
+                            $('.nav-tabs li').eq(index).addClass('active');
+                        }
+                    });
+
+                }
+            })
+            that.$nextTick(function () {
+                $(function () {
+                    /*图片上传*/
+                    $(".xuanze").wrap("<form class='myupload' action='{:url('Index/addImage')}' method='post' enctype='multipart/form-data'></form>");
+                    $(".xuanze").change(function () { //选择文件
+
+                        var obj = $(this);
+                        var type = obj.attr('data-type'); // single 单图 multiple 多图
+                        var xuanze_progress = obj.parents('.form-group').find('.xuanze_progress');
+                        var xuanze_percent = obj.parents('.form-group').find('.xuanze_percent');
+                        var xuanze_showimge = obj.parents('.form-group').find('.xuanze_showimge');
+                        var name = obj.attr('data-name');
+                        obj.parents('.myupload').ajaxSubmit({
+                            dataType: 'json', //数据格式为json
+                            beforeSend: function () { //开始上传
+                                xuanze_progress.show(); //显示进度条
+                                var percentVal = '0%';
+                                xuanze_percent.html(percentVal);
+                            },
+                            uploadProgress: function (event, position, total, percentComplete) {
+                                var percentVal = percentComplete + '%'; //获得进度
+                                xuanze_percent.html(percentVal); //显示上传进度百分比
+                            },
+                            data: {
+                                'type': type,
+                            },
+                            success: function (g) { //成功
+                                xuanze_progress.hide();
+                                if (g.status == 0) {
+                                    alert(g.msg);
+                                    return false;
+                                }
+                                var file_name = g.data.file_name;
+                                if (type == 'multiple') { //多图
+                                    if (name == 'goods_banner_pic') {
+                                        name = 'goods_big_banner'
+                                    }
+
+                                    that.hashPic = false;
+                                    let num = 0;
+
+                                    if (that.list[name]) {
+                                        num = that.list[name].length;
+                                    }
+                                    //console.log(that.list[name]);
+
+                                    g.data.file_name.forEach((item, index) => {
+                                        that.list[name][num] = item;
+                                        num++;
+                                    });
+
+                                    that.hashPic = true;
+
+                                } else { // 单图
+                                    var img = '<img src="' + file_name + '" height="80">' +
+                                        '<input type="hidden" name="' + name + '" class="' + name + '" value="' + file_name + '">';
+                                    xuanze_showimge.html(img);
+                                }
+
+
+                            },
+                            error: function (xhr) { //上传失败
+                                console.log(xhr.status)
+                            }
+                        });
+                    });
+
+                });
+
+
+            })
+        },
+        mounted: function () {
+            // 如在这里开始渲染地图!!! initMap()
+        },
+        methods: {
+            bodyClick: function (items, indexs) {
+                let that = this;
+                this.hashDetail = false;
+
+                that.isChoose.goods_big_banner.forEach((item, index) => {
+                    if (items != 'goods_big_banner' || indexs != index) {
+                        that.isChoose.goods_big_banner[index] = 0;
+                    }
+                });
+                that.isChoose.goods_detail_pic.forEach((item, index) => {
+                    if (items != 'goods_detail_pic' || indexs != index) {
+                        that.isChoose.goods_detail_pic[index] = 0;
+                    }
+                });
+                that.isChoose.goods_logo.forEach((item, index) => {
+                    if (items != 'goods_logo' && indexs != index) {
+                        that.isChoose.goods_logo[index] = 0;
+                    }
+                });
+                this.hashDetail = true;
+            },
+            imgScc: function (item, index) {
+                this.bodyClick(item, index);
+                this.hashDetail = false;
+                if (this.isChoose[item][index]) {
+                    this.isChoose[item][index] = 0;
+                } else {
+                    this.isChoose[item][index] = 1;
+                }
+                this.hashDetail = true;
+            },
+            handleDragStart(e, item, name) {
+                this.dragging[name] = item;
+            },
+            handleDragEnd(e, item, name) {
+                this.dragging[name] = null
+            },
+            //首先把div变成可以放置的元素，即重写dragenter/dragover
+            handleDragOver(e) {
+                e.dataTransfer.dropEffect = 'move'// e.dataTransfer.dropEffect="move";//在dragenter中针对放置目标来设置!
+            },
+            handleDragEnter(e, item, name) {
+                e.dataTransfer.effectAllowed = "move"//为需要移动的元素设置dragstart事件
+                if (item === this.dragging[name]) {
+                    return
+                }
+                const newItems = [...this.list[name]]
+                console.log(newItems)
+                const src = newItems.indexOf(this.dragging[name])
+                const dst = newItems.indexOf(item)
+                newItems.splice(dst, 0, ...newItems.splice(src, 1))
+                //console.log(newItems);
+                this.hashPic = false;
+                this.list[name] = newItems
+                this.hashPic = true;
+            },
+            save: function () {
+
+                var post = $('#add_step').serializeArray();
+                $.ajax({
+                    type: "POST",
+                    url: Url + '/Goods/goodsHandle',
+                    data: post,
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.status) {
+                            dialog.showTips(data.msg, "", "{:url('Goods/goodsList')}");
+                        } else {
+                            alert(data.msg);
+                        }
+                    }
+                })
+            },
+            goods_cate_list: function (type) {
+                //console.log('您选择了', this.cate_selected)
+                //console.log('您选择了', this.cate_selected1)
+                if (type == 1) {
+                    this.cate_selected1 = '';
+                    this.cate_selected2 = '';
+                    this.goods_tree = [];
+                    if (this.goods_cate[this.cate_selected]) {
+                        this.goods_two = this.goods_cate[this.cate_selected]['cate_list'];
+                    }
+                } else {
+                    this.cate_selected2 = '';
+                    if (this.goods_two[this.cate_selected1]) {
+                        this.goods_tree = this.goods_two[this.cate_selected1]['cate_list'];
+                    }
+                }
+
+            },
+            goods_brand_list: function () {
+                // console.log('您选择了', this.brand_selected)
+                //console.log('您选择了', this.brand_selected1)
+                this.brand_selected1 = '';
+                this.brand_two = this.goods_brand[this.brand_selected]['brand_list'];
+
+            },
+            changeType: function () {
+                let that = this;
+                let goods_id = that.list.id;
+                //console.log(that.list);
+                let spec_type = that.goods_type;
+                $.ajax({
+                    type: 'GET',
+                    data: {goods_id: goods_id, spec_type: spec_type},
+                    url: "{:url('Goods/ajaxGetSpecSelect')}",
+                    success: function (data) {
+                        $("#ajax_spec_data").html('')
+                        $("#ajax_spec_data").append(data);
+                        ajaxGetSpecInput();	// 触发完  马上触发 规格输入框
+                    }
+                });
+                //商品类型切换时 ajax 调用  返回不同的属性输入框
+                /*$.ajax({
+                    type:'GET',
+                    data:{goods_id:goods_id,type_id:spec_type},
+                    url:"/index.php/admin/Goods/ajaxGetAttrInput",
+                    success:function(data){
+                        $("#goods_attr_table tr:gt(0)").remove()
+                        $("#goods_attr_table").append(data);
+                    }
+                });*/
+            },
+
+        }
+    })
+
+    function checkNum(obj) {
+        obj.value = obj.value.replace(/^0*/g, '');//第一个数不能为0 ，若为0替换为空
+        obj.value = obj.value.replace(/[^\d]/g, "");//是否是数字 和小数点，若是除数字 和小数点之外的则替换为空
+        // obj.value = obj.value.replace(/^\./g, "");//确证第一个为数字而不是“.”
+        // obj.value = obj.value.replace(/\.{2,}/g, ".");//只能输入一个“.”
+        // obj.value = obj.value.replace(".", "$#$").replace(/\./g, "").replace("$#$", ".");//保证”.“只出现一次，而不能出现两次以上
+        // obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3');//只能输入两个小数   
+    }
+</script>
+</body>
+
+</html>

@@ -1,0 +1,15 @@
+
+.form_left {
+    float: left;
+    margin-right: 10px;
+    line-height: 30px;
+}
+
+.detail_form_right {
+    margin-bottom: 0;
+    line-height: 34px;
+}
+
+.line_h10 {
+    line-height: 15px;
+}

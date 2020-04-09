@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{:getSetting('system.title')} </title>
+    <link href="home_url/css/bootstrap.min.css" rel="stylesheet">
+    <link href="home_url/css/font-awesome.css-v=4.4.0.css" rel="stylesheet">
+    <link href="home_url/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="home_url/css/style.min.css" rel="stylesheet">
+    <link href="home_url/css/common.css" rel="stylesheet">
+</head>
+{include file="base:base" /}
+<body class="gray-bg">
+<div id="app" v-cloak>
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>修改用户信息</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form enctype="multipart/form-data" method="post" id="add_step" class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><b style="color:red;"></b>头像：</label>
+
+                                <div class="col-sm-9">
+                                    <img :src="userList.head_img" alt="" height="100">
+                                    <!--                                        <input type="text" class="form-control manager_name" name="manager_name" style="width:32%" :value="userList.head_img">-->
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="row">
+                                <div class="col-lg-6">
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;"></b>姓名：</label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control manager_name" name="realname" style="width:32%" :value="userList.realname">
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;"></b>手机号：</label>
+
+                                        <div class="col-sm-9">
+                                            <div class="detail_form_right">
+                                                {{userList.telephone}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">密码：</label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control password" name="password" style="width:32%">
+                                        </div>
+                                    </div>
+
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;"></b>昵称：</label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control nickname" name="nickname" style="width:32%" :value="userList.nickname">
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;"></b>性别：</label>
+                                        <div class="col-sm-9" v-if="userList.sex == 1">
+                                            <label><input type="radio" name="sex" value="1" checked>男</label>
+                                            <label><input type="radio" name="sex" value="2" >女</label>
+                                        </div>
+                                        <div class="col-sm-9" v-else>
+                                            <label><input type="radio" name="sex" value="1" >男</label>
+                                            <label><input type="radio" name="sex" value="2" checked>女</label>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                </div>
+                                <div class="col-lg-6">
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;"></b>邮箱：</label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control email" name="email" style="width:32%"  :value="userList.email">
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;"></b>状态：</label>
+
+                                        <div class="col-sm-9">
+                                            <div class="detail_form_right">
+                                                {{userList.status == 1 ? '正常' : '冻结'}}
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;"></b>注册时间：</label>
+
+                                        <div class="col-sm-9">
+                                            <div class="detail_form_right">
+                                                {{userList.reg_time}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;"></b>注册来源：</label>
+
+                                        <div class="col-sm-9">
+                                            <div class="detail_form_right">
+                                                <div v-if="userList.type === 1">APP</div>
+                                                <div v-else-if="userList.type === 2">PC</div>
+                                                <div v-else-if="userList.type === 3">手机端</div>
+                                                <div v-else-if="userList.type === 4">后台导入</div>
+                                                <div v-else-if="userList.type === 5">系统添加</div>
+                                                <div v-else>未知</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;"></b>最后登录时间：</label>
+
+                                        <div class="col-sm-9">
+                                            <div class="detail_form_right">
+                                                {{userList.last_login_time}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label"><b style="color:red;"></b>登录次数：</label>
+
+                                        <div class="col-sm-9">
+                                            <div class="detail_form_right">
+                                                {{userList.login_num}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group" >
+                                <div class="col-sm-4 col-sm-offset-2" style="text-align: center">
+                                    <input type="hidden" name="id"  value="" id="user_id">
+                                    <a href="javascript:history.back();" class="btn btn-white" type="submit">返回</a>
+                                    <a class="btn btn-primary save" href="javascript:void(0)" @click="userHandle">保存</a>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="home_url/js/jquery.min.js"></script>
+<script src="home_url/js/bootstrap.min.js"></script>
+<script src="home_url/js/plugins/peity/jquery.peity.min.js"></script>
+<script src="home_url/js/content.min.js"></script>
+<script src="home_url/js/plugins/iCheck/icheck.min.js"></script>
+<script src="home_url/js/peity-demo.min.js"></script>
+
+<script src="home_url/js/vue/vue.min.js"></script>
+<script>
+    var Url = window.location.protocol + '//' + window.location.host + '/admin'
+    var s = window.location.href;
+    var arr = s.split('id/');
+    var id = arr[1];
+    $('#user_id').val(id);
+    var app = new Vue({
+        el: '#app',
+        data: {
+            userList: [],
+        },
+        created: function(){ //获得初始数据
+            var $_this = this
+            // $_this.msgListView($_this.list1P.pageNo)
+            // $_this.msgListView1($_this.list2P.pageNo)
+            $.ajax({
+                type: "POST",
+                url: Url + '/User/userDetail',
+                data: {id:id},
+                dataType: 'json',
+                success: function(data) {
+                    $_this.userList = data.data.user_list;
+                }
+            })
+        },
+        mounted: function(){
+            // 如在这里开始渲染地图!!! initMap()
+        },
+        methods: {
+            userHandle: function () {
+                var password = $('.password').val();
+                var email = $('.email').val();
+                if (email) {
+                    if(!email.match(/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/)){
+                        alert("邮箱格式不正确！");
+                        return false;
+                    }
+                }
+                if (password) {
+                    if(!password.match(/^.{6,18}$/)){
+                        alert("密码长度必须是6-18位！");
+                        return false;
+                    }
+
+                    if(!password.match(/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,18}$/)){
+                        alert("密码必须是6-18位字母与数字混合！");
+                        return false;
+                    }
+                }
+                var post = $('#add_step').serializeArray();
+                $.ajax({
+                    type: "POST",
+                    url: Url + '/User/userHandle',
+                    data: post,
+                    dataType: 'json',
+                    success: function(data) {
+                        if(data.status){
+                            dialog.showTips(data.msg,"","{:url('User/userList')}");
+                        }else{
+                            alert(data.msg);
+                        }
+                    }
+                })
+            },
+        }
+    })
+
+
+</script>
+</body>
+
+</html>

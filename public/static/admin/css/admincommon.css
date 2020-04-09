@@ -1,0 +1,53 @@
+/*上传图片 1*/
+.imgwrapper img {
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+.img-list li {
+    width: 60px;
+    height: 60px;
+}
+.cst_h3 span {
+    font-weight: normal;
+}
+#imgdiv img {
+    max-width: 190px;
+    max-height: 190px;
+    display: none;
+    margin: 5px;
+}
+.btnimage {
+    width: 80px;
+    height: 30px;
+    background: white;
+    border: 1px solid #d9d9d9;
+    cursor: pointer;
+    position: relative;
+    text-align: center;
+    line-height: 31px;
+}
+.file {
+    position: absolute;
+    top: 0px;
+    left: 0;
+    width: 80px;
+    height: 30px;
+    background: white;
+    border: 1px solid #d9d9d9;
+    cursor: pointer;
+    opacity: 0
+}
+#imgdiv2 img {
+    max-width: 88px;
+    max-height: 88px;
+    display: none;
+    margin: 5px;
+}
+
+.error{
+    color: red;
+}
+/*上传图片 2*/

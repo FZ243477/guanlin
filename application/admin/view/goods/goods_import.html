@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{:getSetting('system.title')}</title>
+
+    <link rel="shortcut icon" href="__IMAGES__/favicon.ico">
+    <link href="home_url/css/bootstrap.min.css" rel="stylesheet">
+    <link href="home_url/css/font-awesome.css-v=4.4.0.css" rel="stylesheet">
+
+    <!-- Morris -->
+    <link href="home_url/css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+
+    <!-- Gritter -->
+    <link href="home_url/js/plugins/gritter/jquery.gritter.css" rel="stylesheet">
+
+    <link href="home_url/css/style.min.css" rel="stylesheet">
+    {include file="base:base" /}
+</head>
+<body class="gray-bg">
+<div id="app" v-cloak>
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>导入商品价格</h5>
+                        <div class="pull-right">
+                            <h3 style="color:red">请先下载模板文件,并只修改红色字体部分。</h3>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <a :href="user_import_template"  class="btn btn-sm btn-primary">模板下载</a>
+                            </div>
+                            <div class="col-sm-3">
+                                <form class='myupload' action="{:url('Goods/goodsImportHandle')}" method='post' enctype='multipart/form-data'>
+                                    <input type="file" name="excel" accept=".xls,.xlsx"/>
+                                </form>
+                            </div>
+                            <div class="col-sm-3">
+                                <button class="btn btn-sm btn-primary"  @click="userImportHandle">导入</button>
+                            </div>
+                        </div>
+                        <div  class="row">
+
+                            <div class="col-sm-6">
+                                <table class="table table-hover products_table">
+                                    <thead>
+                                    <tr >
+                                        <th>导入成功</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    <tr  v-for="vo in success">
+                                        <td>{{vo.msg}}</td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                            <div class="col-sm-6">
+                                <table class="table table-hover products_table">
+                                    <thead>
+                                    <tr>
+                                        <th>导入失败</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    <tr  v-for="vo in failure">
+                                        <td>{{vo.msg}}</td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="home_url/js/jquery.min.js"></script>
+<script src="home_url/js/bootstrap.min.js"></script>
+
+</body>
+
+<script type="text/javascript" src="home_url/js/jquery.js"></script>
+<script type="text/javascript" src="home_url/js/jquery-form.js"></script>
+<script src="home_url/js/vue/vue.min.js"></script>
+<script>
+    var Url = window.location.protocol + '//' + window.location.host + '/admin'
+    var app = new Vue({
+        el: '#app',
+        data: {
+            success: [],
+            failure: [],
+            user_import_template: '',
+        },
+        created: function(){ //获得初始数据
+            var $_this = this
+            $_this.user_import_template = Url+'/Goods/goodsImportTamp';
+            // $_this.msgListView($_this.list1P.pageNo)
+            // $_this.msgListView1($_this.list2P.pageNo)
+           /* $.ajax({
+                type: "POST",
+                url: Url + '/User/userImport',
+                dataType: 'json',
+                success: function(data) {
+                    $_this.user_import_template = data.data.user_import_template;
+                }
+            })*/
+        },
+        mounted: function(){
+            // 如在这里开始渲染地图!!! initMap()
+        },
+        methods: {
+            userImportHandle: function(){
+                var $_this = this;
+                $('input[name="excel"]').parents('.myupload').ajaxSubmit({
+                    dataType:  'json', //数据格式为json
+                    success: function(data) { //成功
+                        if (data.status == 0) {
+                            alert(data.msg);
+                        } else {
+                            // alert(data.msg);
+                            $_this.success = data.data.success;
+                            $_this.failure = data.data.failure;
+                        }
+                    },
+                    error:function(xhr){ //上传失败
+                        console.log(xhr.status)
+                    }
+                });
+            },
+        }
+    })
+
+
+</script>
+</html>

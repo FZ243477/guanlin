@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{:getSetting('system.title')} </title>
+
+    <link href="home_url/css/bootstrap.min.css" rel="stylesheet">
+    <link href="home_url/css/font-awesome.css-v=4.4.0.css" rel="stylesheet">
+    <link href="home_url/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="home_url/css/style.min.css" rel="stylesheet">
+
+    <!--编辑器 1-->
+    <script type="text/javascript" charset="utf-8" src="home_url/Ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="home_url/Ueditor/ueditor.all.js"></script>
+    <script type="text/javascript" charset="utf-8" src="home_url/Ueditor/lang/zh-cn/zh-cn.js"></script>
+    <!--编辑器 2-->
+    <style>
+        .contact_mobile_div {
+            position: relative;
+        }
+        .contact_mobile_div a {
+            position: relative;top: -34px;left: 33%;
+        }
+    </style>
+</head>
+{include file="base:base" /}
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>拆分订单</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="panel-body">
+                    <!--表单数据-->
+                    <form method="post" action="{:url('Order/orderSplit')}" onsubmit="return false"  id="split_order">
+                        <div class="tab-pane">
+                            <table class="table table-bordered">
+                                <tbody>
+                                <tr><td>费用信息:</td>
+                                	<td>
+                                		<div class="col-xs-9">
+                                		<input type="hidden" name="order_id" value="{$order.id}">
+                                		 商品总价：{$order.total_price}+运费:{$order.express_fee}-积分：{$order.integral}-优惠:{$order.coupon_money}
+                                		</div>
+                                	</td>
+                                </tr>
+                                <tr>
+                                    <td>收货人:</td>
+                                    <td>
+                                    <div class="form-group">
+	                                    <div class="col-xs-2"> {$order.consignee}</div>
+                                        <div class="col-xs-1">手机：</div>
+                                        <div class="col-xs-2">{$order.telephone}</div>
+                                        <div class="col-xs-3"><p class="text-warning">温馨提示：原单商品不可全部移除</p></div>
+                                        <div class="col-xs-2 pull-right">
+                                        	<button type="button" class="btn btn-default pull-left" onclick="window.location.reload();">重置</button>
+                                        	<button type="button" class="btn btn-primary pull-right" onclick="add_split()">添加拆单</button>
+                                        </div>
+                                    </div>    
+                                    </td>
+                                </tr>                                                                                      
+                                <tr>
+                                    <td>原单商品列表:</td>
+                                    <td id="origin" style="border:2px orange solid;"> 
+                                       <div class="form-group">
+                                       		<div class="col-xs-10">
+	                                       		<table class="table table-bordered">
+	                                       			<thead>
+	                                       			<tr>
+										                <td class="text-left">商品名称</td>
+										                <td class="text-left">规格</td>
+										                <td class="text-left">价格</td>
+										                <td class="text-left">原购数</td>								                
+										                <td class="text-left">数量</td>
+										                <td class="text-left">操作</td>
+										            </tr>
+										            </thead>
+										            <tbody>
+										            {foreach name="orderGoods" item="vo"}
+										            	<tr>
+										                <td class="text-left">{$vo.goods_name}</td>            
+										                <td class="text-left">{$vo.sku_info}</td>
+										                <td class="text-left">{$vo.goods_price}</td>
+										                <td class="text-left">{$vo.goods_num}</td>
+										                <td class="text-left">
+										                	<input type="text" name="old_goods[{$vo.id}]" rel="{$vo.id}" class="input-sm" style="width:40px;" value="{$vo.goods_num}">
+										               	</td>
+										                <td class="text-left">
+										                	<a href="javascript:void(0)" onclick="javascript:$(this).parent().parent().remove()">移除</a>
+										                </td>
+										           		</tr>
+										           {/foreach}
+										           </tbody>
+	                                       		</table>
+                                       	   </div>
+                                       </div>                                       
+                                    </td>
+                                </tr>                               
+                                <tr id="last_tr">
+                                    <td>管理员备注:</td>
+                                    <td>
+                                    <div class="form-group ">
+	                                    <div class="col-xs-4">
+                                        	<textarea style="width:450px; height:100px;" name="remark1">{$order.remark1|htmlspecialchars_decode}</textarea>
+                                        </div>
+                                    </div>    
+                                    </td>
+                                </tr>                                  
+                             </tbody>
+                          </table>
+                          <div class="col-xs-12">
+                          	<div class="pull-left">
+                          		<p class="text-danger" id="error_log"></p>
+                          	</div>
+	                        <div class="pull-right">
+		                        <button class="btn btn-primary" type="button" onclick="checkSubmit()">
+		                          保存
+<!--		                            <i class="ace-icon fa fa-check bigger-110"></i>保存-->
+		                        </button>
+	                        </div>
+                        </div>
+                      </div>
+                    </form> 
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="home_url/js/jquery.min.js"></script>
+<script>
+var no = 1;
+$(function(){
+	add_split();
+});
+
+function add_split(){
+	var new_order = '';
+	new_order += '<tr id="new_'+no+'" class="new_split"><td>新单商品列表:</td><td>'                      
+	new_order += $('#origin').html();
+	new_order += '<div class="col-xs-1 pull-right"><button type="button" class="btn btn-danger pull-right" onclick="$(this).parent().parent().parent().remove();"><i class="fa fa-trash-o"></i></button></div>'
+	new_order += '</td></tr>';
+	$('#last_tr').before(new_order);
+	$('#new_'+no+' .input-sm').each(function(i,o){
+		var name = $(this).attr('name');
+		$(this).attr('name',no+'_'+name);
+	});
+	no++;
+}
+
+var b = {$goods_num_arr};
+
+function checkSubmit(){
+	var a = [],g = [];
+	$('input[name*=old_goods]').each(function(i,o){
+		var rec_id = $(o).attr('rel');
+		if(!a[rec_id]){
+			a[rec_id] = 0;
+		}
+		a[rec_id] = a[rec_id] + parseInt($(o).val());
+	});
+	
+	$('#origin .input-sm').each(function(){
+		g.push($(this).val());
+	});
+	if($('.new_split').length == 0){
+		$('#error_log').empty().html('请至少拆分一单');
+		return false;
+	}
+	if(g.length == 0){
+		$('#error_log').empty().html('原单商品不可全部移除');
+		return false;
+	}
+	
+	for(var k in b){
+		if(a[k] > parseInt(b[k]['goods_num'])){
+			var lt = a[k] - parseInt(b[k]['goods_num']);
+			$('#error_log').empty().html(b[k]['goods_name']+',数量大于原商单购买数'+lt+'件');
+			return false;
+		}
+		if(a[k] < parseInt(b[k]['goods_num'])){
+			var lt = parseInt(b[k]['goods_num']) - a[k];
+			$('#error_log').empty().html(b[k]['goods_name']+',数量少于原商单购买数'+lt+'件');
+			return false;
+		}else{
+			$('#error_log').empty();
+		}
+	}
+
+    var post = $('#split_order').serializeArray();
+    $.post("{:url('Order/orderSplit')}",post, function(data){
+        if(data.status){
+            dialog.showTips(data.msg,"", "{:url('Order/index')}");
+        }else{
+            alert(data.msg);
+        }
+    }, "json");
+    return false;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>悦品荟</title>
+</head>
+<body>
+<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+<script>
+    // javascript
+    var status = parseInt("{$status}");
+    var token = "{$token}";
+    if( status == 0 ){
+        wx.miniProgram.navigateTo({url: '/pages/userPower/userPower'});
+        wx.miniProgram.postMessage({ data: 'foo' });
+        wx.miniProgram.postMessage({ data: {foo: 'bar'} });
+        wx.miniProgram.getEnv(function(res) { console.log(res.miniprogram)  });
+    }else if( status == 1){
+        wx.miniProgram.navigateTo({url: '/pages/index/index?token='+token});
+        wx.miniProgram.postMessage({ data: 'foo' });
+        wx.miniProgram.postMessage({ data: {foo: 'bar'} });
+        wx.miniProgram.getEnv(function(res) { console.log(res.miniprogram)  });
+    }
+</script>
+</body>
+</html>

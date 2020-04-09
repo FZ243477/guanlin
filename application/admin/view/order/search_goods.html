@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{:getSetting('system.title')} </title>
+
+	<link href="home_url/css/bootstrap.min.css" rel="stylesheet">
+	<link href="home_url/css/font-awesome.css-v=4.4.0.css" rel="stylesheet">
+	<link href="home_url/css/plugins/iCheck/custom.css" rel="stylesheet">
+	<link href="home_url/css/style.min.css" rel="stylesheet">
+
+	<style>
+		.customer_myupload  {
+			opacity: 0;
+			display:none;
+		}
+		.mini {
+			background-color: #FFF;
+			background-image: none;
+			border: 1px solid #e5e6e7;
+			border-radius: 1px;
+			color: inherit;
+			padding: 6px 12px;
+			-webkit-transition: border-color .15s ease-in-out 0s,box-shadow .15s ease-in-out 0s;
+			transition: border-color .15s ease-in-out 0s,box-shadow .15s ease-in-out 0s;
+			font-size: 14px;
+			width: 80px;
+		}
+		[v-cloak] {
+			display: none;
+		}
+
+	</style>
+</head>
+
+{include file="base:base" /}
+<body class="gray-bg">
+<div id="app" v-cloak>
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox">
+					<div class="tabs-container">
+						<div class="tab-content">
+							<div id="tab-1" class="tab-pane active">
+								<div class="panel-body">
+
+									<div class="ibox-content-del">
+										<div class="row row_div">
+											<div class="tables-searchbox newcearchbox">
+												<div class="col-sm-3">
+													<input type="text" placeholder="商品名称|编码" class="input-sm form-control" name="keyword" value="">
+												</div>
+												<!--<div class="form_left">
+                                                    <input type="text" placeholder="商品ID" class="input-sm form-control" name="id" value="">
+                                                </div>-->
+												<div class="col-sm-3">
+													<select name='brand' class="input-sm form-control" style='padding: 5px;'>
+														<option value=''>选择品牌系列</option>
+														<option  v-for="vo in goods_brand_new" :value='vo.id' v-html="vo.classname">{{vo.classname}}</option>
+
+													</select>
+												</div>
+												<div class="col-sm-3">
+													<select name='cate' class="input-sm form-control" style='padding: 5px;'>
+														<option value=''>选择分类</option>
+														<option  v-for="vo in goods_cate_new" :value='vo.id' v-html="vo.classname">{{vo.classname}}</option>
+
+													</select>
+												</div>
+												<div class="col-sm-3">
+													<button class="btn btn-primary input-sm line_h10" @click="msgListView(1, 1)" style="line-height: 15px;"><i class="gicon-search white"></i>查询</button>
+												</div>
+											</div>
+										</div>
+										<div class="table-responsive">
+											<table class="table table-hover products_table">
+												<colgroup>
+													<col width="5%">
+													<col width="5%">
+													<col width="10%">
+													<col width="10%">
+													<col width="10%">
+													<col width="10%">
+													<col width="10%">
+												</colgroup>
+												<thead>
+
+												<tr >
+													<th></th>
+													<th>ID</th>
+													<th>图片</th>
+													<th>名称/编码</th>
+													<th>规格</th>
+													<th>价格</th>
+													<th>库存</th>
+<!--													<th>数量</th>-->
+												</tr>
+												</thead>
+												<tbody>
+												<tr  v-for="(vo, key) in goodsList">
+													<td v-if="hasReset">
+														<input type="checkbox" class="i-checks checkbox" v-if="checkedArr[vo['id']+vo['key']]['checked'] == 1" checked name="input" :value="vo.id" @click="selectOne(vo.id, vo.key)">
+														<input type="checkbox" class="i-checks checkbox" v-else  name="input" :value="vo.id" @click="selectOne(vo.id, vo.key)">
+													</td>
+													<td class='center'>{{vo.id}}</td>
+													<td class='center'><img :src="vo.goods_logo?vo.goods_logo:'home_url/images/zwtp.jpg'" width="50" height='50' style='border-radius: 50%;'></td>
+													<td class='center'>{{vo.goods_name}}<br/>{{vo.goods_code}}</td>
+													<td class='center'>{{vo.key_name}}</td>
+													<td class='center'>{{vo['spec_price']?vo['spec_price']:vo['price']}}</td>
+													<td class='center'>{{vo.stores}}</td>
+<!--													<td class='center'><input  class="goods_num mini" :value="vo.goods_num"/></td>-->
+												</tr>
+												<tr v-if="goodsList == ''"><td style='text-align:center' colspan='8'>暂无数据</td></tr>
+												<tr>
+													<td colspan="12" class="pro_lasttd" v-if="hasReset">
+
+														<input  @click="selectAll" type="checkbox" class="i-checks all" v-if="checkedAll == 1" checked name="inputs" >
+														<input  @click="selectAll" type="checkbox" class="i-checks all" v-else name="inputs" >
+														<span   @click="selectAll">全选</span>
+
+
+														<div class="pro_table_contro">
+															<a href="javascript:void(0);" class="btn btn-primary upd" @click="sureSelect" >确定</a>
+														</div>
+
+													</td>
+												</tr>
+												</tbody>
+											</table>
+
+											<div class="text-center">
+												<div class="page" v-if="pageInfo.pageCount > 1">
+													<navigation  v-if="hackReset" :pages="pageInfo.pageCount" :current="pageInfo.pageCurrent"  @navpage="msgListView"></navigation>
+												</div>
+											</div>
+
+										</div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+</div>
+<script src="home_url/js/jquery.min.js"></script>
+<script src="home_url/js/bootstrap.min.js"></script>
+<script src="home_url/js/plugins/peity/jquery.peity.min.js"></script>
+<script src="home_url/js/content.min.js"></script>
+<script src="home_url/js/plugins/iCheck/icheck.min.js"></script>
+<script src="home_url/js/peity-demo.min.js"></script>
+<script type="text/javascript">
+
+	$('td.pro_lasttd input').on('ifChecked', function(event){
+		$('input').iCheck('check');
+	});
+	$('td.pro_lasttd input').on('ifUnchecked', function(event){
+		$('input').iCheck('uncheck');
+	});
+
+	$('.select_protect').click(function(){
+		if($(".checkbox:checked").length == 0)
+		{
+			alert('请选择商品');
+			return false;
+		}
+		/*$(".customer_info").find('td').eq(0).remove();
+		// 将没选中的复选框所在的  tr  remove  然后删除复选框
+		$("input[type='radio']").each(function(){
+			if($(this).is(':checked') == false)
+			{
+				$(this).parents('tr').remove();
+			}
+			$(this).siblings().show();
+		});*/
+		var id = $("input[type='radio']:checked").val();
+		var goods_name = $("input[type='checkbox']:checked").parents('tr').find('td').eq(3).html();
+		var check_obj = [];
+		$(".checkbox:checked").each(function (i) {
+			var val = $(this);
+			var goods_num = val.parents('tr').find('.goods_num').val();
+			check_obj[i] = {
+				goods_name : val.attr('data-goods_name'),
+				goods_code : val.attr('data-goods_code'),
+				sku_info : val.attr('data-sku_info'),
+				goods_price :val.attr('data-goods_price'),
+				sku_id : val.attr('data-sku_id'),
+				goods_logo : val.attr('data-goods_logo'),
+				goods_num : goods_num,
+				goods_id : val.attr('data-goods_id'),
+			}
+		})
+		javascript:window.parent.call_back(check_obj);
+	});
+
+</script>
+
+<script>
+	$(document).ready(function () {
+		$(".admin_li_b1").click(function(){
+			var edit=$(this).parent(".admin_li_btn").siblings(".admin_li_edit");
+			$(".admin_li_edit").not(edit).hide();
+			edit.toggle();
+		})
+
+		function stopPropagation(e) {
+			if (e.stopPropagation)
+				e.stopPropagation();
+			else
+				e.cancelBubble = true;
+		}
+		$(document).bind('click',function(){
+			$(".admin_li_edit").hide();
+		});
+
+		$(".admin_li_edit").bind('click',function(e){
+			stopPropagation(e);
+		});
+		$(".admin_li_b1").bind('click',function(e){
+			stopPropagation(e);
+		});
+
+
+		$("li.admin_li").click(function(){
+			$(this).addClass("active").siblings("li.admin_li").removeClass("active");
+		})
+
+		$(".admin_tree_top a.pull-right").click(function(){
+			$(".admin-add-box").toggle();
+		})
+		$(".admin-add-box .btn-default").click(function(){
+			$(".admin-add-box").hide();
+		})
+
+
+
+
+
+
+
+
+		$(".checkbox").on('click', function (event) {
+			var i = 1;
+			$(".checkbox").each(function(){
+				if(true != $(this).is(':checked')){
+					i = 0;
+				}
+			});
+			if (i == 1) {
+				$('td.pro_lasttd input').prop('checked', true);
+			} else {
+				$('td.pro_lasttd input').prop('checked', false);
+			}
+		});
+		$('td.pro_lasttd input').on('click', function(event){
+			if(true == $(this).is(':checked')){
+				$('.checkbox').prop('checked', true);
+			} else {
+				$('.checkbox').prop('checked', false);
+			}
+		});
+	});
+</script>
+<script type="text/javascript">
+	$("li").click(function(){
+		$a=$(this).find("a").attr("href");
+		// alert($a);
+		if ($a) { window.location=$a; }
+	})
+</script>
+<script src="home_url/js/vue/vue.min.js"></script>
+<script src="home_url/js/vue/pagination.js"></script>
+<script>
+	var Url = window.location.protocol + '//' + window.location.host + '/admin';
+
+	var app = new Vue({
+		el: '#app',
+		data: {
+			goodsList: [],
+			goods_cate_new: [],
+			goods_brand_new: [],
+			pageInfo: {
+				pageCurrent: 1, // 当前页
+				pageCount: 1, // 总页数
+				list_row: 10, // 当前条数
+				totalCount:0,
+			},
+			hackReset:true,
+			is_button:0,
+			status:0,
+			audit:-1,
+			audit_status:1,
+			audit_msg:'',
+			goods_id:0,
+			checkedAll:0,
+			checkedArr:[],
+			hasReset:true,
+		},
+		created: function(){ //获得初始数据
+			var $_this = this;
+			var post = {
+				type:1,
+				list_row: $_this.pageInfo.list_row, //每页数据个数
+				page: $_this.pageInfo.pageCurrent, // 当前页
+
+			};
+			$_this.ajaxFunction(post, 1);
+			// $_this.msgListView($_this.list1P.pageNo)
+			// $_this.msgListView1($_this.list2P.pageNo)
+
+		},
+		mounted: function(){
+			// 如在这里开始渲染地图!!! initMap()
+		},
+		methods: {
+			ajaxFunction: function(post, type) {
+				var $_this = this;
+				$.ajax({
+					type: "POST",
+					url: Url + '/Order/searchGoods?goods_ids={$goods_ids}&sku_ids={$sku_ids}',
+					data:post,
+					dataType: 'json',
+					success: function(data) {
+						$_this.goodsList = data.data.list;
+						var num = 0;
+						var lenght = 0;
+						$_this.goodsList.forEach(function (item) {
+							if (!$_this.checkedArr[item.id+item.key] || $_this.checkedArr[item.id+item.key]['checked'] == 0) {
+								$_this.checkedArr[item.id+item.key] = {
+									'checked' : 0,
+									'goods_name':item.goods_name,
+									'sku_info':item.key_name?item.key_name:'',
+									'sku_id':item.key,
+									'goods_logo':item.goods_logo,
+									'goods_code':item.goods_code,
+									'goods_price':item.spec_price?item.spec_price:item.price,
+									'goods_num':1,
+									'goods_id':item.id,
+								};
+							} else if ($_this.checkedArr[item.id+item.key] && $_this.checkedArr[item.id+item.key]['checked'] == 1){
+								num ++;
+							}
+							lenght ++;
+						});
+						console.log($_this.checkedArr);
+
+						$_this.goods_cate_new = data.data.goods_cate_new;
+						$_this.goods_brand_new = data.data.goods_brand_new;
+						$_this.pageInfo.pageCount = parseInt(data.data.pageCount) // 获取总页数
+						$_this.hasReset = false;
+						$_this.$nextTick(function () {
+							if (num == lenght) {
+								$_this.checkedAll = 1;
+							} else {
+								$_this.checkedAll = 0;
+							}
+							$_this.hasReset = true;
+							/*$(".checkbox").on('click', function (event) {
+								var i = 1;
+								$(".checkbox").each(function(){
+									if(true != $(this).is(':checked')){
+										i = 0;
+									}
+								});
+								if (i == 1) {
+									$('td.pro_lasttd input').prop('checked', true);
+								} else {
+									$('td.pro_lasttd input').prop('checked', false);
+								}
+							});
+							$('td.pro_lasttd input').on('click', function(event){
+								if(true == $(this).is(':checked')){
+									$('.checkbox').prop('checked', true);
+								} else {
+									$('.checkbox').prop('checked', false);
+								}
+							});*/
+							/*$('td.pro_lasttd input').on('click', function(event){
+								$('input').removeAttr('checked');
+							});*/
+							/*$(".j-audit").click(function(){
+								$_this.goods_id = $(this).attr('data-id');
+								console.log($_this.goods_id );
+								$('#myModal2').show();
+							});
+							$(".close").click(function(){
+								//id = $(this).attr("data-id");
+								$('.inmodal').hide();
+								//$('#albums-overlay').show();
+							});
+							$('.audit_submit').click(function () {
+								let audit_msg = $('#audit_msg').val();
+								let audit_status = $('input[name="audit_status"]:checked').val();
+								let post = {
+									audit_status:audit_status,
+									audit_msg:audit_msg,
+									goods_id:$_this.goods_id,
+								};
+								$.ajax({
+									type:"POST",
+									url: Url + '/Goods/goodsAudit',
+									data: post,
+									dataType:"json",
+									success:function(g){
+										if (g.status == 1) {
+											$_this.msgListView(1, 0);
+											alert(g.msg);
+											$('.inmodal').hide();
+										} else {
+											alert(g.msg);
+										}
+									}
+								})
+							})*/
+						})
+					}
+				})
+			},
+			msgListView: function(pageCurrent, is_button){ //搜索分页数据
+				var $_this = this;
+				var post = {
+					type:1,
+					list_row: $_this.pageInfo.list_row, //每页数据个数
+					page: pageCurrent, // 当前页
+					status:$_this.status,
+					audit:$_this.audit,
+				};
+
+				if (is_button == 1) {
+					$_this.is_button = is_button;
+				}
+				if ($_this.is_button == 1) {
+					post.id = $('input[name="id"]').val();
+					post.keyword = $('input[name="keyword"]').val();
+					post.cate = $('select[name="cate"]').val();
+					post.brand = $('select[name="brand"]').val();
+				}
+				$_this.ajaxFunction(post, 0);
+			},
+			btn_goods: function(status) {
+				var $_this = this;
+				$_this.status = status;
+				var post = {status:status};
+				post.audit = $_this.audit;
+				post.type = 1;
+				$('input[name="id"]').val('');
+				$('input[name="keyword"]').val('');
+				$('select[name="cate"]').val('');
+				$('select[name="brand"]').val('');
+				post.id = $('input[name="id"]').val();
+				post.keyword = $('input[name="keyword"]').val();
+				post.cate = $('select[name="cate"]').val();
+				post.brand = $('select[name="brand"]').val();
+				$_this.ajaxFunction(post, 0);
+			},
+			selectOne: function (id, key) {
+				var $_this = this;
+				var checked = $_this.checkedArr[id+key]['checked'];
+				$_this.hasReset = false;
+				$_this.$nextTick(function () {
+					$_this.checkedArr[id+key]['checked'] = 1-checked;
+					var num = 0;
+					var lenght = 0;
+					$_this.goodsList.forEach(function (item) {
+						if ($_this.checkedArr[item.id+item.key] && $_this.checkedArr[item.id+item.key]['checked'] == 1){
+							num ++;
+						}
+						lenght ++;
+					});
+					$_this.$nextTick(function () {
+						if (num == lenght) {
+							$_this.checkedAll = 1
+						} else {
+							$_this.checkedAll = 0;
+						}
+					});
+					$_this.hasReset = true;
+				});
+				console.log($_this.checkedArr);
+			},
+			selectAll: function () {
+				var $_this = this;
+				$_this.checkedAll = 1-$_this.checkedAll;
+
+				$_this.goodsList.forEach(function (item) {
+					$_this.checkedArr[item.id+item.key]['checked'] = $_this.checkedAll;
+				});
+				console.log($_this.checkedArr);
+			},
+			sureSelect: function () {
+				var $_this = this;
+				var check_obj = [];
+				var i = 0;
+				for(var index in $_this.checkedArr){
+					var item = $_this.checkedArr[index];
+					if (item.checked == 1) {
+						check_obj[i] = {
+							goods_name : item.goods_num,
+							goods_code : item.goods_code,
+							sku_info : item.sku_info,
+							goods_price :item.goods_price,
+							sku_id : item.sku_id,
+							goods_logo : item.goods_logo,
+							goods_num : item.goods_num,
+							goods_id : item.goods_id,
+						};
+						i++;
+					}
+				}
+				
+				console.log(check_obj);
+				javascript:window.parent.call_back(check_obj);
+			}
+
+		}
+	})
+
+
+</script>
+</body>
+
+</html>

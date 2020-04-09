@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{:getSetting('system.title')} </title>
+
+	<link href="home_url/css/bootstrap.min.css" rel="stylesheet">
+	<link href="home_url/css/font-awesome.css-v=4.4.0.css" rel="stylesheet">
+	<link href="home_url/css/plugins/iCheck/custom.css" rel="stylesheet">
+	<link href="home_url/css/style.min.css" rel="stylesheet">
+
+	<style>
+		.customer_myupload  {
+			opacity: 0;
+			display:none;
+		}
+		.mini {
+			background-color: #FFF;
+			background-image: none;
+			border: 1px solid #e5e6e7;
+			border-radius: 1px;
+			color: inherit;
+			padding: 6px 12px;
+			-webkit-transition: border-color .15s ease-in-out 0s,box-shadow .15s ease-in-out 0s;
+			transition: border-color .15s ease-in-out 0s,box-shadow .15s ease-in-out 0s;
+			font-size: 14px;
+			width: 80px;
+		}
+	</style>
+</head>
+
+{include file="base:base" /}
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="ibox">
+				<div class="tabs-container">
+
+					<div class="tab-content">
+						<div id="tab-1" class="tab-pane active">
+							<div class="panel-body">
+
+								<div class="ibox-content-del">
+
+									<div class="row">
+										<!-- <form method="get" action="{:url('Manage/admin/status')}"> -->
+										<form method="get" action="" class="form-inline">
+											<div class="input-group">
+												<input type="text" name="keyword" placeholder="名称/手机号码" class=" form-control" value="{$keyword}" style="width:200px">
+												<span class="input-group-btn">
+												<button type="submit" class="btn btn-sm btn-primary"> 搜索</button> </span>
+											</div>
+										</form>
+									</div>
+
+									<div class="table-responsive">
+										<table class="table table-hover products_table">
+											<colgroup>
+												<col width="5%">
+												<col width="5%">
+												<col width="15%">
+												<col width="15%">
+												<col width="15%">
+												<col width="15%">
+												<col width="15%">
+											</colgroup>
+											<thead>
+											<tr >
+												<th></th>
+												<th>ID</th>
+												<th>头像</th>
+												<th>用户昵称/手机</th>
+												<th>状态</th>
+												<th>注册时间</th>
+											</tr>
+											</thead>
+											<tbody>
+											{foreach name="list" item="vo"}
+											<tr class="checkbox_tr">
+												<td>
+													<input type="radio" class="i-checks checkbox" name="input" value="{$vo.id}"
+														   data-user_id = "{$vo.id}"
+														   data-nickname = "{$vo.nickname}"
+														   data-head_img = "{$vo.head_img}"
+													>
+												</td>
+												<td>{$vo.id}</td>
+												<td><a href="{$vo.head_img}" target="_blank"><img src="{$vo.head_img}" height="60"/></a></td>
+												<td>{$vo.nickname}<br>{$vo.telephone}</td>
+												<td>
+													<img width="20" height="20" src="{eq name='vo.status' value='1'}home_url/images/yes.png{else/}home_url/images/cancel.png{/eq}"/>
+												</td>
+												<td>{$vo['reg_time']}</td>
+											</tr>
+											{/foreach}
+											{empty name="list"}
+											<tr><td style='text-align:center' colspan='10'>暂无数据</td></tr>
+											{/empty}
+											<tr>
+												<td colspan="12" class="pro_lasttd">
+													<div class="pro_table_contro">
+														<a href="javascript:void(0);" class="btn  btn-primary select_protect" >确定</a>
+													</div>
+												</td>
+											</tr>
+											</tbody>
+										</table>
+
+										<div class="text-center">
+											<div class="page">
+												{$list->render()}
+											</div>
+										</div>
+
+									</div>
+
+								</div>
+
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+<script src="home_url/js/jquery.min.js"></script>
+<script src="home_url/js/bootstrap.min.js"></script>
+<script src="home_url/js/plugins/peity/jquery.peity.min.js"></script>
+<script src="home_url/js/content.min.js"></script>
+<script src="home_url/js/plugins/iCheck/icheck.min.js"></script>
+<script src="home_url/js/peity-demo.min.js"></script>
+<script type="text/javascript">
+
+	$('.checkbox_tr').click(function () {
+		$('.checkbox').removeAttr('checked');
+		$(this).find('.checkbox').prop('checked', 'checked');
+	});
+
+	$('td.pro_lasttd input').on('ifChecked', function(event){
+		$('input').iCheck('check');
+	});
+	$('td.pro_lasttd input').on('ifUnchecked', function(event){
+		$('input').iCheck('uncheck');
+	});
+
+	$('.select_protect').click(function(){
+		if($(".checkbox:checked").length == 0)
+		{
+			alert('请选择商品');
+			return false;
+		}
+		/*$(".customer_info").find('td').eq(0).remove();
+		// 将没选中的复选框所在的  tr  remove  然后删除复选框
+		$("input[type='radio']").each(function(){
+			if($(this).is(':checked') == false)
+			{
+				$(this).parents('tr').remove();
+			}
+			$(this).siblings().show();
+		});*/
+		// var id = $("input[type='radio']:checked").val();
+		// var goods_name = $("input[type='checkbox']:checked").parents('tr').find('td').eq(3).html();
+		/*var check_obj = [];
+		$(".checkbox:checked").each(function (i) {
+			var val = $(this);
+			var goods_num = val.parents('tr').find('.goods_num').val();
+			check_obj[i] = {
+				goods_name : val.attr('data-goods_name'),
+				sku_info : val.attr('data-sku_info'),
+				goods_price :val.attr('data-goods_price'),
+				sku_id : val.attr('data-sku_id'),
+				goods_logo : val.attr('data-goods_logo'),
+				goods_num : goods_num,
+				goods_id : val.attr('data-goods_id'),
+			}
+		})*/
+		var user_id = $('.checkbox:checked').attr('data-user_id');
+		var nickname = $('.checkbox:checked').attr('data-nickname');
+		var head_img = $('.checkbox:checked').attr('data-head_img');
+		var check_obj = {
+			user_id:user_id,
+			nickname:nickname,
+			head_img:head_img,
+		}
+		javascript:window.parent.user_call_back(check_obj);
+	});
+
+</script>
+
+<script>
+	$(document).ready(function () {
+		$(".admin_li_b1").click(function(){
+			var edit=$(this).parent(".admin_li_btn").siblings(".admin_li_edit");
+			$(".admin_li_edit").not(edit).hide();
+			edit.toggle();
+		})
+
+		function stopPropagation(e) {
+			if (e.stopPropagation)
+				e.stopPropagation();
+			else
+				e.cancelBubble = true;
+		}
+		$(document).bind('click',function(){
+			$(".admin_li_edit").hide();
+		});
+
+		$(".admin_li_edit").bind('click',function(e){
+			stopPropagation(e);
+		});
+		$(".admin_li_b1").bind('click',function(e){
+			stopPropagation(e);
+		});
+
+
+		$("li.admin_li").click(function(){
+			$(this).addClass("active").siblings("li.admin_li").removeClass("active");
+		})
+
+		$(".admin_tree_top a.pull-right").click(function(){
+			$(".admin-add-box").toggle();
+		})
+		$(".admin-add-box .btn-default").click(function(){
+			$(".admin-add-box").hide();
+		})
+
+
+
+
+
+
+
+
+		$(".checkbox").on('click', function (event) {
+			var i = 1;
+			$(".checkbox").each(function(){
+				if(true != $(this).is(':checked')){
+					i = 0;
+				}
+			});
+			if (i == 1) {
+				$('td.pro_lasttd input').prop('checked', true);
+			} else {
+				$('td.pro_lasttd input').prop('checked', false);
+			}
+		});
+		$('td.pro_lasttd input').on('click', function(event){
+			if(true == $(this).is(':checked')){
+				$('.checkbox').prop('checked', true);
+			} else {
+				$('.checkbox').prop('checked', false);
+			}
+		});
+	});
+</script>
+<script type="text/javascript">
+	$("li").click(function(){
+		$a=$(this).find("a").attr("href");
+		// alert($a);
+		if ($a) { window.location=$a; }
+	})
+</script>
+
+</body>
+
+</html>
