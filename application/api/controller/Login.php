@@ -11,35 +11,18 @@ use app\common\helper\MessageHelper;
 use app\common\helper\UserHelper;
 use app\common\helper\VerificationHelper;
 use app\common\helper\CurlHelper;
-use app\common\constant\SmsConstant;
 use app\common\helper\TokenHelper;
-use app\common\helper\KujialeHelper;
-use app\common\helper\IntegralHelper;
 use think\Db;
 
 class Login extends Base
 {
-    use KujialeHelper;
     use TokenHelper;
     use VerificationHelper;
     use CurlHelper;
-    use IntegralHelper;
     use EncryptionHelper;
     use UserHelper;
     use MessageHelper;
 
-    public function isPartner()
-    {
-        $telephone = model('user')->where('id', $this->user_id)->value('telephone');
-        $partner = model('partner')->where(['telephone' => $telephone])->field('id')->find();
-        if ($partner) {
-            $partner_id = base64_encode(alphaID($partner['id']));
-        } else {
-            $partner_id = '';
-        }
-        //$partner_id = '';
-        ajaxReturn(['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => ['partner_id' => $partner_id]]);
-    }
 
     public function login()
     {
