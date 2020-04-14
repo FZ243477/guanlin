@@ -17,7 +17,6 @@ trait UserHelper
     private function get_access_token($encryptedData,$iv,$session_key)
     {
         $appid = getSetting('wechat.we_cgi_appid');
-        $session_key = $this->base64Decryption($session_key);
         require_once(EXTEND_PATH.'wechat/WXBizDataCrypt.php');
         $pc = new \WXBizDataCrypt ( $appid, $session_key );
         $errCode = $pc->decryptData ( $encryptedData, $iv, $data );
