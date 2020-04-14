@@ -8,14 +8,12 @@ use app\common\helper\CartHelper;
 use app\common\helper\CurlHelper;
 use app\common\helper\GoodsHelper;
 use app\admin\helper\ManagerHelper;
-use app\common\helper\IntegralHelper;
 use app\common\helper\MessageHelper;
 use app\common\helper\OrderHelper;
 use app\common\helper\PayHelper;
 use app\common\helper\PHPExcelHelper;
 use app\common\constant\SystemConstant;
 use app\common\constant\OrderConstant;
-use app\common\helper\PreferentialHelper;
 use think\Db;
 
 class Order extends Base
@@ -24,9 +22,7 @@ class Order extends Base
     use PHPExcelHelper;
     use OrderHelper;
     use PayHelper;
-    use IntegralHelper;
     use CartHelper;
-    use PreferentialHelper;
     use GoodsHelper;
     use MessageHelper;
     use CurlHelper;
@@ -74,11 +70,9 @@ class Order extends Base
                     break;
                 case 3: //待审核
                     $map['a.order_status'] = OrderConstant::ORDER_STATUS_WAIT_SEND;
-                    $map['a.sure_status'] = 0;
                     break;
                 case 4: //待发货
                     $map['a.order_status'] = OrderConstant::ORDER_STATUS_WAIT_SEND;
-                    $map['a.sure_status'] = 1;
                     break;
                 case 5: //待收货
                     $map['a.order_status'] = OrderConstant::ORDER_STATUS_WAIT_RECEIVE;
@@ -122,13 +116,8 @@ class Order extends Base
             $user = model('user')->where(['id' => $v['user_id']])->field('nickname user_name,telephone')->find();
             $order_list[$k]['name'] = $user['user_name'];
             $order_list[$k]['tel'] = $user['telephone'];
-            $order_list[$k]['order_status_name'] = OrderConstant::order_status_array_value($this->orderStatusDesc(0, $v));
+            $order_list[$k]['order_status_name'] = OrderConstant::order_status_array_value($v['order_status']);
             $order_list[$k]['pay_way_name'] = $v['pay_way'] ? OrderConstant::order_pay_array_value($v['pay_way']) : '';
-            $province = model('region')->where(['id' => $v['province_id']])->value('name');
-            $city = model('region')->where(['id' => $v['province_id']])->value('name');
-            $district = model('region')->where(['id' => $v['district_id']])->value('name');
-            $address = $province.$city.$district.$v['place'];
-            $order_list[$k]['place'] = $address;
             $order_list[$k]['pay_wait_price'] = $v['total_fee'] - $v['pay_price'];
             $order_goods = model('order_goods')->where(['order_id' => $v['id']])->select();
             $order_list[$k]['order_goods'] = $order_goods;
@@ -141,7 +130,6 @@ class Order extends Base
 
         $m = model('order');
         unset($map['a.order_status']);
-        unset($map['a.sure_status']);
         $count = $m->alias('a')
             ->join('tb_user b', 'a.user_id = b.id', 'left')->where($map)->count();
         $count1 = $m->alias('a')
@@ -152,10 +140,10 @@ class Order extends Base
             ->where(["a.order_status" => 7])->where($map)->count();//待付尾款
         $count3 = $m->alias('a')
             ->join('tb_user b', 'a.user_id = b.id', 'left')
-            ->where(["a.order_status" => 2, 'a.sure_status' => 0])->where($map)->count();//待审核
+            ->where(["a.order_status" => 2])->where($map)->count();//待审核
         $count4 = $m->alias('a')
             ->join('tb_user b', 'a.user_id = b.id', 'left')
-            ->where(["a.order_status" => 2, 'a.sure_status' => 1])->where($map)->count();//待发货
+            ->where(["a.order_status" => 2])->where($map)->count();//待发货
         $count5 = $m->alias('a')
             ->join('tb_user b', 'a.user_id = b.id', 'left')
             ->where(["a.order_status" => 3])->where($map)->count();//待收货
@@ -283,7 +271,7 @@ class Order extends Base
                 $user = model('user')->where(['id' => $v['user_id']])->field('nickname user_name,telephone')->find();
                 $order_list[$k]['name'] = $user['user_name'];
                 $order_list[$k]['tel'] = $user['telephone'];
-                $order_list[$k]['order_status_name'] = OrderConstant::order_status_array_value($this->orderStatusDesc(0, $v));
+                $order_list[$k]['order_status_name'] = OrderConstant::order_status_array_value($v['order_status']);
                 $order_list[$k]['pay_way_name'] = $v['pay_way'] ? OrderConstant::order_pay_array_value($v['pay_way']) : '';
                 $province = model('region')->where(['id' => $v['province_id']])->value('name');
                 $city = model('region')->where(['id' => $v['province_id']])->value('name');
@@ -629,88 +617,30 @@ class Order extends Base
         $order['realname'] = $user['nickname'];
         $order['m_telephone'] = $user['telephone'];
         $order['goods'] = $order_goods;
-        $order['order_status_name'] = OrderConstant::order_status_array_value($this->orderStatusDesc(0, $order));
+        $order['order_status_name'] = OrderConstant::order_status_array_value($order['order_status']);
         $order['pay_way_name'] = OrderConstant::order_pay_array_value($order['pay_way']);
-        $order['pay_order_status_name'] = OrderConstant::pay_order_status_array_value($order['pay_order_status']);
+        $order['pay_order_status_name'] = '';
         $order['order_type_name'] = CartConstant::cart_type_array_value($order['order_type']);
-        $order['source_name'] = OrderConstant::order_source_value($order['source']);
+        $order['source_name'] = '';
         $order['goods_num'] = 0;
-        foreach ($order_goods as $k1 => $v1) {
-            $order_comment = Db::table('tb_order a,tb_goods_comment b')->where('a.id=b.order_id and b.order_id=' . $v1['order_id'] . ' and b.order_goods_id=' . $v1['id'] . '')->field('a.id,b.*')->select();
-            foreach ($order_comment as $k => $v) {
-                $img = explode(',', $v['slide_img']);
-                $order_comment[$k]['img'] = $img;
-                unset($v['slide_img']);
-            }
-            $order_goods[$k1]['comment'] = $order_comment;
-            $order['goods_num'] += $v1['goods_num'];
-        }
-        $order['province'] = model('region')->where(['id' => $order['province_id']])->value('name');
-        $order['city'] = model('region')->where(['id' => $order['city_id']])->value('name');
-        $order['district'] = model('region')->where(['id' => $order['district_id']])->value('name');
-        $certificate = model('order_certificate')->where(['order_no' => $order['order_no']])->order('create_time asc')->select();
 
-        $order_money = model('order_action')->where(['pay_type' => 1, 'order_id' => $id])->select();
-        $this->assign('certificate', $certificate);
+//        $certificate = model('order_certificate')->where(['order_no' => $order['order_no']])->order('create_time asc')->select();
+
+//        $order_money = model('order_action')->where(['pay_type' => 1, 'order_id' => $id])->select();
+//        $this->assign('certificate', $certificate);
         $this->assign('info', $order);
-        $this->assign('order_money', $order_money);
+//        $this->assign('order_money', $order_money);
 
         $list = model('express')->select();
         $this->assign('express', $list);
 
-        $order_action = model('order_action')->where(['order_id' => $id])->order('log_time desc')->select();
-        $this->assign('order_action', $order_action);
+//        $order_action = model('order_action')->where(['order_id' => $id])->order('log_time desc')->select();
+//        $this->assign('order_action', $order_action);
 
         $confirm_info = [
             'is_pay' => 0,
             'is_audit' => 0,
         ];
-
-        if (($order['order_status'] != OrderConstant::ORDER_STATUS_CANCEL && $order['pay_status'] == 0)
-                || ($order['sure_status'] == 1 && ($order['order_status'] == 7 || $order['order_status'] == 1))
-//                || ($order['pay_status'] == 1 && $order['pay_order_status'] == 2 && $order['sure_status'] == 1)
-//                || ($order['pay_status'] == 1 && $order['is_certificate'] == 1 && $order['sure_status'] == 0)
-//                || ($order['pay_status'] == 1 && $order['order_status'] == 7 && $order['sure_status'] == 1)
-        ) {
-            $confirm_info['is_pay'] = 1;
-        }
-        if (($order['pay_status'] == 1 && $order['sure_status'] == 0)
-            && ($order['is_certificate'] == 2 || $order['is_certificate'] == 0)
-        ) {
-            $confirm_info['is_audit'] = 1;
-        }
-
-        if ($this->act_list != 'all') {
-            $right = model('manager_menu')->where("id", "in", $this->act_list)->field('right')->select();
-            $role_right = '';
-            foreach ($right as $val){
-                $role_right .= $val['right'].',';
-            }
-            $role_right = explode(',', $role_right);
-
-            $is_tur_one = 0;
-            $is_tur_two = 0;
-            //检查是否拥有此操作权限
-            foreach ($role_right as $v) {
-                if (strnatcasecmp('Order@sureStatus', $v) == 0) {
-                    $is_tur_one = 1;
-                }
-                if (strnatcasecmp('Order@surePay', $v) == 0) {
-                    $is_tur_two = 1;
-                }
-            }
-            if ($confirm_info['is_audit'] == 1 && $is_tur_one == 1) {
-                $confirm_info['is_audit'] = 1;
-            } else {
-                $confirm_info['is_audit'] = 0;
-            }
-            if ($confirm_info['is_pay'] == 1 && $is_tur_two == 1) {
-                $confirm_info['is_pay'] = 1;
-            } else {
-                $confirm_info['is_pay'] = 0;
-            }
-        }
-
 
         $this->assign('confirm_info', $confirm_info);
         return $this->fetch();
@@ -1024,7 +954,7 @@ class Order extends Base
             $data_info[$k]['trade_no'] = $v['trade_no'];
             $data_info[$k]['total_price'] = $v['total_price'];
             $data_info[$k]['tel'] = $user['telephone'];
-            $data_info[$k]['order_status'] = OrderConstant::order_status_array_value($this->orderStatusDesc(0, $v));
+            $data_info[$k]['order_status'] = OrderConstant::order_status_array_value($v['order_status']);
             $data_info[$k]['pay_way'] = $v['pay_way'] ? OrderConstant::order_pay_array_value($v['pay_way']) : '';
             $data_info[$k]['total_fee'] = $v['total_fee'];
             $data_info[$k]['consignee'] = $v['consignee'];

@@ -48,7 +48,6 @@ class Finance extends Base
         for ($i = strtotime($start_time); $i <= strtotime($end_time); $i+=86400) {
             $between_time = $this->todayTimestamp($i);
             $where = [];
-            $where['partner_id'] = 0;
             $where['pay_status'] = OrderConstant::PAY_STATUS_DOING;
             $where['pay_time'] = ['between', [date('Y-m-d H:i:s', $between_time[0]), date('Y-m-d H:i:s', $between_time[1])]];
             $money = model('order')->where($where)->select();
@@ -167,10 +166,10 @@ class Finance extends Base
     {
         //查询订单 支付的金额
         $order_model = model('order');
-        $we_map = ['partner_id' => 0];
+        $we_map = [];
         $we_map['pay_time'] = ['between', [$start_time, $end_time]];
         $we_map['pay_status'] = OrderConstant::PAY_STATUS_DOING;
-        $field = 'order_no,order_status,is_certificate,pay_way,pay_order_status,type,deposit_money,total_fee,order_time';
+        $field = 'order_no,order_status,pay_way,order_type,total_fee,order_time';
         $order = $order_model->where($we_map)->field($field)->select();
         $date_time = $this->todayTimestamp();
         list(

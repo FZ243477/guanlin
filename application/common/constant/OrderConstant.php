@@ -16,6 +16,7 @@ class OrderConstant
     const ORDER_STATUS_WAIT_RECEIVE = 5; //待安装
     const ORDER_STATUS_FINISH_ORDER = 6;//订单完成
     const ORDER_STATUS_CANCEL = 7; //取消订单
+    const ORDER_STATUS_REJECTED = 8; //驳回
 
 
     const ORDER_STATUS_WAIT_PAY_NAME = '待付款'; //待付款
@@ -26,6 +27,7 @@ class OrderConstant
     const ORDER_STATUS_WAIT_COMMENT_NAME = '待评价'; //待评价
     const ORDER_STATUS_FINISH_ORDER_NAME = '订单完成'; //订单完成
     const ORDER_STATUS_CANCEL_NAME = '已取消'; //取消订单
+    const ORDER_STATUS_REJECTED_NAME = '审核未通过'; //取消订单
 
     static $order_status_array = [
         self::ORDER_STATUS_CANCEL => self::ORDER_STATUS_CANCEL_NAME,
@@ -35,6 +37,7 @@ class OrderConstant
         self::ORDER_STATUS_FINISH_ORDER => self::ORDER_STATUS_FINISH_ORDER_NAME,
         self::ORDER_STATUS_AUDIT_ORDER => self::ORDER_STATUS_AUDIT_ORDER_NAME,
         self::ORDER_STATUS_FINAL_ORDER => self::ORDER_STATUS_FINAL_ORDER_NAME,
+        self::ORDER_STATUS_REJECTED => self::ORDER_STATUS_REJECTED_NAME,
     ];
 
     static function order_status_array_value($key){
