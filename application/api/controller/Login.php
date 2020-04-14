@@ -179,7 +179,7 @@ class Login extends Base
             ajaxReturn($result);
         }
         $result = $this->get_access_token($encryptedData, $iv, $result['session_key']);
-        model('user')->save(['telephone' => $result['phoneNumber']], ['user_id' => $this->user_id]);
+        model('user')->save(['telephone' => $result['phoneNumber']], ['id' => $this->user_id]);
         ajaxReturn(['status' => 1, 'msg' => 'success']);
 
     }
