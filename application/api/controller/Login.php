@@ -121,8 +121,6 @@ class Login extends Base
 
         $telephone = request()->post('telephone');
 
-        $type = request()->post('type', 0);
-
         if (!$token) {
             ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_NONE_PARAM, 'data' => []]);
         }
@@ -138,17 +136,17 @@ class Login extends Base
             ajaxReturn(['status' => 0, 'msg' => '手机号格式不正确', 'data' => []]);
         }
 
-        if ($type == 1) {
-            $code = request()->post('code');
-            if (!$code) {
-                ajaxReturn(['status' => 0, 'msg' => '请填写验证码', 'data' => []]);
-            }
-            //验证短信
-            $res = $this->checkMessage($telephone, $code, 1);
-            if ($res['status'] != 1) {
-                ajaxReturn(['status' => 0, 'msg' => $res['msg'], 'data' => []]);
-            }
+
+        $code = request()->post('code');
+        if (!$code) {
+            ajaxReturn(['status' => 0, 'msg' => '请填写验证码', 'data' => []]);
         }
+        //验证短信
+        $res = $this->checkMessage($telephone, $code, 1);
+        if ($res['status'] != 1) {
+            ajaxReturn(['status' => 0, 'msg' => $res['msg'], 'data' => []]);
+        }
+
 
         $pid = model('user')->where(['telephone' => $telephone])->value('id');
         if ($pid) {
