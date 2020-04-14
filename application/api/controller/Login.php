@@ -72,7 +72,7 @@ class Login extends Base
                     'login_num' => 1,
                 );
                 if ($info) {
-                    $user = model('user')->where(['user_id' => $info['user_id']])->find();
+                    $user = model('user')->where(['id' => $info['user_id']])->find();
                 } else {
                     $user = false;
                 }
@@ -81,7 +81,7 @@ class Login extends Base
                     unset($data['create_time']);
                     $data['update_time'] = time();
                     $data['login_num'] = $user['login_num'] + 1;
-                    model('user')->save($data, ['user_id' => $user['user_id']]);
+                    model('user')->save($data, ['id' => $user['user_id']]);
                     if ($user['telephone']) {
                         $is_binging = 0;
                     } else {
