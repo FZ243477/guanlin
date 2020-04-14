@@ -20,10 +20,10 @@ trait TokenHelper
         if (!$user_id) {
             return '';
         }
-        $user   = model('user')->where(['user_id'=>$user_id])->field('user_id')->find();
+        $user   = model('user')->where(['id'=>$user_id])->field('id')->find();
         if($user){
             $user_token = model('user_token')->where([
-                'user_id' => $user['user_id'],
+                'user_id' => $user['id'],
                 'login_type' => $login_type,
             ])->find();
             if ($user_token && $user_token['end_time'] > time() && $is_refresh == 0) {
@@ -32,7 +32,7 @@ trait TokenHelper
                 $time = time();
                 $token = md5(EncryptionConstant::MD5_KEY.$time.$user_id);
                 $data = [
-                    'user_id' => $user['user_id'],
+                    'user_id' => $user['id'],
                     'token' => $token,
                     'create_time' => $time,
                     'update_time' => $time,
