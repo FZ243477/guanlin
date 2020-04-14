@@ -1242,7 +1242,6 @@ class Goods extends Base
     {
         $c = model("goods_cate");
         $where = [];
-        $where['is_del'] = 0;
         $where['pid'] = 0;
         // $count=$c->where($where)->order('sort desc')->count();
         // $p=getpage1($count,10);

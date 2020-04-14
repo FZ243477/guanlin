@@ -7,47 +7,35 @@ namespace app\common\constant;
 class OrderConstant
 {
 
-    const ORDER_NO_STR_PREFIX = 'LC'; //主平台订单号
-    const ORDER_NO_STORE_PREFIX = 'ST'; //供应商订单号
-    const ORDER_NO_SON_PREFIX = 'SO'; //子订单号
-    const ORDER_NO_YJ_PREFIX = 'YJ'; //佣金提现
-    const ORDER_NO_DJ_PREFIX = 'DJ'; //定金
-    const ORDER_NO_PR_PREFIX = 'PR'; //采购
+    const ORDER_NO_STR_PREFIX = 'YPH'; //主平台订单号
 
-    const ORDER_STATUS_CANCEL = 0; //取消订单
     const ORDER_STATUS_WAIT_PAY = 1; //待付款
-    const ORDER_STATUS_WAIT_SEND = 2; //待发货
-    const ORDER_STATUS_WAIT_RECEIVE = 3; //待收货
-    const ORDER_STATUS_WAIT_COMMENT = 4; //待评价
-    const ORDER_STATUS_FINISH_ORDER = 5;//订单完成
-    const ORDER_STATUS_AUDIT_ORDER = 6;//待审核
-    const ORDER_STATUS_FINAL_ORDER = 7;//待付尾款
-    const ORDER_STATUS_UN_REFUND = 10; //拒接退款
-    const ORDER_STATUS_APPLY_REFUND = 11; //申请退款
-    const ORDER_STATUS_FINISH_REFUND = 12; //退款完成
+    const ORDER_STATUS_FINAL_ORDER = 2;//待付尾款
+    const ORDER_STATUS_AUDIT_ORDER = 3;//待审核
+    const ORDER_STATUS_WAIT_SEND = 4; //待发货
+    const ORDER_STATUS_WAIT_RECEIVE = 5; //待安装
+    const ORDER_STATUS_FINISH_ORDER = 6;//订单完成
+    const ORDER_STATUS_APPLY_REFUND = 7; //售后
+    const ORDER_STATUS_CANCEL = 8; //取消订单
 
-    const ORDER_STATUS_CANCEL_NAME = '已取消'; //取消订单
+
     const ORDER_STATUS_WAIT_PAY_NAME = '待付款'; //待付款
-    const ORDER_STATUS_WAIT_SEND_NAME = '待发货'; //待确认
-    const ORDER_STATUS_WAIT_RECEIVE_NAME = '待收货'; //待收货
+    const ORDER_STATUS_FINAL_ORDER_NAME = '待付尾款';//待付尾款
+    const ORDER_STATUS_AUDIT_ORDER_NAME = '待审核';//待审核
+    const ORDER_STATUS_WAIT_SEND_NAME = '待发货'; //待发货
+    const ORDER_STATUS_WAIT_RECEIVE_NAME = '待安装'; //待安装
     const ORDER_STATUS_WAIT_COMMENT_NAME = '待评价'; //待评价
     const ORDER_STATUS_FINISH_ORDER_NAME = '订单完成'; //订单完成
-    const ORDER_STATUS_AUDIT_ORDER_NAME = '待审核';//线下付款
-    const ORDER_STATUS_FINAL_ORDER_NAME = '待付尾款';//线下付款
-    const ORDER_STATUS_UN_REFUND_NAME = '拒接退款'; //申请退款
-    const ORDER_STATUS_APPLY_REFUND_NAME = '申请退款'; //申请退款
-    const ORDER_STATUS_FINISH_REFUND_NAME = '退款完成'; //退款完成
+    const ORDER_STATUS_APPLY_REFUND_NAME = '售后'; //售后
+    const ORDER_STATUS_CANCEL_NAME = '已取消'; //取消订单
 
     static $order_status_array = [
         self::ORDER_STATUS_CANCEL => self::ORDER_STATUS_CANCEL_NAME,
         self::ORDER_STATUS_WAIT_PAY => self::ORDER_STATUS_WAIT_PAY_NAME,
         self::ORDER_STATUS_WAIT_SEND => self::ORDER_STATUS_WAIT_SEND_NAME,
         self::ORDER_STATUS_WAIT_RECEIVE => self::ORDER_STATUS_WAIT_RECEIVE_NAME,
-        self::ORDER_STATUS_WAIT_COMMENT => self::ORDER_STATUS_WAIT_COMMENT_NAME,
         self::ORDER_STATUS_FINISH_ORDER => self::ORDER_STATUS_FINISH_ORDER_NAME,
-        self::ORDER_STATUS_UN_REFUND => self::ORDER_STATUS_UN_REFUND_NAME,
         self::ORDER_STATUS_APPLY_REFUND => self::ORDER_STATUS_APPLY_REFUND_NAME,
-        self::ORDER_STATUS_FINISH_REFUND => self::ORDER_STATUS_FINISH_REFUND_NAME,
         self::ORDER_STATUS_AUDIT_ORDER => self::ORDER_STATUS_AUDIT_ORDER_NAME,
         self::ORDER_STATUS_FINAL_ORDER => self::ORDER_STATUS_FINAL_ORDER_NAME,
     ];

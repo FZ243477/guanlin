@@ -5,7 +5,7 @@ namespace app\api\model;
 
 use think\Model;
 
-class Collection extends Model
+class HousesSearch extends Model
 {
     protected $autoWriteTimestamp = true;
 }

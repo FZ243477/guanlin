@@ -52,26 +52,21 @@
 													<input type="text"  name="end_time" id="end" class="input-sm form-control" value="" placeholder="注册结束时间" class="input Wdate mini" style="border-color:#ccc" autocomplete="off">
 												</div>
 												<button class="btn btn-primary input-sm line_h10" @click="msgListView(1, 1)"><i class="gicon-search white"></i>查询</button>
-												<a href="{:url('User/userImport')}" class="btn btn-primary input-sm line_h10"><i class="gicon-search white"></i>导入用户</a>
+												<!--<a href="{:url('User/userImport')}" class="btn btn-primary input-sm line_h10"><i class="gicon-search white"></i>导入用户</a>-->
 												<a href="{:url('User/userExport')}" class="btn btn-primary input-sm line_h10"><i class="gicon-search white"></i>导出用户</a>
-												<a href="{:url('User/userAdd')}" class="btn btn-primary input-sm line_h10"><i class="gicon-search white"></i>添加用户</a>
+												<!--<a href="{:url('User/userAdd')}" class="btn btn-primary input-sm line_h10"><i class="gicon-search white"></i>添加用户</a>-->
 											</div>
 										</div>
 										<div class="table-responsive">
 											<table class="table table-hover products_table">
 												<colgroup>
-
 												</colgroup>
 												<thead>
-
 												<tr >
 													<th></th>
 													<th>ID</th>
 													<th>头像</th>
 													<th>用户昵称/手机</th>
-													<th>一级下线数</th>
-													<th>二级下线数</th>
-													<th>三级下线数</th>
 													<th>状态</th>
 													<th>注册时间<br/>上次登录时间</th>
 													<th>操作</th>
@@ -85,9 +80,6 @@
 													<td class='center'>{{vo.id}}</td>
 													<td class='center'><img :src="vo.head_img" width="50" height='50' style='border-radius: 50%;'></td>
 													<td class='center'>{{vo.nickname}}<br/>{{vo.telephone}}</td>
-													<td class='center'>{{vo['first_leader_num']}}</td>
-													<td class='center'>{{vo['second_leader_num']}}</td>
-													<td class='center'>{{vo['third_leader_num']}}</td>
 													<td class="center">
 														<img width="20" height="20" :src="vo.status==1?'home_url/images/yes.png':'home_url/images/cancel.png'" @click="changeTableVal(vo.id, key)"/>
 													</td>
@@ -97,24 +89,10 @@
 													<td class='center'>{{vo.reg_time}}<br/>{{vo.last_login_time}}</td>
 													<td class='center'>
 														<a :href="'home_host/User/userDetail/id/'+vo.id" class="btn btn-primary"><i class="fa fa-plus"></i>编辑</a>
-
-														<a href="javascript:void(0);" @click="sendCoupon(vo.id);" class="btn btn-primary" title="发放优惠券">发放优惠券</a>
-														<a v-if="vo.is_child == 0" href="javascript:void(0)" class="btn btn-primary" @click="upuser(vo.id)" >升级子账号</a>
-
 														<a href="javascript:void(0)" class="btn btn-default btn-sm del_user" @click="deluser(vo.id)">删除</a>
 													</td>
 												</tr>
 												<tr v-if="userList == ''"><td style='text-align:center' colspan='6'>暂无数据</td></tr>
-												<!--<tr>
-													<td colspan="12" class="pro_lasttd">
-														<label ><input type="checkbox" class="i-checks all"  name="inputs"><span>全选</span></label>
-
-														<div class="pro_table_contro">
-															<a href="javascript:void(0);" class="btn btn-xs btn-primary btn_del" @click="send('')" >确定发放</a>
-														</div>
-
-													</td>
-												</tr>-->
 												</tbody>
 											</table>
 

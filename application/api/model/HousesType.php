@@ -6,9 +6,8 @@ namespace app\api\model;
 use think\Model;
 use traits\model\SoftDelete;
 
-class Order extends Model
+class HousesType extends Model
 {
     use SoftDelete;
     protected $deleteTime = 'delete_time';
-
 }

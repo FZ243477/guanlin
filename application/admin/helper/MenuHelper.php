@@ -32,7 +32,6 @@ trait MenuHelper
                 ['name'=>'订单配置','act'=>'order','control'=>'Setting'],
                 ['name'=>'短信配置','act'=>'sms','control'=>'Setting'],
                 ['name'=>'微信配置','act'=>'wechat','control'=>'Setting'],
-                ['name'=>'酷家乐配置','act'=>'kujiale','control'=>'Setting'],
             ]],
             'Manager' =>['name'=>'权限资源管理','icon'=>'fa-cog','sub_menu'=>[
                 ['name'=>'管理员列表','act'=>'managerList','control'=>'Manager'],

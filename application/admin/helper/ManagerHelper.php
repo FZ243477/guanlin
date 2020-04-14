@@ -2,7 +2,6 @@
 
 
 namespace app\admin\helper;
-use app\common\constant\EncryptionConstant;
 
 trait ManagerHelper
 {
@@ -15,7 +14,7 @@ trait ManagerHelper
      * @param $after_json @操作后值
      * @return bool;
      */
-    private function managerLog($manage_id,$content, $before_json, $after_json)
+    private function managerLog($manage_id, $content, $before_json, $after_json)
     {
         if ($manage_id == 1) {
             return false;
@@ -32,61 +31,5 @@ trait ManagerHelper
         model('ManagerLog')->create($data);
     }
 
-    /**
-     * 设置用户token的方法
-     * @param $manager_id
-     * @return bool|string
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
-     */
-    private function setTokenByUserInfo($manager_id)
-    {
-        if (!$manager_id) {
-            return false;
-        }
-        $user  = model('manager')->where(['id'=>$manager_id])->find();
-        if (!$user) {
-            return false;
-        }
-        $time  = time();
-        $token = md5(EncryptionConstant::MD5_KEY.$time.$manager_id);
-        $manager_token  = model('manager_token')->where(['manager_id' => $manager_id])->find();
-        if ($manager_token) {
-            $data = [
-                'token' => $token,
-                'login_time' => $time,
-            ];
-            model('manager_token')->save($data, ['manager_id' => $manager_id]);
-        } else {
-            $data = [
-                'token' => $token,
-                'login_time' => $time,
-                'manager_id' => $manager_id,
-            ];
-            model('manager_token')->save($data);
-        }
-        return $token;
-    }
 
-    /**
-     * 获取用户的manager_id信息
-     * @param $token
-     * @return bool
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
-     */
-    public function getUserInfoByToken($token){
-        if (!$token) {
-            return false;
-        }
-        $manager_token  = model('manager_token')->where(['token' => $token])->field('manager_id')->find();
-
-        if(empty($manager_token)){
-            return false;
-        }
-
-        return $manager_token['manager_id'];
-    }
 }
