@@ -31,6 +31,9 @@ class Index extends Base
     }
 
 
+    /**
+     * 账号信息
+     */
     public function account()
     {
         $system = getSetting('system');
@@ -40,6 +43,17 @@ class Index extends Base
             're_bank' => $system['re_bank'],
         ];
         ajaxReturn(['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => $list]);
+    }
+
+
+    /**
+     *取消理由
+     */
+    public function cancelCause()
+    {
+        $cancel_cause = model('cancel_cause')->field('name')->select();
+        $return_arr = ['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => ['cancel_cause' => $cancel_cause]]; //
+        ajaxReturn($return_arr);
     }
 
     /**

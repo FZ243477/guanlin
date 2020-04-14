@@ -15,8 +15,7 @@ class OrderConstant
     const ORDER_STATUS_WAIT_SEND = 4; //待发货
     const ORDER_STATUS_WAIT_RECEIVE = 5; //待安装
     const ORDER_STATUS_FINISH_ORDER = 6;//订单完成
-    const ORDER_STATUS_APPLY_REFUND = 7; //售后
-    const ORDER_STATUS_CANCEL = 8; //取消订单
+    const ORDER_STATUS_CANCEL = 7; //取消订单
 
 
     const ORDER_STATUS_WAIT_PAY_NAME = '待付款'; //待付款
@@ -26,7 +25,6 @@ class OrderConstant
     const ORDER_STATUS_WAIT_RECEIVE_NAME = '待安装'; //待安装
     const ORDER_STATUS_WAIT_COMMENT_NAME = '待评价'; //待评价
     const ORDER_STATUS_FINISH_ORDER_NAME = '订单完成'; //订单完成
-    const ORDER_STATUS_APPLY_REFUND_NAME = '售后'; //售后
     const ORDER_STATUS_CANCEL_NAME = '已取消'; //取消订单
 
     static $order_status_array = [
@@ -35,7 +33,6 @@ class OrderConstant
         self::ORDER_STATUS_WAIT_SEND => self::ORDER_STATUS_WAIT_SEND_NAME,
         self::ORDER_STATUS_WAIT_RECEIVE => self::ORDER_STATUS_WAIT_RECEIVE_NAME,
         self::ORDER_STATUS_FINISH_ORDER => self::ORDER_STATUS_FINISH_ORDER_NAME,
-        self::ORDER_STATUS_APPLY_REFUND => self::ORDER_STATUS_APPLY_REFUND_NAME,
         self::ORDER_STATUS_AUDIT_ORDER => self::ORDER_STATUS_AUDIT_ORDER_NAME,
         self::ORDER_STATUS_FINAL_ORDER => self::ORDER_STATUS_FINAL_ORDER_NAME,
     ];

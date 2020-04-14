@@ -248,7 +248,7 @@ class HousesCase extends Base
         $detail['style'] = $housesType['style'];
         $detail['designer'] = model('houses_designer')
             ->where(['id' => $housesCase['designer_id']])
-            ->field('id,designer_name,designer_logo,city,exp')
+            ->field('id,designer_name,designer_logo,designer_describe,city,exp')
             ->find();
         if ($this->user_id) {
             $detail['is_collection'] = model('collection')->where([

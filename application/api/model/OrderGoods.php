@@ -4,14 +4,10 @@
 namespace app\api\model;
 
 use think\Model;
-use traits\model\SoftDelete;
 
 class OrderGoods  extends Model
 {
-    use SoftDelete;
-    protected $deleteTime = 'delete_time';
-	
-	 protected function getGoodsPicAttr($value)
+	 protected function getGoodsLogoAttr($value)
     {
         if ($value) {
             $value = picture_url_dispose($value);
