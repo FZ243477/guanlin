@@ -70,7 +70,6 @@ class Login extends Base
                     'create_time' => time(),
                     'last_login_time' => time(),
                     'login_num' => 1,
-                    'student_id' => date('Ymd hi', time()),
                 );
                 if ($info) {
                     $user = model('user')->where(['user_id' => $info['user_id']])->find();
