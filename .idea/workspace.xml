@@ -142,7 +142,7 @@
           <entry key="jpg" value="1" />
           <entry key="json" value="1" />
           <entry key="md" value="2" />
-          <entry key="php" value="119" />
+          <entry key="php" value="121" />
           <entry key="png" value="2" />
           <entry key="sql" value="2" />
           <entry key="txt" value="6" />
@@ -155,7 +155,7 @@
           <entry key="Image" value="4" />
           <entry key="JSON" value="1" />
           <entry key="Markdown" value="2" />
-          <entry key="PHP" value="119" />
+          <entry key="PHP" value="121" />
           <entry key="PLAIN_TEXT" value="12" />
           <entry key="SQL" value="2" />
           <entry key="htaccess" value="1" />
@@ -166,14 +166,14 @@
           <entry key="dummy" value="17" />
           <entry key="gitignore" value="1" />
           <entry key="html" value="27" />
-          <entry key="php" value="8781" />
+          <entry key="php" value="8789" />
           <entry key="sql" value="16" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="HTML" value="27" />
-          <entry key="PHP" value="8781" />
+          <entry key="PHP" value="8789" />
           <entry key="PLAIN_TEXT" value="18" />
           <entry key="SQL" value="16" />
         </counts>
@@ -200,13 +200,12 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/api/controller/Order.php">
+        <entry file="file://$PROJECT_DIR$/application/api/controller/Designer.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-161">
-              <caret line="342" column="54" selection-start-line="342" selection-start-column="53" selection-end-line="342" selection-end-column="54" />
+            <state relative-caret-position="567">
+              <caret line="45" column="56" lean-forward="true" selection-start-line="45" selection-start-column="56" selection-end-line="45" selection-end-column="56" />
               <folding>
-                <element signature="e#18496#18551#0#PHP" />
-                <element signature="e#18342#18706#0#PHP" />
+                <element signature="e#117#156#0#PHP" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -257,11 +256,23 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/api/controller/Login.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="361">
-              <caret line="83" column="65" selection-start-line="83" selection-start-column="65" selection-end-line="83" selection-end-column="65" />
+            <state relative-caret-position="542">
+              <caret line="181" column="9" selection-start-line="181" selection-start-column="9" selection-end-line="181" selection-end-column="9" />
               <folding>
                 <element signature="e#39#80#0#PHP" expanded="true" />
+                <element signature="e#957#4322#0#PHP" />
+                <element signature="e#4277#5773#0#PHP" />
+                <element signature="e#5862#6582#0#PHP" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/common/helper/TokenHelper.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="497">
+              <caret line="70" column="5" lean-forward="true" selection-start-line="70" selection-start-column="5" selection-end-line="70" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -284,15 +295,6 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/common/constant/OrderConstant.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="294">
-              <caret line="14" column="43" lean-forward="true" selection-start-line="14" selection-start-column="43" selection-end-line="14" selection-end-column="43" />
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -304,7 +306,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Images</find>
       <find>Js</find>
       <find>Webuploader</find>
       <find>IntegralHelper</find>
@@ -334,6 +335,7 @@
       <find>$address</find>
       <find>address_id</find>
       <find>8</find>
+      <find>user_id</find>
     </findStrings>
     <replaceStrings>
       <replace>pay_price</replace>
@@ -409,7 +411,6 @@
         <option value="$PROJECT_DIR$/application/admin/controller/Goods.php" />
         <option value="$PROJECT_DIR$/application/admin/controller/User.php" />
         <option value="$PROJECT_DIR$/application/admin/view/user/user_list.html" />
-        <option value="$PROJECT_DIR$/application/common/helper/TokenHelper.php" />
         <option value="$PROJECT_DIR$/application/api/model/HousesType.php" />
         <option value="$PROJECT_DIR$/application/api/model/HousesCase.php" />
         <option value="$PROJECT_DIR$/application/common/constant/HousesConstant.php" />
@@ -448,6 +449,7 @@
         <option value="$PROJECT_DIR$/application/admin/view/setting/wechat.html" />
         <option value="$PROJECT_DIR$/application/common/helper/UserHelper.php" />
         <option value="$PROJECT_DIR$/application/api/model/UserAccessToken.php" />
+        <option value="$PROJECT_DIR$/application/common/helper/TokenHelper.php" />
         <option value="$PROJECT_DIR$/application/api/controller/Login.php" />
       </list>
     </option>
@@ -864,7 +866,7 @@
       <workItem from="1586498117354" duration="988000" />
       <workItem from="1586739206632" duration="12780000" />
       <workItem from="1586756574634" duration="20948000" />
-      <workItem from="1586827480909" duration="12839000" />
+      <workItem from="1586827480909" duration="15058000" />
     </task>
     <task id="LOCAL-00001" summary="默认">
       <created>1585900330977</created>
@@ -971,11 +973,25 @@
       <option name="project" value="LOCAL" />
       <updated>1586848077384</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="默认">
+      <created>1586848134517</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1586848134517</updated>
+    </task>
+    <task id="LOCAL-00017" summary="默认">
+      <created>1586848194824</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1586848194824</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1109964000" />
+    <option name="totallyTimeSpent" value="1112183000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1144,13 +1160,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/application/common/constant/HousesConstant.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="462">
-          <caret line="22" column="20" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/application/api/model/HousesDesigner.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="147">
@@ -1287,16 +1296,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="613">
           <caret line="1052" column="50" selection-start-line="1052" selection-start-column="45" selection-end-line="1052" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/api/controller/Designer.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="15" column="33" selection-start-line="15" selection-start-column="33" selection-end-line="15" selection-end-column="33" />
-          <folding>
-            <element signature="e#117#156#0#PHP" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1484,12 +1483,32 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/application/common/helper/TokenHelper.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="497">
+          <caret line="70" column="5" lean-forward="true" selection-start-line="70" selection-start-column="5" selection-end-line="70" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/api/controller/Designer.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="567">
+          <caret line="45" column="56" lean-forward="true" selection-start-line="45" selection-start-column="56" selection-end-line="45" selection-end-column="56" />
+          <folding>
+            <element signature="e#117#156#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/application/api/controller/Login.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="83" column="65" selection-start-line="83" selection-start-column="65" selection-end-line="83" selection-end-column="65" />
+        <state relative-caret-position="542">
+          <caret line="181" column="9" selection-start-line="181" selection-start-column="9" selection-end-line="181" selection-end-column="9" />
           <folding>
             <element signature="e#39#80#0#PHP" expanded="true" />
+            <element signature="e#957#4322#0#PHP" />
+            <element signature="e#4277#5773#0#PHP" />
+            <element signature="e#5862#6582#0#PHP" />
           </folding>
         </state>
       </provider>

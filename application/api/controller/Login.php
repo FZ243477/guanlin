@@ -115,7 +115,7 @@ class Login extends Base
     /**
      * 绑定手机号
      */
-    public function bindingTelephone()
+    public function editTelephone()
     {
         $token = request()->post('token');
 
@@ -156,6 +156,33 @@ class Login extends Base
         }
         model('user')->save(['telephone' => $telephone], ['id' => $user_id]);
         ajaxReturn(['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS]);
+
+    }
+
+    public function bindingTelephone()
+    {
+        $appid = getSetting('wechat.we_cgi_appid');
+        $secret = getSetting('wechat.we_cgi_secret');
+
+        $code = request()->post('code');
+        $encryptedData = request()->post('encryptedData');
+        $iv = request()->post('iv');
+
+        $query = [
+            'appid'     => $appid,
+            'secret'    => $secret,
+            'js_code'      => $code,
+            'grant_type'=> 'authorization_code',
+        ];
+        $url = 'https://api.weixin.qq.com/sns/jscode2session?'.http_build_query($query).'#wechat_redirect';
+        $output = $this->curt($url);
+        $result = json_decode($output, true);
+        if (!isset($result['session_key'])) {
+            ajaxReturn($result);
+        }
+        $result = $this->get_access_token($encryptedData, $iv, $result['session_key']);
+        model('user')->save(['telephone' => $result['phoneNumber']], ['user_id' => $this->user_id]);
+        ajaxReturn(['status' => 1, 'msg' => 'success']);
 
     }
 
