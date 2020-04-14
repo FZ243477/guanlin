@@ -77,11 +77,11 @@ class Login extends Base
                     $user = false;
                 }
                 if ($info && $user) {
-                    $user_id = $user['user_id'];
+                    $user_id = $user['id'];
                     unset($data['create_time']);
                     $data['update_time'] = time();
                     $data['login_num'] = $user['login_num'] + 1;
-                    model('user')->save($data, ['id' => $user['user_id']]);
+                    model('user')->save($data, ['id' => $user['id']]);
                     if ($user['telephone']) {
                         $is_binging = 0;
                     } else {
