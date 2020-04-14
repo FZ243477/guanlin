@@ -13,13 +13,13 @@ return [
     // 数据库类型
     'type'            => 'mysql',
     // 服务器地址
-    'hostname'        => 'localhost',
+    'hostname'        => '125.124.142.51',
     // 数据库名
     'database'        => 'yph',
     // 用户名
-    'username'        => 'root',
+    'username'        => 'yph',
     // 密码
-    'password'        => 'HQA4B2m7ugE3kI7fXFvTw3vBSaHYMF',
+    'password'        => 'yph',
     // 端口
     'hostport'        => '',
     // 连接dsn
