@@ -23,6 +23,7 @@ class Base extends Controller{
                 echo json_encode(['status' => 0, 'msg' => '您暂未登陆', 'data' => []]);
             } else {
                 //判断用户是否已经登录
+                //$this->error('请先登录系统!',url('Admin/login'));
                 $this->redirect(getSetting('system.host').url('Admin/login'));
             }
             die;

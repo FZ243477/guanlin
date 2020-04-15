@@ -74,7 +74,6 @@
 															<select name='brand' class="input-sm form-control" @change="selectCoefficient" style='padding: 5px;'>
 																<option value=''>选择品牌系列</option>
 																<option  v-for="vo in goods_brand_new" :value='vo.id' v-html="vo.classname">{{vo.classname}}</option>
-
 															</select>
 														</div>
 													</div>
@@ -479,64 +478,6 @@
 								$_this.checkedAll = 0;
 							}
 							$_this.hasReset = true;
-							//$_this.pageInfo.pageCurrent ++ ;
-							/*$(".checkbox").on('click', function (event) {
-								var i = 1;
-								$(".checkbox").each(function(){
-									if(true != $(this).is(':checked')){
-										i = 0;
-									}
-								});
-								if (i == 1) {
-									$('td.pro_lasttd input').prop('checked', true);
-								} else {
-									$('td.pro_lasttd input').prop('checked', false);
-								}
-							});
-							$('td.pro_lasttd input').on('click', function(event){
-								if(true == $(this).is(':checked')){
-									$('.checkbox').prop('checked', true);
-								} else {
-									$('.checkbox').prop('checked', false);
-								}
-							});*/
-							/*$('td.pro_lasttd input').on('click', function(event){
-								$('input').removeAttr('checked');
-							});*/
-							/*$(".j-audit").click(function(){
-								$_this.goods_id = $(this).attr('data-id');
-								console.log($_this.goods_id );
-								$('#myModal2').show();
-							});
-							$(".close").click(function(){
-								//id = $(this).attr("data-id");
-								$('.inmodal').hide();
-								//$('#albums-overlay').show();
-							});
-							$('.audit_submit').click(function () {
-								let audit_msg = $('#audit_msg').val();
-								let audit_status = $('input[name="audit_status"]:checked').val();
-								let post = {
-									audit_status:audit_status,
-									audit_msg:audit_msg,
-									goods_id:$_this.goods_id,
-								};
-								$.ajax({
-									type:"POST",
-									url: Url + '/Goods/goodsAudit',
-									data: post,
-									dataType:"json",
-									success:function(g){
-										if (g.status == 1) {
-											$_this.msgListView(1, 0);
-											alert(g.msg);
-											$('.inmodal').hide();
-										} else {
-											alert(g.msg);
-										}
-									}
-								})
-							})*/
 						})
 					}
 				})
