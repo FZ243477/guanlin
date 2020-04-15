@@ -39,9 +39,9 @@ class Order extends Base
         if (!$goods_id) {
             ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_NONE_PARAM]);
         }
-        $address = model('address')->where(['id' => $address_id])->field('consignee,province,city,district,address,telephone')->find();
+        $address = model('address')->where(['id' => $address_id])->field('id,consignee,province,city,district,address,telephone')->find();
         if (!$address) {
-            $address = model('address')->where(['user_id' => $this->user_id])->field('consignee,province,city,district,address,telephone')->order('is_default desc, id desc')->find();
+            $address = model('address')->where(['user_id' => $this->user_id])->field('id,consignee,province,city,district,address,telephone')->order('is_default desc, id desc')->find();
         }
 
         if ($order_type == 1) { //单品
