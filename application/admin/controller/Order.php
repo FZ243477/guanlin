@@ -204,8 +204,6 @@ class Order extends Base
         }
         $pay_price = request()->post('pay_price');
         $data['money'] = $pay_price;
-        $data['total_money'] = $order['pay_price'] + $pay_price;
-        $data['pay_type'] = 1;
         $data['order_id'] = $order_id;
         $data['action_user'] = model('manager')->where(['id' => $this->manager_id])->value('manager_name');
         $data['action_note'] = $action_note;
@@ -216,6 +214,8 @@ class Order extends Base
 //        $data['audit_name'] = $data['action_user'];
 //        $data['audit_time'] = $data['log_time'];
         if ($type == 1) {
+            $data['total_money'] = $order['pay_price'] + $pay_price;
+            $data['pay_type'] = 1;
             if (!$pay_price) {
                 ajaxReturn(['status' => 0, 'msg' => '请填写结算金额']);
             }
@@ -237,7 +237,11 @@ class Order extends Base
             }
             model('order')->where('id', $order['id'])->setInc('pay_price', $pay_price);
         } else {
+            $data['pay_type'] = 2;
             $data['status_desc'] = '拒绝本次付款';
+            model('order')->save([
+                'order_status' => OrderConstant::ORDER_STATUS_REJECTED,
+            ], ['id'=>$order_id]);
         }
 
         model('order_certificate')->where([

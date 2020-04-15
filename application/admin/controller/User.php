@@ -58,8 +58,7 @@ class User extends Base
             $totalCount = $user_model->where($map)->count();
             $first_row = ($page-1)*$list_row;
             $field = [
-                'id','telephone','head_img','status','is_child',
-                'nickname','reg_time','last_login_time',
+                'id','telephone','head_img','status', 'nickname','create_time',
             ];
             $lists = $user_model->where($map)->field($field)->limit($first_row, $list_row)->order('id desc')->select();
 
