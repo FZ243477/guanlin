@@ -143,7 +143,7 @@
           <entry key="jpg" value="1" />
           <entry key="json" value="1" />
           <entry key="md" value="2" />
-          <entry key="php" value="129" />
+          <entry key="php" value="130" />
           <entry key="png" value="2" />
           <entry key="sql" value="2" />
           <entry key="txt" value="6" />
@@ -156,7 +156,7 @@
           <entry key="Image" value="4" />
           <entry key="JSON" value="1" />
           <entry key="Markdown" value="2" />
-          <entry key="PHP" value="129" />
+          <entry key="PHP" value="130" />
           <entry key="PLAIN_TEXT" value="12" />
           <entry key="SQL" value="2" />
           <entry key="htaccess" value="1" />
@@ -167,14 +167,14 @@
           <entry key="dummy" value="17" />
           <entry key="gitignore" value="1" />
           <entry key="html" value="28" />
-          <entry key="php" value="9070" />
+          <entry key="php" value="9078" />
           <entry key="sql" value="16" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="HTML" value="28" />
-          <entry key="PHP" value="9070" />
+          <entry key="PHP" value="9078" />
           <entry key="PLAIN_TEXT" value="18" />
           <entry key="SQL" value="16" />
         </counts>
@@ -188,15 +188,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/database.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="336">
-              <caret line="24" column="12" selection-start-line="24" selection-start-column="12" selection-end-line="24" selection-end-column="12" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/application/admin/controller/Order.php">
           <provider selected="true" editor-type-id="text-editor">
@@ -268,11 +259,20 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/api/controller/HousesCase.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="189">
-              <caret line="167" column="28" selection-start-line="167" selection-start-column="28" selection-end-line="167" selection-end-column="28" />
+            <state relative-caret-position="409">
+              <caret line="173" column="20" selection-start-line="173" selection-start-column="20" selection-end-line="173" selection-end-column="20" />
               <folding>
                 <element signature="e#36#75#0#PHP" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/api/controller/Order.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="378">
+              <caret line="43" column="89" selection-start-line="43" selection-start-column="89" selection-end-line="43" selection-end-column="89" />
             </state>
           </provider>
         </entry>
@@ -427,7 +427,6 @@
         <option value="$PROJECT_DIR$/application/api/model/OrderGoods.php" />
         <option value="$PROJECT_DIR$/application/api/model/CancelCause.php" />
         <option value="$PROJECT_DIR$/application/api/controller/Index.php" />
-        <option value="$PROJECT_DIR$/application/api/controller/Order.php" />
         <option value="$PROJECT_DIR$/application/api/controller/Base.php" />
         <option value="$PROJECT_DIR$/application/admin/view/setting/wechat.html" />
         <option value="$PROJECT_DIR$/application/common/helper/UserHelper.php" />
@@ -441,6 +440,7 @@
         <option value="$PROJECT_DIR$/application/common/constant/OrderConstant.php" />
         <option value="$PROJECT_DIR$/application/api/controller/User.php" />
         <option value="$PROJECT_DIR$/application/api/controller/Login.php" />
+        <option value="$PROJECT_DIR$/application/api/controller/Order.php" />
         <option value="$PROJECT_DIR$/application/api/controller/HousesCase.php" />
       </list>
     </option>
@@ -741,7 +741,7 @@
       <workItem from="1586739206632" duration="12780000" />
       <workItem from="1586756574634" duration="20948000" />
       <workItem from="1586827480909" duration="18694000" />
-      <workItem from="1586911852868" duration="587000" />
+      <workItem from="1586911852868" duration="2798000" />
     </task>
     <task id="LOCAL-00001" summary="默认">
       <created>1585900330977</created>
@@ -897,11 +897,25 @@
       <option name="project" value="LOCAL" />
       <updated>1586858502469</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="默认">
+      <created>1586912453554</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1586912453554</updated>
+    </task>
+    <task id="LOCAL-00024" summary="默认">
+      <created>1586916477847</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1586916477847</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1116406000" />
+    <option name="totallyTimeSpent" value="1118617000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1240,17 +1254,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/api/controller/Order.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-161">
-          <caret line="342" column="54" selection-start-line="342" selection-start-column="53" selection-end-line="342" selection-end-column="54" />
-          <folding>
-            <element signature="e#18496#18551#0#PHP" />
-            <element signature="e#18342#18706#0#PHP" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/static/admin/ueditor/php/Uploader.class.php">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -1391,10 +1394,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/application/api/controller/Order.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="43" column="89" selection-start-line="43" selection-start-column="89" selection-end-line="43" selection-end-column="89" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/application/api/controller/HousesCase.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="167" column="28" selection-start-line="167" selection-start-column="28" selection-end-line="167" selection-end-column="28" />
+        <state relative-caret-position="409">
+          <caret line="173" column="20" selection-start-line="173" selection-start-column="20" selection-end-line="173" selection-end-column="20" />
           <folding>
             <element signature="e#36#75#0#PHP" expanded="true" />
           </folding>

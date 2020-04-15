@@ -171,7 +171,7 @@ class HousesCase extends Base
             ->join('houses_type ht', 'ht.houses_id = h.id', 'left')
             ->where($where)
             ->field('ht.id,ht.name,ht.logo,ht.area,space')
-            ->find();
+            ->select();
 
         $where = ['user_id' => $this->user_id, 'keyword' => $keyword];
         $search_list = model('houses_search')->where($where)->field('id')->find();
