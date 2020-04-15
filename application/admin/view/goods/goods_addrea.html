@@ -119,7 +119,7 @@
                                         {/empty}
                                         <div class="xuanze_showimge mgr10" data-nums='15' style="position:relative;" >
                                             <div style='float:left;position:relative;'>
-                                                <img src="{$edit_goods.goods_logo}" class="mgr10 mgt10 ">
+                                                <img src="{$edit_goods.goods_logo}" style="width: 150px;" class="mgr10 mgt10 ">
                                                 <input type="hidden" name="express_logo" class="express_logo" value="{$edit_goods.goods_logo}">
                                             </div>
                                         </div>
@@ -150,10 +150,15 @@
                                         <img  class='goods_logo' src="home_url/images/addimg.png" />
                                         {/empty}
                                         <div class="xuanze_showimge mgr10" data-nums='15' style="position:relative;" >
-                                            <div style='float:left;position:relative;'>
-                                                <img src="" class="mgr10 mgt10 ">
-                                                <input type="hidden" name="multiple_logo" class="multiple_logo" value="">
+                                            {notempty name="detail_tujilogo"}
+                                            {volist name="detail_tujilogo" id="vo"}
+                                            <div class="goods_imgs" style='float:left;position:relative;margin-right: 8px;'>
+                                                <img src="{$vo.logo}" style="width: 150px;" class="mgr10 mgt10 ">
+                                                <input type="hidden" name="multiple_logo" class="multiple_logo" value="{$vo.logo}">
+                                                <em class="close" style="float: right;" title="移除这张图片" onclick="delImgs(this)">×</em>
                                             </div>
+                                            {/volist}
+                                            {/notempty}
                                         </div>
                                     </div>
                                     <div class="xuanze_progress fl mgr15" style="display:none">
@@ -183,10 +188,15 @@
                                         <img  class='goods_logo' src="home_url/images/addimg.png" />
                                         {/empty}
                                         <div class="xuanze_showimge mgr10" data-nums='15' style="position:relative;" >
-                                            <div style='float:left;position:relative;'>
-                                                <img src="" class="mgr10 mgt10 ">
-                                                <input type="hidden" name="multiple_logo" class="detail_logo" value="">
+                                            {notempty name="detail_xqlogo"}
+                                            {volist name="detail_xqlogo" id="vo"}
+                                            <div class="goods_imgs" style='float:left;position:relative;margin-right: 8px;'>
+                                                <img src="{$vo.logo}" style="width: 150px;"  class="mgr10 mgt10 ">
+                                                <input type="hidden" name="detail_logo" class="detail_logo" value="{$vo.logo}">
+                                                <em class="close" style="float: right;" title="移除这张图片" onclick="delImgs(this)">×</em>
                                             </div>
+                                            {/volist}
+                                            {/notempty}
                                         </div>
                                     </div>
                                     <div class="xuanze_progress fl mgr15" style="display:none">
@@ -246,7 +256,7 @@
         $.post("{:url('Goods/save_product')}",post, function(data){
 
             if(data.status){
-                dialog.showTips(data.msg,"", "{:url('Goods/goodsListrea')}");
+                dialog.showTips(data.msg,"", "{:url('Goods/goodsListref')}");
             }else{
                 alert(data.msg);
             }
@@ -311,7 +321,7 @@
                         var img = '<div class="goods_imgs">' +
                             '<img src="'+ g.data.file_name +'" height="80"  class="mgr10 mgt10 ">' +
                             '<input type="hidden" name="'+ name +'[]" class="'+ name +'"  value="'+ g.data.file_name +'">' +
-                            '<em class="close" title="移除这张图片" onclick="delImgs(this)">×</em>' +
+                            '<em class="close" style="float: left;" title="移除这张图片" onclick="delImgs(this)">×</em>' +
                             '</div>';
 
                         xuanze_showimge.append(img);
@@ -336,7 +346,7 @@
     });
 
     function delImgs(obj){
-        $(obj).parent(".goods_imgs").remove();
+        $(obj).parents(".goods_imgs").remove();
         $(obj).remove();
 
     }

@@ -40,6 +40,7 @@ class Banner extends Base
         $this->assign("banner_cate", $banner_cate);
 
         $list = $banner_model->where($where)->order('sort desc, banner_id desc')->paginate(10,false,['query'=>request()->param()]);
+       dump($list);exit;
         $this->assign('list', $list);
         return $this->fetch();
     }

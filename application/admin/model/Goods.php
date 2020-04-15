@@ -23,6 +23,8 @@ class Goods extends Model
         return $this->hasMany('SpecGoodsPrice','goods_id','id');
     }
 
+
+
     //获取器 用于读取字段值的修改
     protected function getClassNameAttr($value, $data)
     {
