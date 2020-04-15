@@ -46,7 +46,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/application/admin/helper/MenuHelper.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="275">
@@ -55,11 +55,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/admin/controller/Goods.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="44575">
-              <caret line="1808" column="31" lean-forward="true" selection-start-line="1808" selection-start-column="31" selection-end-line="1808" selection-end-column="31" />
+            <state relative-caret-position="250">
+              <caret line="29" selection-start-line="29" selection-end-line="29" />
             </state>
           </provider>
         </entry>
@@ -172,7 +172,6 @@
         <option value="$PROJECT_DIR$/public/.gitignore" />
         <option value="$PROJECT_DIR$/../yph/application/api/controller/Login.php" />
         <option value="$PROJECT_DIR$/application/admin/helper/ManagerHelper.php" />
-        <option value="$PROJECT_DIR$/application/admin/controller/Goods.php" />
         <option value="$PROJECT_DIR$/application/admin/controller/User.php" />
         <option value="$PROJECT_DIR$/application/admin/view/user/user_list.html" />
         <option value="$PROJECT_DIR$/application/api/model/HousesType.php" />
@@ -220,6 +219,7 @@
         <option value="$PROJECT_DIR$/application/api/controller/Order.php" />
         <option value="$PROJECT_DIR$/application/api/controller/HousesCase.php" />
         <option value="$PROJECT_DIR$/application/admin/helper/MenuHelper.php" />
+        <option value="$PROJECT_DIR$/application/admin/controller/Goods.php" />
       </list>
     </option>
   </component>
@@ -252,7 +252,7 @@
       <path value="$PROJECT_DIR$/vendor/myclabs/php-enum" />
     </include_path>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="-27" />
     <option name="width" value="1937" />
     <option name="height" value="1057" />
@@ -481,7 +481,7 @@
       <workItem from="1586756574634" duration="20948000" />
       <workItem from="1586827480909" duration="18694000" />
       <workItem from="1586911852868" duration="2798000" />
-      <workItem from="1586931850857" duration="451000" />
+      <workItem from="1586931850857" duration="717000" />
     </task>
     <task id="LOCAL-00001" summary="默认">
       <created>1585900330977</created>
@@ -655,7 +655,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1119068000" />
+    <option name="totallyTimeSpent" value="1119334000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -667,7 +667,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19101876" />
@@ -1120,17 +1120,17 @@
         <state relative-caret-position="-494" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/admin/controller/Goods.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="44575">
-          <caret line="1808" column="31" lean-forward="true" selection-start-line="1808" selection-start-column="31" selection-end-line="1808" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/application/admin/helper/MenuHelper.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="275">
           <caret line="14" column="52" selection-start-line="14" selection-start-column="52" selection-end-line="14" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/admin/controller/Goods.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="250">
+          <caret line="29" selection-start-line="29" selection-end-line="29" />
         </state>
       </provider>
     </entry>
