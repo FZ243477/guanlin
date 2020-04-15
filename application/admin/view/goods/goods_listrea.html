@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>悦品荟商城 - 订单</title>
+    <meta name="keywords" content="悦品荟商城">
+    <meta name="description" content="悦品荟商城">
+
+    <link href="home_url/css/bootstrap.min.css" rel="stylesheet">
+    <link href="home_url/css/font-awesome.css-v=4.4.0.css" rel="stylesheet">
+    <link href="home_url/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="home_url/css/style.min.css" rel="stylesheet">
+    {include file="base:base" /}
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="tabs-container">
+                    <ul class="nav nav-tabs">
+                        <li class="active tabs_a fl">
+                        <a href="{:url('Order/orderList')}" class="active tabs_a fl">所有商品</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="row" style="padding-top:20px;background:#fff;margin-left: 0;margin-right: 0;">
+                            <form method="get" action="" class="form-inline order_search">
+                                <div class="form-group" style="margin-left: 10px;">
+                                    <label for="exampleInputEmail1"  class="sr-only">商品名称</label>
+                                    <input type="text" name="name" value="" placeholder="商品名称" id="exampleInputEmail1" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <select name='brand' class="input-sm form-control" data-placeholder="请选择状态"  id="exampleInputEmail2" style='padding: 5px;'>
+                                        <option value=''>商品分类</option>
+                                        {volist name="cateres" id="cate"}
+                                        <option  value="{$cate.id}" style="width:100%;background-color: #EAC06C" >{$cate.name}</option>
+                                            <?php foreach($cate['children'] as $k2=>$v2): ?>
+                                            <option  value="{$v2.id}"  style="width:70%;">{$v2.name}</option>
+                                            <?php endforeach; ?>
+                                        {/volist}
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+
+                                </div>
+
+                                <a class="btn btn-primary"  onclick="exportOrder()">搜索</a>
+                                <a href="{:url('goods/goods_addrea')}" class="btn btn-primary" >添加商品</a>
+                            </form>
+
+                            <div id="tab-1" class="tab-pane">
+                                <div class="panel-body">
+                                    <div class="ibox-content-del">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover products_table" >
+                                                <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>商品名称</th>
+                                                    <th>商品描述</th>
+                                                    <th>商品分类</th>
+                                                    <th>商品原价</th>
+                                                    <th>商品价格</th>
+                                                    <th>商品数量</th>
+                                                    <th>商品logo</th>
+                                                    <th>操作</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody class="xun" id="xun">
+                                                <tr><td colspan="10" style="text-align: center;">暂无数据</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="page">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal" id="myModal21" tabindex="-1" role="dialog" aria-hidden="true" >
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header" style="padding: 10px 15px;">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+                    </button>
+                    <h5 class="model_tit">订单发货</h5>
+                </div>
+
+                <div class="modal-body modal-prodot-body">
+
+                    <div class="model_body">
+                        <div class="model_address">
+
+                            <form class="form-horizontal">
+                                <div class="form-group clearfix">
+                                    <label class="col-sm-2 control-label">使用物流</label>
+                                    <div class="col-sm-6">
+                                        <label><input type="radio"  value="1" name="is_check" checked>是</label>
+                                        <label><input type="radio"  value="0" name="is_check">否</label>
+                                    </div>
+                                </div>
+                                <div class="is_check_sure" style="display: block">
+                                    <div class="form-group clearfix">
+                                        <label class="col-sm-2 control-label">选择物流</label>
+
+                                        <div class="col-sm-9">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <select id="wuliu_name" class="form-control m-b" name="wuliu_name">
+                                                        <option value='0'>请选择物流...</option>
+                                                        <option value=""></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group clearfix">
+                                        <label class="col-sm-2 control-label">物流单号</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" id="wuliu_nums" class="form-control" >
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="is_check_false" style="display: none">
+                                    <div class="form-group clearfix">
+                                        <label class="col-sm-2 control-label">配送员</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" id="s_username" class="form-control" >
+                                        </div>
+                                    </div>
+                                    <div class="form-group clearfix">
+                                        <label class="col-sm-2 control-label">配送电话</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" id="s_telephone" class="form-control" >
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="col-sm-2 control-label">备　　注</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" id="s_remark" class="form-control" >
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary sendExpress">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true" style="">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header" style="padding: 10px 15px;">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+                    </button>
+                    <h5 class="model_tit">订单审核</h5>
+                </div>
+
+                <div class="modal-body modal-prodot-body">
+
+                    <div class="model_body">
+                        <div class="model_address">
+
+                            <form class="form-horizontal">
+                                <div class="form-group clearfix">
+                                    <label class="col-sm-2 control-label">备注</label>
+
+                                    <div class="col-sm-6">
+                                        <textarea type="text" class="form-control"  id="action_note1" cols="100" rows="4" style="text-align: left;resize:none;margin-bottom: 10px" ></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group clearfix">
+                                    <label class="col-sm-2 control-label">发货方式</label>
+                                    <div class="col-sm-6">
+                                        <label><input type="radio" class="form-control" name="sure_status" style="width: 14px" checked value="1">发货给仓库</label>
+                                        <label><input type="radio" class="form-control" name="sure_status" style="width: 14px" value="0">发货给用户</label>
+                                        <label><input type="radio" class="form-control" name="sure_status" style="width: 14px" value="2">取消订单</label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick ="return orderAction1()" >确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal" id="refusetuikuan" tabindex="-1" role="dialog" aria-hidden="true" style="">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header" style="padding: 10px 15px;">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+                    </button>
+                    <h5 class="model_tit">退款</h5>
+                </div>
+
+                <div class="modal-body modal-prodot-body">
+
+                    <div class="model_body">
+                        <div class="model_address">
+
+                            <form class="form-horizontal">
+                                <div class="form-group clearfix">
+                                    <label class="col-sm-3 control-label"><span class="colorRed"></span>服务类型：</label>
+                                    <div class="col-sm-6" style="margin-top: 7px;"><span class="fi-help-text" id="refund_type"></span></div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="col-sm-3 control-label"><span class="colorRed"></span>支付方式：</label>
+                                    <div class="col-sm-6" style="margin-top: 7px;"><span class="fi-help-text" id="rtk_pay_way_name"></span></div>
+                                </div>
+
+                                <div class="form-group clearfix" id="refund_hw_status_text" style="display:none;">
+                                    <label class="col-sm-3 control-label"><span class="colorRed"></span>是否收到货：</label>
+                                    <div class="col-sm-6" style="margin-top: 7px;">
+                                        <span class="fi-help-text" id="refund_hw_status"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group clearfix" id="show_open_price">
+                                    <label class="col-sm-3 control-label"><span class="colorRed"></span>退款金额：</label>
+                                    <div class="col-sm-6" style="margin-top: 7px;"><span class="fi-help-text" id="rtk_pay_price"></span></div>
+                                </div>
+
+                                <div class="form-group clearfix">
+                                    <label class="col-sm-3 control-label"><span class="colorRed"></span>原因：</label>
+                                    <div class="col-sm-6" style="margin-top: 7px;">
+										<span class="fi-help-text" id="refund_reason">
+										</span>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group clearfix">
+                                    <label class="col-sm-3 control-label"><span class="colorRed"></span>原因说明：</label>
+                                    <div class="col-sm-6" style="margin-top: 7px;">
+										<span class="fi-help-text" id="refund_instructions">
+										</span>
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="col-sm-3 control-label"><span class="colorRed"></span>申请时间：</label>
+                                    <div class="col-sm-6" style="margin-top: 7px;">
+										<span class="fi-help-text" id="refund_add_time" style="margin-top: 7px;">
+										</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group clearfix">
+                                    <label class="col-sm-3 control-label"><span class="colorRed"></span>拒绝原因：</label>
+                                    <div class="col-sm-6" style="margin-top: 7px;">
+                                        <textarea rows="3" cols="40" style="padding: 5px" name="refuse_refund_reason"></textarea>
+                                        <span class="fi-help-text"></span>
+                                    </div>
+                                </div>
+                                <input type="hidden" value="" id="new_refuse_order_no" />
+                                <input type="hidden" value="" id="new_refuse_order_id" />
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="modal-footer">
+                    <a href="javascript:;" class="btn btn-primary" onclick="J_refuse_refund_submit(this)">拒绝</a>
+                    <a href="javascript:;" class="btn btn-primary" onclick="TY_refuse_refund_submit(this)" id="TY_refuse_refund_submit">同意</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal" id="tuikuan" tabindex="-1" role="dialog" aria-hidden="true" style="">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header" style="padding: 10px 15px;">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+                    </button>
+                    <h5 class="model_tit">退款</h5>
+                </div>
+
+                <div class="modal-body modal-prodot-body">
+
+                    <div class="model_body">
+                        <div class="model_address">
+
+                            <form class="form-horizontal">
+
+                                <div class="form-group clearfix">
+                                    <label class="col-sm-3 control-label"><span class="colorRed"></span>订单编号：</label>
+                                    <div class="col-sm-6" style="margin-top: 7px;"><span class="fi-help-text" id="tk_order_no"></span></div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="col-sm-3 control-label"><span class="colorRed"></span>支付方式：</label>
+                                    <div class="col-sm-6" style="margin-top: 7px;"><span class="fi-help-text" id="tk_pay_way_name"></span></div>
+                                </div>
+
+
+                                <div class="form-group clearfix" id="show_open_price">
+                                    <label class="col-sm-3 control-label"><span class="colorRed"></span>支付金额：</label>
+                                    <div class="col-sm-6" style="margin-top: 7px;"><span class="fi-help-text" id="tk_pay_price"></span></div>
+                                </div>
+
+                                <div class="form-group clearfix">
+                                    <label class="col-sm-3 control-label"><span class="colorRed"></span>退款金额：</label>
+                                    <div class="col-sm-6" style="margin-top: 7px;">
+                                        <input type="text" value="" class="input" name="refund_money"
+                                               id="xstk"
+                                               maxlength="10"
+                                               onkeyup="this.value=this.value.replace(/[^\d\.]+/g,'')"
+                                               onblur="this.value=this.value.replace(/(\.\d{2})\d*$/,'\$1')">
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="modal-footer">
+                    <input type="hidden" value="" id="tk_order_id" />
+                    <a href="javascript:;" class="btn btn-primary" onclick="J_Submit_refund(this)">退款</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="home_url/js/jquery.min.js"></script>
+<script src="home_url/js/bootstrap.min.js"></script>
+<script src="home_url/js/plugins/peity/jquery.peity.min.js"></script>
+<script src="home_url/js/content.min.js"></script>
+<script src="home_url/js/plugins/iCheck/icheck.min.js"></script>
+<script src="home_url/js/peity-demo.min.js"></script>
+<script src="home_url/js/plugins/layer/laydate/laydate.js"></script>
+<script>
+    $(document).ready(function( ){
+        var name = "";
+        console.log(name);
+        var cate = "";
+        console.log(cate);
+        $.ajax({
+            type: "POST",
+            url: "{:url('Goods/search')}",
+            data: {
+                name:name,
+                cate:cate,
+            },
+            dataType: "json",
+            success:function(res){
+                var res1 = res.data
+                var html='';
+                console.log(res1);
+                $.each(res1,function(i,v){
+                    var eid=v.id;
+                    html+="<tr>"
+                    html+="<td class=\"editida\" >"+v.id+"</td>"
+                    html+="<td>"+v.goods_name+"</td>"
+                    html+="<td>"+v.goods_describe+"</td>"
+                    html+="<td>"+v.cate_name+"</td>"
+                    html+="<td>"+v.goods_price+"</td>"
+                    html+="<td>"+v.goods_oprice+"</td>"
+                    html+="<td>"+v.collection_num+"</td>"
+                    html+="<td class=\"center\"> <img width=\"20\" height=\"20\" src="+v.goods_logo+"> </td>"
+                    html+="<td> <a  href=\"javascript:void(0);\" class=\"btn btn-primary btn-sm\" onclick=goodsshow("+v.id+") title=\"查看详情\">详情</a>" +
+                        " <a href=\"javascript:void(0);\" class=\"btn btn-primary btn-sm j-editClass\"  onclick=goodsedit("+v.id+") data-id=\"\" title=\"编辑\" >编辑</a>" +
+                        " <a href=\"javascript:void(0);\" class=\"btn btn-primary btn-sm j-editClass1\" onclick=goodsdel("+v.id+") data-id=\"\">删除</a></td>"
+                    html+="</tr>"
+                })
+                $("#xun").html(html)
+            }
+        });
+    })
+    function goodsshow(e){
+        location.href='goods_addrea/id/'+e+'/type/show';
+    }
+    function goodsedit(e){
+        location.href='goods_addrea/id/'+e+'';
+    }
+    function goodsdel(e){
+        var id = e;
+        if(!id){
+            $(".checkbox").each(function(){
+                if(true == $(this).is(':checked')){
+                    id += id?"-"+$(this).val():$(this).val();
+                }
+            });
+            if(!id){
+                alert('请选择要删除的数据');
+                return false;
+            }
+        }
+        dialog.showTips('确定要删除吗？', "firm", function(){
+            $.ajax({
+                url: "{:url('Goods/del_goods')}",
+                type: "post",
+                dataType: "json",
+                data: {
+                    id: id,
+                }
+            }).done(function (res) {
+                if (res.status == 1) {
+                    dialog.showTips(res.msg,"", 1);
+                } else {
+                    alert(res.msg);
+                }
+            })
+        })
+    }
+    function exportOrder () {
+        var name = $('#exampleInputEmail1').val();
+        console.log(name);
+        var cate = $('#exampleInputEmail2').val();
+        console.log(cate);
+        $.ajax({
+            type: "POST",
+            url: "{:url('Goods/search')}",
+            data: {
+                name:name,
+                cate:cate,
+            },
+            dataType: "json",
+            success:function(res){
+                var res1 = res.data
+                var html='';
+                console.log(res1)
+                $.each(res1,function(i,v){
+                    html+="<tr>"
+                    html+="<td>"+v.id+"</td>"
+                    html+="<td>"+v.goods_name+"</td>"
+                    html+="<td>"+v.goods_describe+"</td>"
+                    html+="<td>"+v.cate_name+"</td>"
+                    html+="<td>"+v.goods_price+"</td>"
+                    html+="<td>"+v.goods_oprice+"</td>"
+                    html+="<td>"+v.collection_num+"</td>"
+                    html+="<td class=\"center\"> <img width=\"20\" height=\"20\" src="+v.goods_logo+"> </td>"
+                    html+="<td> <a  href=\"#\" class=\"btn btn-primary btn-sm\" title=\"查看详情\">详情</a>" +
+                        " <a href=\"javascript:void(0);\" class=\"btn btn-primary btn-sm j-editClass\" onclick=goodsedit() data-id=\"\" title=\"编辑\" >编辑</a>" +
+                        " <a href=\"javascript:void(0);\" class=\"btn btn-primary btn-sm j-editClass1\" data-id=\"\">删除</a></td>"
+                    html+="</tr>"
+                })
+                $("#xun").html(html)
+            }
+        });
+    }
+    function bianji(){
+        var f1 = $("#edit").data('id');
+    }
+</script>
+</body>
+</html>

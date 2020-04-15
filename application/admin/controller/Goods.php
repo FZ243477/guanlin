@@ -4,6 +4,7 @@
 namespace app\admin\controller;
 
 use app\admin\helper\ManagerHelper;
+use app\common\constant\OrderConstant;
 use app\common\helper\EncryptionHelper;
 use app\common\helper\PHPExcelHelper;
 use app\common\helper\GoodsHelper;
@@ -24,8 +25,201 @@ class Goods extends Base
         parent::__construct();
     }
 
+    public function goodsListrea()
+    {
+
+        $goods_cate=db('goods_cate')->where('pid',0)->field('id,pid,name')->select();
+        foreach ($goods_cate as $k=> $v){
+            $children=db('goods_cate')->where('pid',$v['id'])->field('id,pid,name')->select();
+            if($children){
+                $cateres[$k]['id']=$v['id'];
+                $cateres[$k]['name']=$v['name'];
+                $cateres[$k]['children']=$children;
+            }else{
+                $cateres[$k]['children']=0;
+            }
+        }
+            $this->assign("cateres", $cateres);
+            return $this->fetch();
+    }
+
+    public function search(){
+        if(request()->isPost()) {
+            $data=input();
+            $name=$data['name'];
+            $cate_id=$data['cate'];
+            $where=[];
+            if($name!=""){
+                $where['a.goods_name']=array('like',"$name%");
+            }else{}
+            if($cate_id!=""){
+                $where['b.id']=$cate_id;
+            }else{}
+                $goods = Db::name('goods')->alias('a')
+                    ->field('a.id,a.cate_id,a.goods_name,a.goods_describe,a.goods_price,a.goods_oprice,a.collection_num,a.goods_logo,b.name')
+                    ->join('goods_cate b', 'b.id=a.cate_id')
+                    //->whereLike('a.goods_name',"%".$name."%")
+                    ->order('a.id desc')
+                    ->where($where)
+                    ->select();
+            $list = [];
+            foreach ($goods as $v => $k) {
+                $list[$v]['id'] = $k['id'];
+                $list[$v]['goods_name'] = $k['goods_name'];
+                $list[$v]['goods_describe'] = $k['goods_describe'];
+                $list[$v]['cate_name'] = $k['name'];
+                $list[$v]['goods_price'] = $k['goods_price'];
+                $list[$v]['goods_oprice'] = $k['goods_oprice'];
+                $list[$v]['collection_num'] = $k['collection_num'];
+                $list[$v]['goods_logo'] = $k['goods_logo'];
+            }
+            $this->assign("list", $list);
+            return $this->success('success','',$list);
+        }
+    }
+
+    //新增商品页面
+    public function goods_addrea(){
+        $data=input();
+        if(isset($data['id'])){
+            $edit_goods = Db::name('goods')->alias('a')
+                ->field('a.id,a.cate_id,a.goods_name,a.goods_describe,a.goods_price,a.goods_oprice,a.sort,a.collection_num,a.goods_logo,b.name')
+                ->join('goods_cate b', 'b.id=a.cate_id')
+                ->order('sort desc,a.id desc')
+                ->where('a.id',$data['id'])
+                ->find();
+            $edit_goods['type']=1;
+            $this->assign("edit_goods", $edit_goods);
+        }else{
+            $edit_goods=[
+                'goods_name'=>'',
+                'goods_describe'=>'',
+                'cate_id'=>'',
+                'goods_price'=>'',
+                'goods_oprice'=>'',
+                'collection_num'=>'',
+                'goods_logo'=>'',
+                'name'=>'',
+                'type'=>0,
+                'sort'=>0,
+                'id'=>'',
+            ];
+            $this->assign("edit_goods", $edit_goods);
+        }
+        if(isset($data['type'])){
+            $goods_show=$data['type'];
+            $this->assign('goods_show',$goods_show);
+        }
+        $goods_cate=db('goods_cate')->where('pid',0)->field('id,pid,name')->select();
+        foreach ($goods_cate as $k=> $v){
+            $children=db('goods_cate')->where('pid',$v['id'])->field('id,pid,name')->select();
+            if($children){
+                $cateres[$k]['id']=$v['id'];
+                $cateres[$k]['name']=$v['name'];
+                $cateres[$k]['children']=$children;
+            }else{
+                $cateres[$k]['children']=0;
+            }
+        }
+        $this->assign("cateres", $cateres);
+        return $this->fetch();
+    }
+
+    //新增商品操作 修改商品操作
+    public function save_product(){
+        if (request()->isPost()) {
+            $data = request()->post();
+            if (!$data['goods_name']) {
+                ajaxReturn(['status' => 0, 'msg' => '请填写商品名称', 'data' => []]);
+            }
+            if (!$data['goods_describe']) {
+                ajaxReturn(['status' => 0, 'msg' => '请填写商品描述', 'data' => []]);
+            }
+            if (!$data['goods_price']) {
+                ajaxReturn(['status' => 0, 'msg' => '请填写商品原价', 'data' => []]);
+            }
+            if (!$data['goods_oprice']) {
+                ajaxReturn(['status' => 0, 'msg' => '请填写商品售价', 'data' => []]);
+            }
+            if (!$data['collection_num']) {
+                ajaxReturn(['status' => 0, 'msg' => '请填写商品数量', 'data' => []]);
+            }
+            if (!$data['brand']) {
+                ajaxReturn(['status' => 0, 'msg' => '请选择商品分类', 'data' => []]);
+            }
+            if (!$data['express_logo']) {
+                ajaxReturn(['status' => 0, 'msg' => '请上传商品logo', 'data' => []]);
+            }
+            if(!$data['multiple_logo']){
+                ajaxReturn(['status' => 0, 'msg' => '请上传商品图集', 'data' => []]);
+            }
+            if(!$data['editid']){
+                $cate_pid=Db::name('goods_cate')->where('id',$data['brand'])->field('id,pid')->find();
+            $save_content=[
+                'goods_name'=>$data['goods_name'],
+                'goods_describe'=>$data['goods_describe'],
+                'goods_price'=>$data['goods_price'],
+                'goods_oprice'=>$data['goods_oprice'],
+                'collection_num'=>$data['collection_num'],
+                'sort'=>$data['sort'],
+                'cate_id'=>$data['brand'],
+                'goods_logo'=>$data['express_logo'],
+                'pid'=>$cate_pid['pid'],
+                'create_time'=>time()
+            ];
+            $save=Db::name('goods')->insertGetId($save_content);
+            $goods_id = Db::name('goods')->getLastInsID();
+            $logo=$data['multiple_logo'];
+           foreach($logo as $k=>$v){
+               $save_images=[
+                   'goods_id'=>$goods_id,
+                   'type'=>0,
+                   'logo'=>$v
+               ];
+               $save_logo=Db::name('goods_images')->insertGetId($save_images);
+           }
+            if ($save) {
+                ajaxReturn(['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => []]);
+            } else {
+                ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []]);
+            }
+            }
+            if(isset($data['editid'])){
+                $edit_content=[
+                    'goods_name'=>$data['goods_name'],
+                    'goods_describe'=>$data['goods_describe'],
+                    'goods_price'=>$data['goods_price'],
+                    'goods_oprice'=>$data['goods_oprice'],
+                    'collection_num'=>$data['collection_num'],
+                    'sort'=>$data['sort'],
+                    'cate_id'=>$data['brand'],
+                    'goods_logo'=>$data['express_logo'],
+                    'update_time'=>time()
+                ];
+                $edit=Db::name('goods')->where('id',$data['editid'])->update($edit_content);
+                if ($edit) {
+                    ajaxReturn(['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => []]);
+                } else {
+                    ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []]);
+                }
+            }
+        }
+    }
+
+    public function del_goods(){
+        if (request()->isPost()) {
+            $data=input();
+            $del=Db::name('goods')->where('id',$data['id'])->delete();
+            if ($del) {
+                ajaxReturn(["status" => 1, "msg" => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => []]);
+            } else {
+                ajaxReturn(["status" => 0, "msg" => SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []]);
+            }
+        }
+    }
     public function goodsList()
     {
+
         if (request()->isPost()) {
             $map = [];
             $status = request()->post('status', 0, 'intval');
@@ -118,8 +312,8 @@ class Goods extends Base
             }
 
             $goods_model = model('Goods');
-            $count0 = $goods_model->where($map0)->count();
 
+            $count0 = $goods_model->where($map0)->count();
             //出售中
             $count1 = $goods_model->where($map1)->count();
 
@@ -135,7 +329,6 @@ class Goods extends Base
             //待审核
             $count5 = $goods_model->where($map5)->count();
 
-
             $list_row = input('post.list_row', 10); //每页数据
             $page = input('post.page', 1); //当前页
 
@@ -149,9 +342,7 @@ class Goods extends Base
             foreach ($lists as $k => $v) {
                 $lists[$k]['sku_info'] = model('spec_goods_price')->where(['goods_id' => $v['id']])->select();
             }
-
             $pageCount = ceil($totalCount / $list_row);
-
             //商品分类
             $goods_cate = model('goods_cate')->field('id,classname,pid')->where(['pid' => 0, 'status' => '1'])->order('sort desc')->select();
             $goods_cate_new = [];
@@ -169,7 +360,6 @@ class Goods extends Base
             } else {
                 $is_cost_price = 0;
             }
-
             $data = [
                 'list' => $lists ? $lists : [],
                 'pageCount' => $pageCount ? $pageCount : 0,
@@ -183,7 +373,6 @@ class Goods extends Base
                 'goods_cate_new' => $goods_cate_new ? $goods_cate_new : [],
                 'is_cost_price' => $is_cost_price,
             ];
-
             $json_arr = ['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => $data];
             ajaxReturn($json_arr);
         } else {
@@ -1242,6 +1431,7 @@ class Goods extends Base
     {
         $c = model("goods_cate");
         $where = [];
+        $where['is_del'] = 0;
         $where['pid'] = 0;
         // $count=$c->where($where)->order('sort desc')->count();
         // $p=getpage1($count,10);

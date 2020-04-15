@@ -105,6 +105,19 @@
 														<th>订单金额</th>
 														<th>已付款金额</th>
 														<th>操作</th>
+<!--														<th>待付款金额</th>-->
+<!--														<th>收货人</th>-->
+<!--														<th>收货人手机号</th>-->
+<!--														<th>收货地址</th>-->
+<!--														<th>商品名称</th>-->
+<!--														<th>商品编号</th>-->
+<!--														<th>供应商</th>-->
+<!--														<th>商品单价</th>-->
+<!--														<th>商品数量</th>-->
+<!--														<th>商品价格</th>-->
+<!--														<th>商品实付价格</th>-->
+<!--														<th>SKU</th>-->
+														<!--													<th style="width: 150px;">操作</th>-->
 													</tr>
 													</thead>
 													<tbody>
@@ -112,12 +125,33 @@
 													<tr>
 														<td >{$vo.order_no}</td>
 														<td >{$vo.order_time}</td>
-
+<!--														<td >{$vo.trade_no}</td>-->
 														<td >{$vo.name}</td>
 														<td >{$vo.tel}</td>
 														<td >{$vo.order_status_name}</td>
 														<td >{$vo.pay_way_name}</td>
+<!--														<td >{$vo.total_price}</td>-->
+<!--														<td >{$vo.coupon_price}</td>-->
+<!--														<td >{$vo.express_fee}</td>-->
+<!--														<td >{$vo.cover_fee}</td>-->
 														<td >{$vo.total_fee}</td>
+														<td >{$vo.paid_money}</td>
+<!--														<td >{$vo.pay_wait_price}</td>-->
+<!--														<td >{$vo.consignee}</td>-->
+<!--														<td >{$vo.telephone}</td>-->
+<!--														<td >{$vo.place}</td>-->
+														<!--{foreach name="vo.order_goods" item="v" key="k"}
+														{eq name="k" value="0"}
+														<td>{$v.goods_name}</td>
+														<td>{$v.goods_code}</td>
+														<td>{$v.store_name}</td>
+														<td>{$v.goods_price}</td>
+														<td>{$v.goods_num}</td>
+														<td>{$v['goods_price'] * $v['goods_num']}</td>
+														<td>{$v['goods_price']* $v['goods_num']-$v['coupon_price']* $v['goods_num']}</td>
+														<td>{$v.sku_info}</td>
+														{/eq}
+														{/foreach}-->
 														<td>
 															<a  href="{:url('Order/detail',array('order_id'=>$vo['id'],'user_id'=>$vo['user_id']))}" class="btn btn-primary btn-sm" title="查看详情">详情</a>
 															{eq name="vo.is_audit" value="1"}
@@ -130,6 +164,20 @@
 															{/eq}
 														</td>
 													</tr>
+													<!--{foreach name="vo.order_goods" item="v" key="k"}
+													{neq name="k" value="0"}
+													<tr>
+														<td>{$v.goods_name}</td>
+														<td>{$v.goods_code}</td>
+														<td>{$v.store_name}</td>
+														<td>{$v.goods_price}</td>
+														<td>{$v.goods_num}</td>
+														<td>{$v['goods_price'] * $v['goods_num']}</td>
+														<td>{$v['goods_price']* $v['goods_num']-$v['coupon_price']* $v['goods_num']}</td>
+														<td>{$v.sku_info}</td>
+													</tr>
+													{/neq}
+													{/foreach}-->
 													{/foreach}
 													{empty name="order_list"}
 													<tr><td colspan="10" style="text-align: center;">暂无数据</td></tr>
@@ -137,6 +185,29 @@
 													</tbody>
 												</table>
 											</div>
+											<!--<div class="table-responsive table_r col-lg-2">
+												<table class="table table-hover products_table">
+													<tr>
+														<th>操作</th>										
+													</tr>
+													{foreach name="order_list" item="vo"}
+													<tr>
+														<td style="height: {php}echo count($vo['order_goods'])*53{/php}px">
+															<a  href="{:url('Order/detail',array('order_id'=>$vo['id'],'user_id'=>$vo['user_id']))}" title="查看详情">详情</a>
+															{eq name='vo.sure_status' value="0"}
+															{eq name="vo.pay_status" value="1"}
+															{if condition="$vo['is_certificate'] eq 2 or $vo['is_certificate'] eq 0"}
+															<a href="javascript:void(0);" class="j-editClass" data-id="{$vo.id}" title="审核订单">审核</a>
+															{/if}
+															&lt;!&ndash;														<a href="javascript:void(0);" class="btn btn-primary btn-sm j-editClass" data-id="{$vo.id}">发货</a>&ndash;&gt;
+															{/eq}
+															{/eq}
+														</td>
+													</tr>
+													{/foreach}
+												</table>
+											</div>-->
+
 										<div class="page">
 											{$order_list->render()}
 										</div>
