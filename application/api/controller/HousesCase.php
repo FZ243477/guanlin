@@ -344,10 +344,12 @@ class HousesCase extends Base
             $lists['banner_top'] = model('goods_images')
                 ->where(['type' => 0, 'goods_id' => $goods_id])
                 ->field('logo')
+                ->order('sort asc')
                 ->select();
             $lists['banner_detail'] =  model('goods_images')
                 ->where(['type' => 1, 'goods_id' => $goods_id])
                 ->field('logo')
+                ->order('sort asc')
                 ->select();
             $data = [
                 'list' => $lists->toArray(),
