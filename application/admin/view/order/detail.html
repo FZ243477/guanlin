@@ -20,7 +20,6 @@
             margin: 0;
         }
         @media print{ body { height : auto}}
-
     </style>
     <script language="javascript">
         function printdiv(printpage){
@@ -53,6 +52,13 @@
         });
 
     </script>
+    <style>
+        .ibox_span {
+            font-weight: 700;
+            margin-right: 10px;
+            color:blue;
+        }
+    </style>
 </head>
 
 <body class="gray-bg" >
@@ -60,8 +66,8 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox-title">
         <div class="pull-right">
-            <button class="btn btn-primary" onClick="outOrderGoods('{$info.id}')" >送货明细单</button>
-            <button class="btn btn-primary"  onClick="printdiv('div_print');">打印</button>
+            <!--<button class="btn btn-primary" onClick="outOrderGoods('{$info.id}')" >送货明细单</button>-->
+            <!--<button class="btn btn-primary"  onClick="printdiv('div_print');">打印</button>-->
         </div>
     </div>
     <div class="row" id="div_print">
@@ -93,13 +99,8 @@
                                         <tr>
                                             <th>物流信息</th>
                                             <td>
-                                                {eq name="info.shipping_type" value="1"}
                                                 物流名称：{$info.express_name}</br>
                                                 物流单号：{$info.express_no}</br>
-                                                {else/}
-                                                配送员：{$info.shipping_username}</br>
-                                                手机号：{$info.shipping_telephone}</br>
-                                                {/eq}
                                                 物流费用：{$info.express_fee}
                                             </td>
                                         </tr>
@@ -120,21 +121,7 @@
                                         </tr>
                                         <tr>
                                             <th>订单金额</th>
-                                            <td>订单总额:{$info.total_fee}
-                                                <br>
-                                                总支付金额:{$info.paid_money}
-                                                <br>
-                                               <!-- {neq name='info.pay_order_status' value='0'}
-                                                总定金：{$info.deposit_money}.00  {notempty name="info.pay_time"} 支付时间：{$info.pay_time}{/notempty}
-                                                <br>
-                                                总尾款：{$info['total_fee'] - $info['deposit_money']} {notempty name="info.pay_final_time"} 审核时间：{$info.pay_final_time}{/notempty}
-                                                <br>
-                                                {/neq}-->
-                                               <!-- {foreach name="order_money" item="v" key="k"}
-                                                第{$k+1}笔款项，支付金额：{$v.money} 支付时间：{$v.log_time|date='Y-m-d H:i:s', ###}
-                                                <br>
-                                                {/foreach}-->
-                                            </td>
+                                            <td>{$info.total_fee}</td>
                                         </tr>
                                         </tr>
                                         </tbody>
@@ -191,12 +178,12 @@
             </div>
             <br>
             <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h5>商品清单
+                <div class="ibox-title goods_list" >
+                    <h5><span class="ibox_span">-</span>商品清单
                     </h5>
 
                 </div>
-                <div class="ibox-content">
+                <div class="ibox-content goods_content">
                     <table class="table table-bordered">
                         <colgroup>
                             <col width="12%">
@@ -210,48 +197,60 @@
                         <thead>
                         <tr>
                             <th>商品图片</th>
-                            <th>商品编码</th>
+                            <!--<th>商品编码</th>-->
                             <th>商品名称</th>
                             <th>单价（元）</th>
                             <th>数量</th>
-                            <th>备注</th>
-                            <th>评价</th>
                         </tr>
                         </thead>
                         <tbody>
                         {volist name="info.goods" id="vo"}
                         <tr>
                             <td>
-                                <div class="proImg"><img src="{$vo.goods_pic?$vo.goods_pic:'home_url/images/zwtp.jpg'}"></div>
+                                <div class="proImg"><img src="{$vo.goods_logo?$vo.goods_logo:'home_url/images/zwtp.jpg'}"></div>
                             </td>
-                            <td>{$vo.goods_code}</td>
                             <td><h5>{$vo.goods_name}</h5></td>
                             <td>{$vo.goods_price}</td>
                             <td>{$vo.goods_num}{$vo.goods_unit}</td>
-                            <td>{$vo.goods_remark}</td>
-                            <td>
-                                {if condition="$vo['comment'] eq null"} <b style="color:red">暂无评论</b>
-                                {else /}
-                                {foreach name="vo.comment" item="vos" }
-                                评价时间：{$vos['add_time']}<br/>
-                                评价内容：{$vos['content']}<br/>
-                                评价图片：{empty name="cache.slide_img"}未上传图片 {else/}
-                                {volist name='vos.img' id='v'}
-                                <img class='pic_arr' src='{$v}' style='margin-right: 30px;' width='80'>
-                                {/volist}
-                                {/empty}
-                                {/foreach}
-                                {/if}
-                            </td>
                         </tr>
                         {/volist}
                         </tbody>
                     </table>
                 </div>
                 <br/>
+                <div class="ibox-title" >
+                    <h5><span class="ibox_span">-</span>金额信息
+                    </h5>
+                </div>
                 <div class="ibox-content">
-                    {notempty name="order_money"}
                     <table class="table table-bordered">
+                        <colgroup>
+                            <col width="10%">
+                            <col width="10%">
+                            <col width="10%">
+                            <col width="10%">
+                            <col width="10%">
+                            <col width="10%">
+                            <col width="10%">
+                            <col width="10%">
+                            <col width="10%">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>总计金额</th>
+                            <th>已支付金额</th>
+                            <th>待支付金额</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>{$info.total_fee}</td>
+                            <td>{$info.pay_price}</td>
+                            <td>{$info.total_fee - $info.pay_price}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <!--<table class="table table-bordered">
                         <colgroup>
                             <col width="10%">
                             <col width="7%">
@@ -266,12 +265,7 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th>商品总金额</th>
-                            <th>运费</th>
-                            <th>安装服务费</th>
-                            <th>优惠券优惠金额</th>
                             <th>总计金额</th>
-                            <th>商品总数量</th>
                             <th>支付金额</th>
                             <th>累计已支付金额</th>
                             <th>审核时间</th>
@@ -279,172 +273,23 @@
                         </tr>
                         </thead>
                         <tbody>
+
                         {foreach name="order_money" item="v" key="k"}
                         <tr>
-                            <td>{$info.total_price}</td>
-                            <td>{$info.express_fee}</td>
-                            <td>{$info.cover_fee}</td>
-                            <td>{$info.coupon_price}</td>
                             <td>{$info.total_fee}</td>
-                            <td>{$info.goods_num}</td>
                             <td>{$v.money}</td>
-                            <td>{$v.total_money}</td>
-                            <td>{notempty name='v.audit_time'}{$v.audit_time|date='Y-m-d H:i:s',###}{/notempty}</td>
-                            <td>{$v.audit_name}</td>
+                            <td>{$info.total_fee}</td>
                         </tr>
                         {/foreach}
                         </tbody>
-                    </table>
-                    {else/}
-                    <table class="table table-bordered">
-                        <colgroup>
-                            <col width="14%">
-                            <col width="7%">
-                            <col width="14%">
-                            <col width="14%">
-                            <col width="10%">
-                            <col width="14%">
-                            <col width="10%">
-                            <col width="10%">
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th>商品总金额</th>
-                            <th>运费</th>
-                            <th>安装服务费</th>
-                            <th>优惠券优惠金额</th>
-                            <th>总计金额</th>
-                            <th>商品总数量</th>
-                            <th>支付金额</th>
-                            <th>支付时间</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>{$info.total_price}</td>
-                            <td>{$info.express_fee}</td>
-                            <td>{$info.cover_fee}</td>
-                            <td>{$info.coupon_price}</td>
-                            <td>{$info.total_fee}</td>
-                            <td>{$info.goods_num}</td>
-                            <td>{$info.pay_price}</td>
-                            <td>{$info.pay_time}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    {/notempty}
+                    </table>-->
                 </div>
-                <br/><br/>
-
+                <br/>
                 <div class="ibox float-e-margins">
-                    {eq name="confirm_info.is_pay" value="1"}
-                    <div class="ibox-title print_none">
-                        <h5>确认付款</h5>
-                    </div>
-                    <div class="ibox-content print_none">
-                        <div class="tab-content form-horizontal" style="">
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label">付款金额：</label>
-                                <div class="col-sm-5">
-                                    <input class="form-control" id="moneys" type="text">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label">备注：</label>
-                                <div class="col-sm-5">
-                                    <textarea class="form-control" cols="100"  id="action_note2" rows="4" style="text-align: left;resize:none;margin-bottom: 10px" type="text" ></textarea>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label"><b style='color:red;'>*</b>上传凭证：</label>
-                                <div class="col-sm-5">
-                                    <div class="info_heads">
-                                        <input accept="image/jpg,image/jpeg,image/png"
-                                               class="file xuanze"
-                                               data-name="img_pay"
-                                               data-type="single"
-                                               name="upload_pic"
-                                               style="position: absolute;z-index: 999;opacity: 0;width: 80px;height: 80px;cursor: pointer;"
-                                               type="file" >
-                                        <img  class='banner_logo' src="home_url/images/addimg.png" />
-                                        <div class="xuanze_showimge mgr10" data-nums='15' style="position:relative;"></div>
-                                    </div>
-                                    <div class="xuanze_progress fl mgr15" style="display:none">
-                                        <img src="home_url/images/loadings.gif" style="width: 30px;height: 30px;" />
-                                        <span class="xuanze_percent">80%</span>
-                                    </div>
-                                    <div style="clear: both;"></div>
-                                    <span class="help-block m-b-none" style="color:red"></span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label"></label>
-                                <div class="col-sm-5">
-                                    <a class="btn btn-primary" href="javascript:void(0);" onclick ="return orderAction2()" style="margin-right:20px">确认</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <br/>
-                    {/eq}
-                    {eq name='confirm_info.is_audit' value="1"}
-                    <div class="ibox-title print_none">
-                        <h5>审核订单</h5>
-                    </div>
-                    <div class="ibox-content print_none">
-                        <div class="tab-content form-horizontal" style="">
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label">备注：</label>
-                                <div class="col-sm-5">
-                                    <textarea class="form-control" cols="100"  id="action_note1" rows="4" style="text-align: left;resize:none;margin-bottom: 10px" type="text" ></textarea>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label">类型：</label>
-                                <div class="col-sm-5">
-                                    <label><input checked class="form-control" name="sure_status" style="width: 14px" type="radio" value="1">发货给仓库</label>
-                                    <label><input class="form-control" name="sure_status" style="width: 14px" type="radio" value="0">发货给用户</label>
-                                    <label><input class="form-control" name="sure_status" style="width: 14px" type="radio" value="2">取消订单</label>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label"></label>
-                                <div class="col-sm-5">
-                                    <a class="btn btn-primary" href="javascript:void(0);" onclick ="return orderAction1()" style="margin-right:20px">确认</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <br/>
-                    {/eq}
-                    {eq name="info.order_status" value="3"}
-                    <div class="ibox-title print_none">
-                        <h5>确认收货</h5>
-                    </div>
-                    <div class="ibox-content print_none">
-                        <div class="tab-content form-horizontal" style="">
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label">备注：</label>
-                                <div class="col-sm-5">
-                                    <textarea class="form-control" cols="100"  id="action_note3" rows="4" style="text-align: left;resize:none;margin-bottom: 10px" type="text" ></textarea>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label"></label>
-                                <div class="col-sm-5">
-                                    <input class="form-control" name="sure_status3" style="width: 14px" type="hidden" value="3">
-                                    <a class="btn btn-primary" href="javascript:void(0);" onclick ="return orderAction3()" style="margin-right:20px">确认收货</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <br/>
-                    {/eq}
                     {notempty name='certificate'}
                     <div class="ibox-title" id="p_z_j">
-                        <h5>前端上传凭证列表
+                        <h5><span class="ibox_span">-</span>凭证列表
                         </h5>
-
                     </div>
                     <div class="ibox-content">
                         <table class="table table-bordered">
@@ -457,7 +302,7 @@
                                 <col width="10%">
                                 <col width="10%">
                                 <col width="10%">
-<!--                                <col width="10%">-->
+                                <!--                                <col width="10%">-->
                             </colgroup>
                             <thead>
                             <tr>
@@ -465,11 +310,8 @@
                                 <th>收款户名</th>
                                 <th>收款账号</th>
                                 <th>收款账号开户银行</th>
-                                <th>户名</th>
-                                <th>账号</th>
-                                <th>金额</th>
                                 <th>凭证</th>
-<!--                                <th>状态</th>-->
+                                <th>状态</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -483,39 +325,40 @@
                                 <td>{$vo.re_username}</td>
                                 <td>{$vo.re_account}</td>
                                 <td>{$vo.re_bank}</td>
-                                <td>{$vo.username}</td>
-                                <td>{$vo.account}</td>
-                                <td>{$vo.money}</td>
                                 <td>
                                     <div class="proImg"><a href="{$vo.certificate}" target="_blank"><img src="{$vo.certificate}"></a></div>
                                 </td>
-                               <!-- <td>
-                                    {switch name="vo.status"}
-                                    {case value="0"}待审核{/case}
-                                    {case value="1"}通过{/case}
-                                    {case value="2"}拒绝{/case}
-                                    {/switch}
-                                </td>-->
+                                 <td>
+                                     {switch name="vo.status"}
+                                     {case value="0"}待审核{/case}
+                                     {case value="1"}通过{/case}
+                                     {case value="2"}拒绝{/case}
+                                     {/switch}
+                                 </td>
                             </tr>
                             {/volist}
                             </tbody>
                         </table>
 
                     </div>
-                    {eq name='info.is_certificate' value='1'}
+                    <br/>
+                    {/notempty}
+                    {eq name='info.order_status' value="3"}
+                    <div class="ibox-title print_none">
+                        <h5><span class="ibox_span">-</span>审核订单</h5>
+                    </div>
                     <div class="ibox-content print_none">
                         <div class="tab-content form-horizontal" style="">
                             <div class="form-group">
                                 <label class="col-sm-1 control-label">支付金额：</label>
                                 <div class="col-sm-5">
-                                    <input class="form-control" id="paid_money" style="text-align: left;resize:none;margin-bottom: 10px" type="text" value="">
-
+                                    <input class="form-control" id="pay_price" style="text-align: left;resize:none;margin-bottom: 10px" type="text" value="">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-1 control-label">备注：</label>
                                 <div class="col-sm-5">
-                                    <textarea class="form-control" cols="100"  id="action_note" rows="4" style="text-align: left;resize:none;margin-bottom: 10px" type="text" ></textarea>
+                                    <textarea class="form-control" cols="100"  id="action_note1" rows="4" style="text-align: left;resize:none;margin-bottom: 10px" type="text" ></textarea>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -529,13 +372,9 @@
                     </div>
                     <br/>
                     {/eq}
-                    <br/>
-                    {/notempty}
                     <div class="ibox float-e-margins margin-bottom-400" >
                         <div class="ibox-title">
-                            <h5>后台操作记录
-                            </h5>
-
+                            <h5><span class="ibox_span">-</span>后台操作记录</h5>
                         </div>
                         <div class="ibox-content">
                             <table class="table table-bordered">
@@ -550,9 +389,6 @@
                                 <tr>
                                     <td class="text-center">操作者</td>
                                     <td class="text-center">操作时间</td>
-                                    <!--                                <td class="text-center">订单状态</td>-->
-                                    <!--                                <td class="text-center">付款状态</td>-->
-                                    <!--                                <td class="text-center">发货状态</td>-->
                                     <td class="text-center">描述</td>
                                     <td class="text-center">备注</td>
                                     <td class="text-center">凭证</td>
@@ -578,260 +414,7 @@
         </div>
     </div>
     <div class="orderDot_back">
-        {eq name="info.order_status" value="1"}
-        <a class="btn btn-primary" href="{:url('Order/orderEditPrice', ['order_id' => $info.id])}" style="float:left">修改价格</a>
-        {/eq}
-        {eq name="info.order_status" value="2"}
-        <!--                        <a href="{:url('Order/orderEdit', ['order_id' => $info.id])}" class="btn btn-primary" style="float:left">修改订单</a>-->
-        {/eq}
-
-        <!--<a href="{:url('Order/orderSplit', ['order_id' => $info.id])}" class="btn btn-primary" style="float:left;margin-left: 20px;">拆分订单</a>-->
         <a class="btn btn-primary btn-sm" href="javascript:history.back();" type="button">返回列表</a>
-    </div>
-    <div aria-hidden="true" class="modal inmodal" id="myModal" role="dialog" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content animated bounceInRight">
-                <div class="modal-header" style="padding: 10px 15px;">
-                    <button class="close" data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
-                    </button>
-
-                    <h5 class="model_tit">修改地址</h5>
-
-
-                </div>
-
-                <div class="modal-body modal-prodot-body">
-
-                    <div class="model_body">
-                        <div class="model_address">
-
-                            <form class="form-horizontal">
-                                <div class="form-group clearfix">
-                                    <label class="col-sm-2 control-label">联系地址</label>
-
-                                    <div class="col-sm-9">
-                                        <div class="row">
-                                            <div class="col-sm-4">
-                                                <select class="form-control m-b" id="s_province" name="s_province"></select>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <select class="form-control m-b" id="s_city" name="s_city" ></select>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <select class="form-control m-b" id="s_county" name="s_county"></select>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <div class="form-group clearfix">
-                                    <label class="col-sm-2 control-label">街道地址</label>
-
-                                    <div class="col-sm-9">
-                                        <input class="form-control" id="address" type="text" value="{$info.place}">
-
-                                    </div>
-                                </div>
-
-                                <div class="form-group clearfix">
-                                    <label class="col-sm-2 control-label">收件人</label>
-
-                                    <div class="col-sm-9">
-                                        <input class="form-control" id="consignee" type="text" value="{$info.consignee}">
-
-                                    </div>
-                                </div>
-                                <div class="form-group clearfix">
-                                    <label class="col-sm-2 control-label">手机号</label>
-
-                                    <div class="col-sm-9">
-                                        <input class="form-control" id="telephone" maxlength='11' type="number" value="{$info.telephone}">
-
-                                    </div>
-                                </div>
-                            </form>
-
-
-
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-white" data-dismiss="modal" type="button">关闭</button>
-                    <button class="btn btn-primary xiugaiAddress" type="button">确定</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div aria-hidden="true" class="modal inmodal" id="myModal1" role="dialog" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content animated bounceInRight">
-                <div class="modal-header" style="padding: 10px 15px;">
-                    <button class="close" data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
-                    </button>
-                    <h5 class="model_tit">取消订单</h5>
-                </div>
-
-                <div class="modal-body modal-prodot-body">
-
-                    <div class="model_body">
-                        <div class="model_address">
-                            <form class="form-horizontal">
-                                <div class="form-group clearfix">
-                                    <div class="col-sm-12">
-                                        <textarea id="cancleMsg" name="a" placeholder="请填写取消订单理由" rows="5"></textarea>
-                                    </div>
-                                </div>
-
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-white" data-dismiss="modal" type="button">关闭</button>
-                    <button class="btn btn-primary cancle" type="button">确定</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div aria-hidden="true" class="modal inmodal" id="myModal2" role="dialog" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content animated bounceInRight">
-                <div class="modal-header" style="padding: 10px 15px;">
-                    <button class="close" data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
-                    </button>
-                    <h5 class="model_tit">订单发货</h5>
-                </div>
-
-                <div class="modal-body modal-prodot-body">
-
-                    <div class="model_body">
-                        <div class="model_address">
-
-                            <form class="form-horizontal">
-                                <div class="form-group clearfix">
-                                    <label class="col-sm-2 control-label">选择物流</label>
-
-                                    <div class="col-sm-9">
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <select class="form-control m-b" id="wuliu_name" name="wuliu_name">
-                                                    <option value='0'>请选择物流...</option>
-                                                    {volist name="express" id="vo"}
-                                                    <option value="{$vo.express_ma}">{$vo.express_company}</option>
-                                                    {/volist}
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group clearfix">
-                                    <label class="col-sm-2 control-label">物流单号</label>
-                                    <div class="col-sm-6">
-                                        <input class="form-control" id="wuliu_nums" type="text" >
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-white" data-dismiss="modal" type="button">关闭</button>
-                    <button class="btn btn-primary sendExpress" type="button">确定</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div aria-hidden="true" class="modal inmodal" id="myModal4" role="dialog" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content animated bounceInRight">
-                <div class="modal-header" style="padding: 10px 15px;">
-                    <button class="close" data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
-                    </button>
-                    <h5 class="model_tit">修改物流</h5>
-                </div>
-
-                <div class="modal-body modal-prodot-body">
-
-                    <div class="model_body">
-                        <div class="model_address">
-
-                            <form class="form-horizontal">
-                                <div class="form-group clearfix">
-                                    <label class="col-sm-2 control-label">选择物流</label>
-
-                                    <div class="col-sm-9">
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <select class="form-control m-b" id="modify_wuliu_name" name="modify_wuliu_name">
-                                                    <option value='0'>请选择物流...</option>
-                                                    {volist name="express" id="vo"}
-                                                    <option name='vo.express_ma' value="{$vo.express_ma}" value="$info['send_names']" {eq>selected</eq>>{$vo.express_company}</option>
-                                                    {/volist}
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group clearfix">
-                                    <label class="col-sm-2 control-label">物流单号</label>
-                                    <div class="col-sm-6">
-                                        <input class="form-control" id="modify_wuliu_nums" type="text" value="{$info.express_no}" >
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-white" data-dismiss="modal" type="button">关闭</button>
-                    <button class="btn btn-primary modifyExpress" type="button">确定</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div aria-hidden="true" class="modal inmodal" id="myModal3" role="dialog" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content animated bounceInRight">
-                <div class="modal-header" style="padding: 10px 15px;">
-                    <button class="close" data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
-                    </button>
-                    <h5 class="model_tit">订单核销</h5>
-                </div>
-
-                <div class="modal-body modal-prodot-body">
-
-                    <div class="model_body">
-                        <div class="model_address">
-
-                            <form class="form-horizontal">
-                                <div class="form-group clearfix">
-                                    <label class="col-sm-2 control-label">核销码</label>
-                                    <div class="col-sm-6">
-                                        <input class="form-control" id="verification" type="text" >
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-white" data-dismiss="modal" type="button">关闭</button>
-                    <button class="btn btn-primary okover" type="button">确定</button>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script src="home_url/js/jquery.min.js"></script>
@@ -842,6 +425,19 @@
     <script type="text/javascript">_init_area();</script>
 
     <script type="text/javascript">
+        $('.ibox-title').click(function () {
+            var flag = $(this).attr('data-type');
+            if (flag == 1) {
+                $(this).next('.ibox-content').show();
+                $(this).attr('data-type', 0);
+                $(this).find('.ibox_span').html('-');
+            } else {
+                $(this).next('.ibox-content').hide();
+                $(this).attr('data-type', 1);
+                $(this).find('.ibox_span').html('+');
+            }
+        });
+
         function orderAction2() {
             var action_note = $('#action_note2').val();
             var img = $('.img_pay').val();
@@ -926,58 +522,42 @@
         }
         $('.checkbox').click(function () {
             var money = paidMoeny();
-            $('#paid_money').val(money);
+            $('#pay_price').val(money);
         });
         function orderAction (type) {
-            var id = '';
-            $(".checkbox").each(function(){
-                if(true == $(this).is(':checked')){
-                    id += id?"-"+$(this).val():$(this).val();
-                }
-            });
-            if(!id){
-                alert('请选择凭证记录');
-                return false;
-            }
-            var paid_money = $('#paid_money').val();
+            var pay_price = $('#pay_price').val();
 
             var action_note = $('#action_note').val();
-            if (!action_note) {
-                alert('请填写备注');
-                return false;
-            }
+            // if (!action_note) {
+            //     alert('请填写备注');
+            //     return false;
+            // }
             var order_id = "{$info.id}"
             if (type == 1) {
-                if (!paid_money) {
+                if (!pay_price) {
                     alert('请填支付金额');
                     return false;
                 }
-                /*    var moeny = "{$info.total_fee}" - "{$info.paid_money}";
-                    if (paid_money > moeny) {
-                        alert('不能大于待结算金额');
-                        return false;
-                    }*/
                 dialog.showTips('确定同意吗？','firm', function () {
-                    order_action_ajax (type, action_note, order_id, id, paid_money)
+                    order_action_ajax (type, action_note, order_id, pay_price)
                 })
             } else {
                 dialog.showTips('确定拒绝吗？','firm', function () {
-                    order_action_ajax (type, action_note, order_id, id, paid_money)
+                    order_action_ajax (type, action_note, order_id, pay_price)
                 })
             }
             return false;
         }
 
-        function order_action_ajax (type, action_note, order_id, id, paid_money) {
+        function order_action_ajax (type, action_note, order_id, pay_price) {
             $.ajax({
                 type: "POST",
                 url: "{:url('Order/orderAction')}",
                 data: {
                     type:type,
                     action_note:action_note,
-                    paid_money:paid_money,
+                    pay_price:pay_price,
                     order_id:order_id,
-                    id:id,
                 },
                 dataType: "json",
                 success: function(g){

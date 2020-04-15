@@ -4,7 +4,6 @@
 namespace app\admin\controller;
 use app\admin\helper\ManagerHelper;
 use app\common\helper\EncryptionHelper;
-use app\common\helper\KujialeHelper;
 use app\common\helper\PHPExcelHelper;
 use app\common\constant\SystemConstant;
 use app\common\constant\UserConstant;
@@ -15,7 +14,6 @@ class User extends Base
     use ManagerHelper;
     use EncryptionHelper;
     use PHPExcelHelper;
-    use KujialeHelper;
 
     public function __construct()
     {
@@ -25,8 +23,7 @@ class User extends Base
     public function userList()
     {
         if (request()->isPost()) {
-            $map['is_del'] = 0;
-            $map['is_platform'] = 1;
+            $map = [];
             #手机号 昵称
             $telephone = request()->post('telephone', '', 'trim');
             if($telephone){
@@ -34,7 +31,7 @@ class User extends Base
             }
             $nickname = request()->post('nickname', '', 'trim');
             if($nickname){
-                $map['nickname|realname']=['like', "%".$nickname."%"];
+                $map['nickname']=['like', "%".$nickname."%"];
             }
             $status = request()->post('status');
             if($status != ''){
@@ -61,20 +58,9 @@ class User extends Base
             $totalCount = $user_model->where($map)->count();
             $first_row = ($page-1)*$list_row;
             $field = [
-                'id','telephone','head_img','status','is_child',
-                'nickname','reg_time','last_login_time',
+                'id','telephone','head_img','status', 'nickname','create_time', 'last_login_time',
             ];
             $lists = $user_model->where($map)->field($field)->limit($first_row, $list_row)->order('id desc')->select();
-
-            foreach ($lists as $k => $v) {
-                $first_leader = model('user')->where(['first_leader' => $v['id']])->count();
-                $lists[$k]['first_leader_num'] = $first_leader?$first_leader:0;
-                $second_leader = model('user')->where(['second_leader' => $v['id']])->count();
-                $lists[$k]['second_leader_num'] = $second_leader?$second_leader:0;
-                $third_leader = model('user')->where(['third_leader' => $v['id']])->count();
-                $lists[$k]['third_leader_num'] = $third_leader?$third_leader:0;
-            }
-
             $pageCount = ceil($totalCount/$list_row);
 
             $data = [

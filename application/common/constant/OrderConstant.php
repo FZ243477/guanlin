@@ -48,7 +48,7 @@ class OrderConstant
     const ORDER_PAY_WAY_ALIPAY = 1; //支付宝
     const ORDER_PAY_WAY_WXPAY = 2; //微信支付
     const ORDER_PAY_WAY_UNIONPAY = 3; //银联支付
-    const ORDER_PAY_WAY_CERTIFICATE = 4; //线下支付，上传凭证
+    const ORDER_PAY_WAY_CERTIFICATE = 0; //线下支付，上传凭证
 
 
 

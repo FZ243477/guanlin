@@ -8,14 +8,12 @@ use app\common\helper\CartHelper;
 use app\common\helper\CurlHelper;
 use app\common\helper\GoodsHelper;
 use app\admin\helper\ManagerHelper;
-use app\common\helper\IntegralHelper;
 use app\common\helper\MessageHelper;
 use app\common\helper\OrderHelper;
 use app\common\helper\PayHelper;
 use app\common\helper\PHPExcelHelper;
 use app\common\constant\SystemConstant;
 use app\common\constant\OrderConstant;
-use app\common\helper\PreferentialHelper;
 use think\Db;
 
 class Order extends Base
@@ -24,9 +22,7 @@ class Order extends Base
     use PHPExcelHelper;
     use OrderHelper;
     use PayHelper;
-    use IntegralHelper;
     use CartHelper;
-    use PreferentialHelper;
     use GoodsHelper;
     use MessageHelper;
     use CurlHelper;
@@ -55,7 +51,6 @@ class Order extends Base
 
         $this->assign("telephone",$name);
 
-
         if ($starttime && $endtime) {
             $map['a.order_time'] = ['between', [$starttime, $endtime]];
         } elseif ($starttime) {
@@ -64,50 +59,16 @@ class Order extends Base
             $map['a.order_time'] = ['elt', $endtime];
         }
 
-        if ($status !== false && $status != "") {
-            switch ($status) {
-                case 1: //待付款
-                    $map['a.order_status'] = OrderConstant::ORDER_STATUS_WAIT_PAY;
-                    break;
-                case 2: //待付尾款
-                    $map['a.order_status'] = OrderConstant::ORDER_STATUS_FINAL_ORDER;
-                    break;
-                case 3: //待审核
-                    $map['a.order_status'] = OrderConstant::ORDER_STATUS_WAIT_SEND;
-                    $map['a.sure_status'] = 0;
-                    break;
-                case 4: //待发货
-                    $map['a.order_status'] = OrderConstant::ORDER_STATUS_WAIT_SEND;
-                    $map['a.sure_status'] = 1;
-                    break;
-                case 5: //待收货
-                    $map['a.order_status'] = OrderConstant::ORDER_STATUS_WAIT_RECEIVE;
-                    break;
-                case 6: //待评价
-                    $map['a.order_status'] = OrderConstant::ORDER_STATUS_WAIT_COMMENT;
-                    break;
-                case 7: //已评价
-                    $map['a.order_status'] = OrderConstant::ORDER_STATUS_FINISH_ORDER;
-                    break;
-                case 8: //已取消
-                    $map['a.order_status'] = OrderConstant::ORDER_STATUS_CANCEL;
-                    break;
-                case 9: //退款售后
-                    $map['a.order_status'] = ['in', [
-                        OrderConstant::ORDER_STATUS_UN_REFUND,
-                        OrderConstant::ORDER_STATUS_APPLY_REFUND,
-                        OrderConstant::ORDER_STATUS_FINISH_REFUND
-                    ]];
-                    break;
-            }
+        if ($status) {
+            $map['a.order_status'] = $status;
         }
 
         if ($name) {
-            $map['b.nickname|a.telephone|a.consignee|b.realname|b.telephone'] = ["like", "%$name%"];
+            $map['b.nickname|a.telephone|a.consignee|b.telephone'] = ["like", "%$name%"];
             $this->assign("name", $name);
         }
         if ($order_no) {
-            $map['a.order_no|a.only_order_no'] = ["like", "%$order_no%"];
+            $map['a.order_no'] = ["like", "%$order_no%"];
             $this->assign("order_no", $order_no);
         }
 
@@ -122,13 +83,8 @@ class Order extends Base
             $user = model('user')->where(['id' => $v['user_id']])->field('nickname user_name,telephone')->find();
             $order_list[$k]['name'] = $user['user_name'];
             $order_list[$k]['tel'] = $user['telephone'];
-            $order_list[$k]['order_status_name'] = OrderConstant::order_status_array_value($this->orderStatusDesc(0, $v));
-            $order_list[$k]['pay_way_name'] = $v['pay_way'] ? OrderConstant::order_pay_array_value($v['pay_way']) : '';
-            $province = model('region')->where(['id' => $v['province_id']])->value('name');
-            $city = model('region')->where(['id' => $v['province_id']])->value('name');
-            $district = model('region')->where(['id' => $v['district_id']])->value('name');
-            $address = $province.$city.$district.$v['place'];
-            $order_list[$k]['place'] = $address;
+            $order_list[$k]['order_status_name'] = OrderConstant::order_status_array_value($v['order_status']);
+            $order_list[$k]['pay_way_name'] =  OrderConstant::order_pay_array_value($v['pay_way']);
             $order_list[$k]['pay_wait_price'] = $v['total_fee'] - $v['pay_price'];
             $order_goods = model('order_goods')->where(['order_id' => $v['id']])->select();
             $order_list[$k]['order_goods'] = $order_goods;
@@ -149,28 +105,25 @@ class Order extends Base
             ->where(["a.order_status" => 1])->where($map)->count();//已下单
         $count2 = $m->alias('a')
             ->join('tb_user b', 'a.user_id = b.id', 'left')
-            ->where(["a.order_status" => 7])->where($map)->count();//待付尾款
+            ->where(["a.order_status" => 2])->where($map)->count();//待付尾款
         $count3 = $m->alias('a')
             ->join('tb_user b', 'a.user_id = b.id', 'left')
-            ->where(["a.order_status" => 2, 'a.sure_status' => 0])->where($map)->count();//待审核
+            ->where(["a.order_status" => 3])->where($map)->count();//待审核
         $count4 = $m->alias('a')
             ->join('tb_user b', 'a.user_id = b.id', 'left')
-            ->where(["a.order_status" => 2, 'a.sure_status' => 1])->where($map)->count();//待发货
+            ->where(["a.order_status" => 4])->where($map)->count();//待发货
         $count5 = $m->alias('a')
             ->join('tb_user b', 'a.user_id = b.id', 'left')
-            ->where(["a.order_status" => 3])->where($map)->count();//待收货
+            ->where(["a.order_status" => 5])->where($map)->count();//待安装
         $count6 = $m->alias('a')
             ->join('tb_user b', 'a.user_id = b.id', 'left')
-            ->where(["a.order_status" => 4])->where($map)->count();//已送达
+            ->where(["a.order_status" => 6])->where($map)->count();//已完成
         $count7 = $m->alias('a')
             ->join('tb_user b', 'a.user_id = b.id', 'left')
-            ->where(["a.order_status" => 5])->where($map)->count();//交易完成
+            ->where(["a.order_status" => 7])->where($map)->count();//已取消
         $count8 = $m->alias('a')
             ->join('tb_user b', 'a.user_id = b.id', 'left')
-            ->where(["a.order_status" => 0])->where($map)->count();//已取消
-        $count9 = $m->alias('a')
-            ->join('tb_user b','a.user_id = b.id','left')
-            ->where(["a.order_status"=>['in', [10,11,12]]])->where($map)->count();//
+            ->where(["a.order_status" => 8])->where($map)->count();//已拒绝
 
         $list = model('express')->select();
         $this->assign('express', $list);
@@ -184,430 +137,10 @@ class Order extends Base
         $this->assign("count6", $count6);
         $this->assign("count7", $count7);
         $this->assign("count8", $count8);
-        $this->assign("count9", $count9);
-
-        $confirm_info = [
-            'is_pay' => 0,
-            'is_audit' => 0,
-        ];
-
-
-        $this->assign('confirm_info', $confirm_info);
-        return $this->fetch();
-    }
-
-    /*
-      *售后订单
-      */
-    public function refundOrder(){
-        $map = [];
-        $name = request()->param("name");
-        $order_no = request()->param("order_no");
-        $starttime = request()->param("starttime");
-        $endtime = request()->param("endtime");
-        $partner_id = request()->param("partner_id");
-        $status = request()->param("status", 13);
-        $this->assign("name", $name);
-        $this->assign("order_no", $order_no);
-        $this->assign("starttime", $starttime);
-        $this->assign("endtime", $endtime);
-        $this->assign("status", $status);
-
-        $this->assign("telephone",$name);
-
-        if ($partner_id != '') {
-            $map['partner_id'] = $partner_id;
-        }
-
-        $partner = model('partner')->where([])->select();
-        $this->assign('partner', $partner);
-        if ($starttime && $endtime) {
-            $map['a.order_time'] = ['between', [$starttime, $endtime]];
-        } elseif ($starttime) {
-            $map['a.order_time'] = ['egt', $starttime];
-        } elseif ($endtime) {
-            $map['a.order_time'] = ['elt', $endtime];
-        }
-        $arr_array = [];
-
-        if ($status == 11 || $status == 12) {
-            if ($status == 11) {
-                $is_refund = ['in', [3, 4]];
-            } else if ($status == 12) {
-                $is_refund = 1;
-            }
-            $sx_order_goods = model("order_goods")->where(["is_refund" => $is_refund])->select();
-
-            foreach ($sx_order_goods as $sg_key => $sg_val) {
-                $arr_array[] = $sx_order_goods[$sg_key]["order_id"];
-            }
-
-            if ($arr_array) {
-                $map['a.id'] = ["in", $arr_array];
-            }
-
-        } else if ($status == 13) {
-            $sx_order_goods = model("order_goods")->where(["is_refund" => ['neq', 0]])->select();
-
-            foreach ($sx_order_goods as $sg_key => $sg_val) {
-                $arr_array[] = $sx_order_goods[$sg_key]["order_id"];
-            }
-
-            if ($arr_array) {
-                $map['a.id'] = ["in", $arr_array];
-            }
-        }
-
-
-        if ($name) {
-            $map['b.nickname|a.telephone|a.consignee|b.realname|b.telephone'] = ["like", "%$name%"];
-            $this->assign("name", $name);
-        }
-        if ($order_no) {
-            $map['a.order_no|a.only_order_no'] = ["like", "%$order_no%"];
-            $this->assign("order_no", $order_no);
-        }
-
-
-        if (empty($arr_array)) {
-            $order_list = [];
-        } else {
-            $order_list = model('order')->alias('a')
-                ->join('tb_user b', 'a.user_id = b.id', 'left')
-                ->field('a.*')
-                ->order('a.order_time desc')
-                ->where($map)
-                ->paginate(10,false,['query'=>request()->param()]);
-
-            foreach ($order_list as $k => $v) {
-                $user = model('user')->where(['id' => $v['user_id']])->field('nickname user_name,telephone')->find();
-                $order_list[$k]['name'] = $user['user_name'];
-                $order_list[$k]['tel'] = $user['telephone'];
-                $order_list[$k]['order_status_name'] = OrderConstant::order_status_array_value($this->orderStatusDesc(0, $v));
-                $order_list[$k]['pay_way_name'] = $v['pay_way'] ? OrderConstant::order_pay_array_value($v['pay_way']) : '';
-                $province = model('region')->where(['id' => $v['province_id']])->value('name');
-                $city = model('region')->where(['id' => $v['province_id']])->value('name');
-                $district = model('region')->where(['id' => $v['district_id']])->value('name');
-                $address = $province.$city.$district.$v['place'];
-                $order_list[$k]['place'] = $address;
-                $order_list[$k]['pay_wait_price'] = $v['total_fee'] - $v['pay_price'];
-                $order_goods = model('order_goods')->where(['order_id' => $v['id']])->select();
-                foreach ($order_goods as $k1 => $v1) {
-
-                    $order_goods[$k1]['store_name'] = model('store')->where('id', $v1['store_id'])->value('store_name');
-                    $order_goods[$k1]['pay_price'] = ($v1['goods_price'] - $v1['coupon_price']) * $v1['goods_num'];
-                    $refund_count = model("refund_list")
-                        ->where(["user_id" => $v['user_id'], "order_no" => $v['order_no'], 'order_id' => $v1["id"]])->find();
-
-                    $order_goods[$k1]['refund_refund_type'] = $refund_count["refund_type"];
-                    $order_goods[$k1]['refund_refund_order_syn'] = $refund_count["refund_order_syn"];
-                    $order_goods[$k1]['refund_refund_order_id'] = $refund_count["order_id"];
-                    $order_goods[$k1]['refund_refund_hw_status'] = $refund_count["refund_hw_status"];
-                    $order_goods[$k1]['refund_refund_reason'] = $refund_count["refund_reason"];
-                    $order_goods[$k1]['refund_refund_price'] = $refund_count["refund_price"];
-                    $order_goods[$k1]['refund_refund_instructions'] = $refund_count["refund_instructions"];
-                    $order_goods[$k1]['refund_refund_add_time'] = $refund_count["refund_add_time"];
-                    $order_goods[$k1]['refund_refund_pic1'] = $refund_count["refund_pic1"];
-                    $order_goods[$k1]['refund_refund_pic2'] = $refund_count["refund_pic2"];
-                    $order_goods[$k1]['refund_refund_pic3'] = $refund_count["refund_pic3"];
-                    $order_goods[$k1]['refund_refund_pic4'] = $refund_count["refund_pic4"];
-                    $order_goods[$k1]['refund_refund_pic5'] = $refund_count["refund_pic5"];
-
-                    $order_goods[$k1]['refund_express_company'] = model("express")->where(['express_ma' => $v1['refund_express_ma']])->value('express_company');
-
-                }
-                $order_list[$k]['order_goods'] = $order_goods;
-            }
-        }
-
-        $this->assign("order_list", $order_list);
-
-        $m = model('order');
-        $map['a.order_status'] = ['in', [10,11,12]];
-        unset($map['a.id']);
-        $count11 = model("order_goods")->where(["is_refund" => ['in',[3,4]]])->count();
-        $count12 = model("order_goods")->where(["is_refund" => 1])->count();
-        $count13 = model("order_goods")->where(["is_refund" => ['neq', 0]])->count();
-        $list = model('express')->select();
-        $this->assign('express', $list);
-        $this->assign("count11", $count11);
-        $this->assign("count12", $count12);
-        $this->assign("count13", $count13);
 
         return $this->fetch();
     }
 
-    /**
-     * 确认付款
-     */
-    public function surePay()
-    {
-        $img = request()->post('img');
-        $action_note = request()->post('action_note');
-        $order_id = request()->post('order_id');
-        $money = request()->post('money');
-
-        if (!$order_id) {
-            ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_NONE_PARAM]);
-        }
-        $order = model('order')->where(['id'=>$order_id])->find();
-        if (!$order) {
-            ajaxReturn(['status' => 0, 'msg' => '订单不存在']);
-        }
-        if (!$img) {
-            ajaxReturn(['status' => 0, 'msg' => '请上传凭证']);
-        }
-        if (!$money) {
-            ajaxReturn(['status' => 0, 'msg' => '请填写金额']);
-        }
-        if (($order['total_fee'] - $order['paid_money']) < $money) {
-            ajaxReturn(['status' => 0, 'msg' => '不能超出待付金额']);
-        }
-        $action_type = 0;
-        if (($money == $order['total_fee'] && $order['pay_order_status'] == OrderConstant::PAY_ORDER_STATUS_ALL)
-            || ($money == $order['deposit_money']
-                && $order['pay_order_status'] == OrderConstant::PAY_ORDER_STATUS_NONE_DEPOSIT)
-            || ($money == ($order['total_fee'] - $order['deposit_money'])
-                && $order['pay_order_status'] == OrderConstant::PAY_ORDER_STATUS_DOING_DEPOSIT)
-        ) {
-            $action_type = 1;
-        }
-        $data['pay_type'] = 1;
-        $data['order_id'] = $order_id;
-        $data['action_user'] = model('manager')->where(['id' => $this->manager_id])->value('manager_name');
-        $data['action_note'] = $action_note;
-        $data['img'] = $img;
-        $data['action_type'] = $action_type;
-        $data['money'] = $money;
-        $data['total_money'] = $order['pay_price'] + $money;
-        $data['order_status'] = $order['order_status'];
-        $data['pay_status'] = $order['pay_status'];
-        $data['shipping_status'] = $order['is_shipping'];
-        $data['log_time'] = time();
-        $data['status_desc'] = '确认付款';
-        Db::startTrans();
-        $res = model('order_action')->save($data);//订单操作记录
-        if (!$res) {
-            Db::rollback();
-            ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_OPERATION_FAILURE]);
-        }
-
-        //$type = $order['pay_way']?$order['pay_way']:OrderConstant::ORDER_PAY_WAY_CERTIFICATE;
-
-        $this->orderSplit($order_id);
-        if ($order['pay_order_status'] == OrderConstant::PAY_ORDER_STATUS_ALL) {
-            if (round($order['total_fee'] - $order['paid_money'], 2) == $money) {
-                $is_certificate = OrderConstant::ORDER_CERTIFICATE_DONE;
-                $res = $this->moneyWater(
-                    $order['id'],
-                    OrderConstant::ORDER_PAY_WAY_CERTIFICATE,
-                    $order['user_id'],
-                    $order['total_fee'],
-                    0,
-                    0,
-                    MoneyWaterConstant::MONEY_WATER_TYPE_SUB,
-                    MoneyWaterConstant::MONEY_WATER_STATUS_SUCCESS,
-                    MoneyWaterConstant::MONEY_WATER_CATE_ORDER_BUY,
-                    '订单消费',
-                    ''
-                );
-            } else {
-                $is_certificate = OrderConstant::ORDER_CERTIFICATE_DOING;
-            }
-            $pay_order_status = OrderConstant::PAY_ORDER_STATUS_ALL;
-        }
-        $is_certificate = OrderConstant::ORDER_CERTIFICATE_DONE;
-        //定金支付，未付定金 改为 定金支付已付定金
-        if ($order['pay_order_status'] == OrderConstant::PAY_ORDER_STATUS_NONE_DEPOSIT) {
-            if ($money > $order['deposit_money']) {
-                ajaxReturn(['status' => 0, 'msg' => '不能大于待结算金额']);
-            }
-            if ($money == round($order['deposit_money'] - $order['paid_money'],2)) {
-                $pay_order_status = OrderConstant::PAY_ORDER_STATUS_DOING_DEPOSIT;
-
-            } else {
-                $pay_order_status = OrderConstant::PAY_ORDER_STATUS_NONE_DEPOSIT;
-
-            }
-
-        }
-        //定金支付，已付定金 改为 定金支付已付尾款
-        if ($order['pay_order_status'] == OrderConstant::PAY_ORDER_STATUS_DOING_DEPOSIT) {
-            if (round($order['total_fee'] - $order['paid_money'], 2) == $money) {
-                $data_info = [
-                    'order_status' => OrderConstant::ORDER_STATUS_WAIT_SEND,
-                    'pay_order_status' => OrderConstant::PAY_ORDER_STATUS_DOING_END,
-                    'is_certificate' => OrderConstant::ORDER_CERTIFICATE_DONE,
-                    'pay_final_way' => OrderConstant::ORDER_PAY_WAY_CERTIFICATE,
-                    'pay_final_time' => date('Y-m-d H:i:s', time()),
-                ];
-                $pay_order_status = OrderConstant::PAY_ORDER_STATUS_DOING_END;
-                $is_certificate = OrderConstant::ORDER_CERTIFICATE_DONE;
-                model('order')->update($data_info, ['id' => $order_id]);
-                $res = $this->moneyWater(
-                    $order['id'],
-                    OrderConstant::ORDER_PAY_WAY_CERTIFICATE,
-                    $order['user_id'],
-                    $order['total_fee'],
-                    0,
-                    0,
-                    MoneyWaterConstant::MONEY_WATER_TYPE_SUB,
-                    MoneyWaterConstant::MONEY_WATER_STATUS_SUCCESS,
-                    MoneyWaterConstant::MONEY_WATER_CATE_ORDER_BUY,
-                    '订单消费',
-                    ''
-                );
-            } else {
-                $pay_order_status = OrderConstant::PAY_ORDER_STATUS_DOING_DEPOSIT;
-
-            }
-        }
-
-        model('order')->update([
-            'pay_way' => OrderConstant::ORDER_PAY_WAY_CERTIFICATE,
-            'order_status' => OrderConstant::ORDER_STATUS_WAIT_SEND,
-            'pay_order_status' => $pay_order_status,
-            'sure_status' => 0,
-            'pay_status' => OrderConstant::PAY_STATUS_DOING,
-            'is_certificate' => $is_certificate,
-            'pay_time' => date('Y-m-d H:i:s', time()),
-            'paid_money' => $order['paid_money'] + $money,
-            'pay_price' => $order['paid_money'] + $money,
-        ], ['order_no' => $order['order_no']]);
-
-        if (($order['total_fee'] - $order['paid_money']) == $money) {
-            $res = $this->moneyWater(
-                $order['id'],
-                OrderConstant::ORDER_PAY_WAY_CERTIFICATE,
-                $order['user_id'],
-                $order['total_fee'],
-                0,
-                0,
-                MoneyWaterConstant::MONEY_WATER_TYPE_SUB,
-                MoneyWaterConstant::MONEY_WATER_STATUS_SUCCESS,
-                MoneyWaterConstant::MONEY_WATER_CATE_ORDER_BUY,
-                '订单消费',
-                ''
-            );
-        }
-
-        Db::commit();
-        ajaxReturn(["status" => 1, "msg" => SystemConstant::SYSTEM_OPERATION_SUCCESS]);
-    }
-
-    /**
-     * 确认订单
-     */
-    public function sureStatus()
-    {
-        $sure_status = request()->post('sure_status');
-        $action_note = request()->post('action_note');
-        $order_id = request()->post('order_id');
-
-        if (!$order_id) {
-            ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_NONE_PARAM]);
-        }
-        $order = model('order')->where(['id'=>$order_id])->find();
-        if (!$order) {
-            ajaxReturn(['status' => 0, 'msg' => '订单不存在']);
-        }
-        if ($sure_status == 0 || $sure_status ==1 ) {
-            if (($order['pay_status'] == 1 && $order['sure_status'] == 0)
-                && ($order['is_certificate'] == 2 || $order['is_certificate'] == 0)
-            ) {
-                //通过
-            } else {
-                $data = ['url' => url('Order/detail', ['order_id' => $order_id]).'#p_z_j'];
-                ajaxReturn(['status' => 0, 'msg' => '该订单还有凭证未确认，请进入详情查看', 'data' => $data]);
-            }
-        }
-        $msg = '审核订单';
-        $order_action = [];
-        if ($sure_status  ==  0) {
-            $store_id = model('order_goods')->where(['order_id'=>$order_id])->group('store_id')->count();
-            if ($store_id > 1) {
-                ajaxReturn(['status' => 0, 'msg' => '该订单包含多个供应商的商品，不可直接发货给用户']);
-            }
-            $order_action = model('order_action')
-                ->where(['order_id' => $order_id, 'pay_type' => 1])
-                ->order('log_time desc')
-                ->find();
-        } elseif ($sure_status == 1) {
-            $order_action = model('order_action')
-                ->where(['order_id' => $order_id, 'pay_type' => 1])
-                ->order('log_time desc')
-                ->find();
-        } elseif ($sure_status == 2) {
-            $msg = '取消订单';
-        } elseif ($sure_status == 3) {
-            $msg = '确认收货';
-        }
-        $data['order_id'] = $order_id;
-        $data['action_user'] = model('manager')->where(['id' => $this->manager_id])->value('manager_name');
-        $data['action_note'] = $action_note;
-        $data['order_status'] = $order['order_status'];
-        $data['pay_status'] = $order['pay_status'];
-        $data['shipping_status'] = $order['is_shipping'];
-        $data['log_time'] = time();
-        $data['status_desc'] = $msg;
-        model('order_action')->save($data);//订单操作记录
-
-        if ($order_action) {
-            $data_where = ['action_id' => $order_action['action_id']];
-            $data_info = ['audit_name' => $data['action_user'], 'audit_time' => $data['log_time']];
-            model('order_action')->update($data_info, $data_where);
-        }
-        if ($sure_status == 2) {
-            $return_arr = $this->cancel_order($order['order_no']);
-            model('order')->update(['sure_status' => 1], ['id'=>$order_id]);
-            ajaxReturn($return_arr);
-        } elseif ($sure_status == 3) {
-            $return_arr = $this->confirm_order($order['order_no']);
-            ajaxReturn($return_arr);
-        }
-        if ($order['pay_order_status'] == OrderConstant::PAY_ORDER_STATUS_DOING_DEPOSIT
-        ||$order['pay_order_status'] == OrderConstant::PAY_ORDER_STATUS_NONE_DEPOSIT
-        ) { //付定金审核
-            model('order')->save([
-                'order_status' => OrderConstant::ORDER_STATUS_FINAL_ORDER,
-                'is_certificate' => OrderConstant::ORDER_CERTIFICATE_DOING,
-                'sure_status' => 1,
-                //'is_shipping' => 1,
-                //'shipping_time' => date('Y-m-d H:i:s', time()),
-                'ship_status' => $sure_status
-            ], ['id'=>$order_id]);
-        } else if($order['pay_order_status'] == OrderConstant::PAY_ORDER_STATUS_DOING_END) {//付尾款审核
-            model('order')->save([
-                'order_status' => OrderConstant::ORDER_STATUS_WAIT_SEND,
-                'sure_status' => 1,
-                //'is_shipping' => 1,
-                //'shipping_time' => date('Y-m-d H:i:s', time()),
-                'ship_status' => $sure_status
-            ], ['id'=>$order_id]);
-        } else if ($order['pay_order_status'] == OrderConstant::PAY_ORDER_STATUS_ALL) { //全额审核
-            if ($order['total_fee'] - $order['paid_money'] == 0) {
-                model('order')->save([
-                    'order_status' => OrderConstant::ORDER_STATUS_WAIT_SEND,
-                    'sure_status' => 1,
-//                'is_shipping' => 1,
-//                'shipping_time' => date('Y-m-d H:i:s', time()),
-                    'ship_status' => $sure_status
-                ], ['id'=>$order_id]);
-            } else {
-                model('order')->save([
-                    'order_status' => OrderConstant::ORDER_STATUS_FINAL_ORDER,
-                    'is_certificate' => OrderConstant::ORDER_CERTIFICATE_NONE,
-                    'sure_status' => 1,
-                    //'is_shipping' => 1,
-                    //'shipping_time' => date('Y-m-d H:i:s', time()),
-                    'ship_status' => $sure_status
-                ], ['id'=>$order_id]);
-            }
-
-        }
-        $this->orderSplit($order_id);
-        ajaxReturn(["status" => 1, "msg" => SystemConstant::SYSTEM_OPERATION_SUCCESS]);
-    }
 
     /*
     *订单详情
@@ -629,25 +162,10 @@ class Order extends Base
         $order['realname'] = $user['nickname'];
         $order['m_telephone'] = $user['telephone'];
         $order['goods'] = $order_goods;
-        $order['order_status_name'] = OrderConstant::order_status_array_value($this->orderStatusDesc(0, $order));
+        $order['order_status_name'] = OrderConstant::order_status_array_value($order['order_status']);
         $order['pay_way_name'] = OrderConstant::order_pay_array_value($order['pay_way']);
-        $order['pay_order_status_name'] = OrderConstant::pay_order_status_array_value($order['pay_order_status']);
         $order['order_type_name'] = CartConstant::cart_type_array_value($order['order_type']);
         $order['source_name'] = OrderConstant::order_source_value($order['source']);
-        $order['goods_num'] = 0;
-        foreach ($order_goods as $k1 => $v1) {
-            $order_comment = Db::table('tb_order a,tb_goods_comment b')->where('a.id=b.order_id and b.order_id=' . $v1['order_id'] . ' and b.order_goods_id=' . $v1['id'] . '')->field('a.id,b.*')->select();
-            foreach ($order_comment as $k => $v) {
-                $img = explode(',', $v['slide_img']);
-                $order_comment[$k]['img'] = $img;
-                unset($v['slide_img']);
-            }
-            $order_goods[$k1]['comment'] = $order_comment;
-            $order['goods_num'] += $v1['goods_num'];
-        }
-        $order['province'] = model('region')->where(['id' => $order['province_id']])->value('name');
-        $order['city'] = model('region')->where(['id' => $order['city_id']])->value('name');
-        $order['district'] = model('region')->where(['id' => $order['district_id']])->value('name');
         $certificate = model('order_certificate')->where(['order_no' => $order['order_no']])->order('create_time asc')->select();
 
         $order_money = model('order_action')->where(['pay_type' => 1, 'order_id' => $id])->select();
@@ -660,72 +178,15 @@ class Order extends Base
 
         $order_action = model('order_action')->where(['order_id' => $id])->order('log_time desc')->select();
         $this->assign('order_action', $order_action);
-
-        $confirm_info = [
-            'is_pay' => 0,
-            'is_audit' => 0,
-        ];
-
-        if (($order['order_status'] != OrderConstant::ORDER_STATUS_CANCEL && $order['pay_status'] == 0)
-                || ($order['sure_status'] == 1 && ($order['order_status'] == 7 || $order['order_status'] == 1))
-//                || ($order['pay_status'] == 1 && $order['pay_order_status'] == 2 && $order['sure_status'] == 1)
-//                || ($order['pay_status'] == 1 && $order['is_certificate'] == 1 && $order['sure_status'] == 0)
-//                || ($order['pay_status'] == 1 && $order['order_status'] == 7 && $order['sure_status'] == 1)
-        ) {
-            $confirm_info['is_pay'] = 1;
-        }
-        if (($order['pay_status'] == 1 && $order['sure_status'] == 0)
-            && ($order['is_certificate'] == 2 || $order['is_certificate'] == 0)
-        ) {
-            $confirm_info['is_audit'] = 1;
-        }
-
-        if ($this->act_list != 'all') {
-            $right = model('manager_menu')->where("id", "in", $this->act_list)->field('right')->select();
-            $role_right = '';
-            foreach ($right as $val){
-                $role_right .= $val['right'].',';
-            }
-            $role_right = explode(',', $role_right);
-
-            $is_tur_one = 0;
-            $is_tur_two = 0;
-            //检查是否拥有此操作权限
-            foreach ($role_right as $v) {
-                if (strnatcasecmp('Order@sureStatus', $v) == 0) {
-                    $is_tur_one = 1;
-                }
-                if (strnatcasecmp('Order@surePay', $v) == 0) {
-                    $is_tur_two = 1;
-                }
-            }
-            if ($confirm_info['is_audit'] == 1 && $is_tur_one == 1) {
-                $confirm_info['is_audit'] = 1;
-            } else {
-                $confirm_info['is_audit'] = 0;
-            }
-            if ($confirm_info['is_pay'] == 1 && $is_tur_two == 1) {
-                $confirm_info['is_pay'] = 1;
-            } else {
-                $confirm_info['is_pay'] = 0;
-            }
-        }
-
-
-        $this->assign('confirm_info', $confirm_info);
         return $this->fetch();
     }
 
     public function orderAction ()
     {
-        $id = request()->post('id');
-        if (!$id) {
-            ajaxReturn(['status' => 0, 'msg' => '请选择凭证记录']);
-        }
         $type = request()->post('type');
         $action_note = request()->post('action_note');
         if (!$action_note) {
-            ajaxReturn(['status' => 0, 'msg' => '请填写备注']);
+//            ajaxReturn(['status' => 0, 'msg' => '请填写备注']);
         }
         $order_id = request()->post('order_id');
         if (!$order_id) {
@@ -736,15 +197,13 @@ class Order extends Base
             ajaxReturn(['status' => 0, 'msg' => '订单不存在']);
         }
 
-        $id_arr = explode('-', $id);
-        $order_certificate = model('order_certificate')->where(['id' => ['in', $id_arr], 'status' => 0])->select();
+//        $id_arr = explode('-', $id);
+        $order_certificate = model('order_certificate')->where(['status' => 0, 'order_no' => $order['order_no']])->select();
         if (!$order_certificate) {
-            ajaxReturn(['status' => 0, 'msg' => '请选择未审核的凭证记录']);
+            ajaxReturn(['status' => 0, 'msg' => '没有未审核的凭证记录']);
         }
-        $paid_money = request()->post('paid_money');
-        $data['money'] = $paid_money;
-        $data['total_money'] = $order['pay_price'] + $paid_money;
-        $data['pay_type'] = 1;
+        $pay_price = request()->post('pay_price');
+        $data['money'] = $pay_price;
         $data['order_id'] = $order_id;
         $data['action_user'] = model('manager')->where(['id' => $this->manager_id])->value('manager_name');
         $data['action_note'] = $action_note;
@@ -755,117 +214,40 @@ class Order extends Base
 //        $data['audit_name'] = $data['action_user'];
 //        $data['audit_time'] = $data['log_time'];
         if ($type == 1) {
-            if (!$paid_money) {
+            $data['total_money'] = $order['pay_price'] + $pay_price;
+            $data['pay_type'] = 1;
+            if (!$pay_price) {
                 ajaxReturn(['status' => 0, 'msg' => '请填写结算金额']);
             }
 
-            //全额支付
-            if ($order['pay_order_status'] == OrderConstant::PAY_ORDER_STATUS_ALL) {
-                if ($paid_money > $order['total_fee'] - $order['paid_money']) {
-                    ajaxReturn(['status' => 0, 'msg' => '不能大于待结算金额']);
-                }
-                if ($paid_money == $order['total_fee'] - $order['paid_money']) {
-                    $data['status_desc'] = '全额支付完成全部线下付款';
-                    $data_info = [
-                        'sure_status' => 0,
-                        'pay_status' => OrderConstant::PAY_STATUS_DOING,
-                        'order_status' => OrderConstant::ORDER_STATUS_WAIT_SEND,
-                        'is_certificate' => OrderConstant::ORDER_CERTIFICATE_DONE,
-                    ];
-                    model('order')->save($data_info, ['id' => $order_id]);
-
-                    $this->orderSplit($order_id);
-                } else {
-                    model('order')->save([
-                        'order_status' => OrderConstant::ORDER_STATUS_WAIT_SEND,
-                        'is_certificate' => OrderConstant::ORDER_CERTIFICATE_DONE,
-                        'sure_status' => 0,
-                        //'is_shipping' => 1,
-                        //'shipping_time' => date('Y-m-d H:i:s', time()),
-                    ], ['id'=>$order_id]);
-                    $data['status_desc'] = '全额支付部分线下付款';
-                }
+            if ($pay_price > $order['total_fee'] - $order['pay_price']) {
+                ajaxReturn(['status' => 0, 'msg' => '不能大于待结算金额']);
             }
-            //定金支付，未付定金 改为 定金支付已付定金
-            if ($order['pay_order_status'] == OrderConstant::PAY_ORDER_STATUS_NONE_DEPOSIT) {
-                if ($paid_money > $order['deposit_money']) {
-                    ajaxReturn(['status' => 0, 'msg' => '不能大于待结算金额']);
-                }
-                if ($paid_money == $order['deposit_money'] - $order['paid_money']) {
-                    $data['status_desc'] = '支付定金部分线下付款';
-                    $data_info = [
-                        'sure_status' => 0,
-                        'pay_status' => OrderConstant::PAY_STATUS_DOING,
-                        'order_status' => OrderConstant::ORDER_STATUS_FINAL_ORDER,
-                        'pay_order_status' => OrderConstant::PAY_ORDER_STATUS_DOING_DEPOSIT,
-                        'is_certificate' => OrderConstant::ORDER_CERTIFICATE_DONE,
-                        'pay_way' => OrderConstant::ORDER_PAY_WAY_CERTIFICATE,
-                        'pay_time' => date('Y-m-d H:i:s', time()),
-                    ];
-                    model('order')->save($data_info, ['id' => $order_id]);
-                    $this->orderSplit($order_id);
-                } else {
-                    model('order')->save([
-                        'order_status' => OrderConstant::ORDER_STATUS_WAIT_SEND,
-                        'is_certificate' => OrderConstant::ORDER_CERTIFICATE_DONE,
-                        'sure_status' => 0,
-                        //'is_shipping' => 1,
-                        //'shipping_time' => date('Y-m-d H:i:s', time()),
-                    ], ['id'=>$order_id]);
-                    $data['status_desc'] = '支付定金部分线下付款';
-                }
-
+            if ($pay_price == $order['total_fee'] - $order['pay_price']) {
+                $data['status_desc'] = '完成全部付款';
+                $data_info = [
+                    'order_status' => OrderConstant::ORDER_STATUS_WAIT_SEND,
+                ];
+                model('order')->save($data_info, ['id' => $order_id]);
+            } else {
+                model('order')->save([
+                    'order_status' => OrderConstant::ORDER_STATUS_FINAL_ORDER,
+                ], ['id'=>$order_id]);
+                $data['status_desc'] = '部分付款';
             }
-            //定金支付，已付定金 改为 定金支付已付尾款
-            if ($order['pay_order_status'] == OrderConstant::PAY_ORDER_STATUS_DOING_DEPOSIT) {
-                if ($paid_money > $order['total_fee'] - $order['paid_money']) {
-                    ajaxReturn(['status' => 0, 'msg' => '不能大于待结算金额']);
-                }
-                if ($paid_money == $order['total_fee'] - $order['paid_money']) {
-                    $data['status_desc'] = '支付定金尾款全部线下付款';
-                    $data_info = [
-                        'sure_status' => 0,
-                        'order_status' => OrderConstant::ORDER_STATUS_WAIT_SEND,
-                        'pay_order_status' => OrderConstant::PAY_ORDER_STATUS_DOING_END,
-                        'is_certificate' => OrderConstant::ORDER_CERTIFICATE_DONE,
-                        'pay_final_way' => OrderConstant::ORDER_PAY_WAY_CERTIFICATE,
-                        'pay_final_time' => date('Y-m-d H:i:s', time()),
-                    ];
-                    model('order')->save($data_info, ['id' => $order_id]);
-                    $res = $this->moneyWater(
-                        $order['id'],
-                        OrderConstant::ORDER_PAY_WAY_CERTIFICATE,
-                        $order['user_id'],
-                        $order['total_fee'],
-                        0,
-                        0,
-                        MoneyWaterConstant::MONEY_WATER_TYPE_SUB,
-                        MoneyWaterConstant::MONEY_WATER_STATUS_SUCCESS,
-                        MoneyWaterConstant::MONEY_WATER_CATE_ORDER_BUY,
-                        '订单消费',
-                        ''
-                    );
-                    $this->orderSplit($order_id);
-                } else {
-                    model('order')->save([
-                        'order_status' => OrderConstant::ORDER_STATUS_WAIT_SEND,
-                        'is_certificate' => OrderConstant::ORDER_CERTIFICATE_DONE,
-                        'sure_status' => 0,
-                        //'is_shipping' => 1,
-                        //'shipping_time' => date('Y-m-d H:i:s', time()),
-                    ], ['id'=>$order_id]);
-                    $data['status_desc'] = '支付定金尾款部分线下付款';
-                }
-            }
-
-            model('order')->where('id', $order['id'])->setInc('paid_money', $paid_money);
-            model('order')->where('id', $order['id'])->setInc('pay_price', $paid_money);
+            model('order')->where('id', $order['id'])->setInc('pay_price', $pay_price);
         } else {
+            $data['pay_type'] = 2;
             $data['status_desc'] = '拒绝本次付款';
+            model('order')->save([
+                'order_status' => OrderConstant::ORDER_STATUS_REJECTED,
+            ], ['id'=>$order_id]);
         }
-        $paid_money = $paid_money/count($id_arr);
-        model('order_certificate')->where(['id' => ['in', $id_arr]])->setField('status', $type==1?$type:2);
-        model('order_certificate')->where(['id' => ['in', $id_arr]])->setField('sure_money', $paid_money);
+
+        model('order_certificate')->where([
+            'status' => 0,
+            'order_no' => $order['order_no']
+        ])->setField('status', $type==1?$type:2);
         model('order_action')->save($data);//订单操作记录
         ajaxReturn(["status" => 1, "msg" => SystemConstant::SYSTEM_OPERATION_SUCCESS]);
     }
@@ -873,39 +255,26 @@ class Order extends Base
     public function fahuo()
     {
         $id = request()->post('id');
-        $data['order_status'] = 3;
+        $data['order_status'] = OrderConstant::ORDER_STATUS_WAIT_RECEIVE;
         $data['is_shipping'] = 1;
         $data['express_name'] = request()->post('express_name');
         $data['express_no'] = request()->post('express_no');
-        $data['shipping_type'] = request()->post('shipping_type');
-        $data['shipping_username'] = request()->post('shipping_username');
-        $data['shipping_telephone'] = request()->post('shipping_telephone');
-
-
         $data['shipping_time'] = date('Y-m-d H:i:s', time());
         $res = model('order')->save($data, ['id' => $id]);
         $order = model('order')->where(['id' => $id])->find();
-        $storeOrder = model("store_order")->where(['parent_no' => $order['order_no']])->select();
-        if ($storeOrder) {
-            foreach ($storeOrder as $storeOrder_k => $storeOrder_v) {
-                model('store_order')->where(['id' => $storeOrder_v['id']])->update(['order_status' => 3, 'is_shipping' => 1]);
-            }
-        }
 
-        $shipping_remark = request()->post('shipping_remark');
         $data_info['status_desc'] = '订单发货';
         $data_info['order_id'] = $id;
         $data_info['action_user'] = model('manager')->where(['id' => $this->manager_id])->value('manager_name');
-        $data_info['action_note'] = $shipping_remark;
         $data_info['order_status'] = $order['order_status'];
         $data_info['pay_status'] = $order['pay_status'];
         $data_info['shipping_status'] = $order['is_shipping'];
         $data_info['log_time'] = time();
         model('order_action')->save($data_info);//订单操作记录
         if ($res) {
-            $msg = getSetting('sms.shipping_template');
+          /*  $msg = getSetting('sms.shipping_template');
             $msg = str_replace('{order_no}', $order['order_no'], $msg);
-            $this->smsMessage($order['telephone'], $msg);
+            $this->smsMessage($order['telephone'], $msg);*/
             ajaxReturn(["status" => 1, "msg" => "发货成功！"]);
         } else {
             ajaxReturn(["status" => 0, "msg" => "网络繁忙，请稍后~~"]);
@@ -947,45 +316,11 @@ class Order extends Base
         }
         $arr_array = [];
 
-        if ($status !== false && $status != "") {
-            switch ($status) {
-                case 1: //待付款
-                    $map['a.order_status'] = OrderConstant::ORDER_STATUS_WAIT_PAY;
-                    break;
-                case 2: //待付尾款
-                    $map['a.order_status'] = OrderConstant::ORDER_STATUS_FINAL_ORDER;
-                    break;
-                case 3: //待审核
-                    $map['a.order_status'] = OrderConstant::ORDER_STATUS_WAIT_SEND;
-                    $map['a.sure_status'] = 0;
-                    break;
-                case 4: //待发货
-                    $map['a.order_status'] = OrderConstant::ORDER_STATUS_WAIT_SEND;
-                    $map['a.sure_status'] = 1;
-                    break;
-                case 5: //待收货
-                    $map['a.order_status'] = OrderConstant::ORDER_STATUS_WAIT_RECEIVE;
-                    break;
-                case 6: //待评价
-                    $map['a.order_status'] = OrderConstant::ORDER_STATUS_WAIT_COMMENT;
-                    break;
-                case 7: //已评价
-                    $map['a.order_status'] = OrderConstant::ORDER_STATUS_FINISH_ORDER;
-                    break;
-                case 8: //已取消
-                    $map['a.order_status'] = OrderConstant::ORDER_STATUS_CANCEL;
-                    break;
-                case 9: //退款售后
-                    $map['a.order_status'] = ['in', [
-                        OrderConstant::ORDER_STATUS_UN_REFUND,
-                        OrderConstant::ORDER_STATUS_APPLY_REFUND,
-                        OrderConstant::ORDER_STATUS_FINISH_REFUND
-                    ]];
-                    break;
-            }
+        if ($status) {
+            $map['a.order_status'] = $status;
         }
         if ($name) {
-            $map['b.nickname|a.telephone|a.consignee|b.realname|b.telephone'] = ["like", "%$name%"];
+            $map['b.nickname|a.telephone|a.consignee|b.telephone'] = ["like", "%$name%"];
             $this->assign("name", $name);
         }
         if ($order_no) {
@@ -993,63 +328,30 @@ class Order extends Base
             $this->assign("order_no", $order_no);
         }
 
-        if (($status == 11 || $status == 12) && empty($arr_array)) {
-            $refund = model('order')->alias('a')
-                ->join('tb_user b', 'a.user_id = b.id', 'left')
-                ->field('a.*')
-                ->order('a.order_time desc')
-                ->where(['a.id' => ['lt', 0]])
-                ->select();
-        } else {
-            $refund = model('order')->alias('a')
-                ->join('tb_user b', 'a.user_id = b.id', 'left')
-                ->field('a.*')
-                ->order('a.order_time desc')
-                ->where($map)
-                ->select();
-        }
+
+        $refund = model('order')->alias('a')
+            ->join('tb_user b', 'a.user_id = b.id', 'left')
+            ->field('a.*')
+            ->order('a.order_time desc')
+            ->where($map)
+            ->select();
 
 
-        /*  $m = model('order');
-          $refund = $m->alias('a')
-              ->field('a.order_no,a.user_id,a.order_status,a.pay_way,a.total_fee,a.consignee,a.telephone,a.place')
-              ->where($where)
-              ->select();*/
         $data_info = [];
         foreach ($refund as $k => $v) {
             $data_info[$k]['order_no'] = $v['order_no'];
             $user = model('user')->where(['id' => $v['user_id']])->field('nickname user_name,telephone')->find();
             $data_info[$k]['order_time'] = $v['order_time'];
             $data_info[$k]['name'] = $user['user_name'];
-            $data_info[$k]['trade_no'] = $v['trade_no'];
-            $data_info[$k]['total_price'] = $v['total_price'];
             $data_info[$k]['tel'] = $user['telephone'];
-            $data_info[$k]['order_status'] = OrderConstant::order_status_array_value($this->orderStatusDesc(0, $v));
-            $data_info[$k]['pay_way'] = $v['pay_way'] ? OrderConstant::order_pay_array_value($v['pay_way']) : '';
+            $data_info[$k]['order_status'] = OrderConstant::order_status_array_value($v['order_status']);
+            $data_info[$k]['pay_way'] = OrderConstant::order_pay_array_value($v['pay_way']);
             $data_info[$k]['total_fee'] = $v['total_fee'];
             $data_info[$k]['consignee'] = $v['consignee'];
             $data_info[$k]['telephone'] = $v['telephone'];
-            $province = model('region')->where(['id' => $v['province_id']])->value('name');
-            $city = model('region')->where(['id' => $v['province_id']])->value('name');
-            $district = model('region')->where(['id' => $v['district_id']])->value('name');
-            $address = $province.$city.$district.$v['place'];
-            $data_info[$k]['place'] = $address;
-            $data_info[$k]['coupon_price'] = $v['coupon_price'];
-            $data_info[$k]['express_fee'] = $v['express_fee'];
-            $data_info[$k]['cover_fee'] = $v['cover_fee'];
             $data_info[$k]['pay_price'] = $v['pay_price'];
             $data_info[$k]['pay_wait_price'] = $v['total_fee'] - $v['pay_price'];
-            $order_goods = model('order_goods')
-                ->field('store_id,coupon_price,goods_name,goods_code,goods_num,goods_price,sku_info')
-                ->where(['order_id' => $v['id']])
-                ->select();
-            foreach ($order_goods as $k1 => $v1) {
-                $order_goods[$k1]['store_name'] = model('store')->where('id', $v1['store_id'])->value('store_name');
-                $order_goods[$k1]['pay_price'] = ($v1['goods_price'] - $v1['coupon_price'])*$v1['goods_num'];
-            }
-            $data_info[$k]['order_goods'] = $order_goods;
         }
-
 
         $filename = '订单';
 

@@ -41,29 +41,18 @@
 						<a href="{:url('Order/orderList',['status' => 4])}" class="{eq name="status" value="4"}active{/eq} tabs_a fl">待发货({$count4|default='0'})</a>
 						</li>
 						<li class="{eq name="status" value="5"}active{/eq} tabs_a fl">
-						<a href="{:url('Order/orderList',['status' => 5])}" class="{eq name="status" value="5"}active{/eq} tabs_a fl">待收货({$count5|default='0'})</a>
+						<a href="{:url('Order/orderList',['status' => 5])}" class="{eq name="status" value="5"}active{/eq} tabs_a fl">待安装({$count5|default='0'})</a>
 						</li>
 						<li class="{eq name="status" value="6"}active{/eq} tabs_a fl">
-						<a href="{:url('Order/orderList',['status' => 6])}" class="{eq name="status" value="6"}active{/eq} tabs_a fl">收货完成({$count6|default='0'})</a>
+						<a href="{:url('Order/orderList',['status' => 6])}" class="{eq name="status" value="6"}active{/eq} tabs_a fl">订单完成({$count6|default='0'})</a>
 						</li>
 						<li class="{eq name="status" value="7"}active{/eq} tabs_a fl">
-						<a href="{:url('Order/orderList',['status' => 7])}" class="{eq name="status" value="7"}active{/eq} tabs_a fl">评价完成({$count7|default='0'})</a>
+						<a href="{:url('Order/orderList',['status' => 7])}" class="{eq name="status" value="7"}active{/eq} tabs_a fl">已取消({$count7|default='0'})</a>
 						</li>
 						<li class="{eq name="status" value="8"}active{/eq} tabs_a fl">
-						<a href="{:url('Order/orderList',['status' => 8])}" class="{eq name="status" value="8"}active{/eq} tabs_a fl">已取消({$count8|default='0'})</a>
-						</li>
-						<li class="{eq name="status" value="9"}active{/eq} tabs_a fl">
-						<a href="{:url('Order/orderList',['status' => 9])}" class="{eq name="status" value="9"}active{/eq} tabs_a fl">退款订单({$count9|default='0'})</a>
+						<a href="{:url('Order/orderList',['status' => 8])}" class="{eq name="status" value="8"}active{/eq} tabs_a fl">驳回({$count8|default='0'})</a>
 						</li>
 					</ul>
-					<!--<ul class="nav nav-tabs">
-						<li class="{eq name="status" value="11"}active{/eq} tabs_a fl">
-						<a href="{:url('Order/orderList',['status' => 11])}" class="{eq name="status" value="100"}active{/eq} tabs_a fl">退款中商品({$count11|default='0'})</a>
-						</li>
-						<li class="{eq name="status" value="12"}active{/eq} tabs_a fl">
-						<a href="{:url('Order/orderList',['status' => 12])}" class="{eq name="status" value="8"}active{/eq} tabs_a fl">退款完成商品({$count12|default='0'})</a>
-						</li>
-					</ul>-->
 					<div class="tab-content">
 						<div class="row" style="padding-top:20px;background:#fff;margin-left: 0;margin-right: 0;">
 							<form method="get" action="" class="form-inline order_search">
@@ -93,31 +82,13 @@
 													<tr>
 														<th>订单号</th>
 														<th>下单时间</th>
-<!--														<th>支付流水号</th>-->
 														<th>下单人姓名</th>
 														<th>下单人手机号</th>
 														<th>订单状态</th>
 														<th>支付类型</th>
-<!--														<th>商品金额</th>-->
-<!--														<th>优惠金额</th>-->
-<!--														<th>物流费</th>-->
-<!--														<th>上门服务费</th>-->
 														<th>订单金额</th>
 														<th>已付款金额</th>
 														<th>操作</th>
-<!--														<th>待付款金额</th>-->
-<!--														<th>收货人</th>-->
-<!--														<th>收货人手机号</th>-->
-<!--														<th>收货地址</th>-->
-<!--														<th>商品名称</th>-->
-<!--														<th>商品编号</th>-->
-<!--														<th>供应商</th>-->
-<!--														<th>商品单价</th>-->
-<!--														<th>商品数量</th>-->
-<!--														<th>商品价格</th>-->
-<!--														<th>商品实付价格</th>-->
-<!--														<th>SKU</th>-->
-														<!--													<th style="width: 150px;">操作</th>-->
 													</tr>
 													</thead>
 													<tbody>
@@ -125,59 +96,22 @@
 													<tr>
 														<td >{$vo.order_no}</td>
 														<td >{$vo.order_time}</td>
-<!--														<td >{$vo.trade_no}</td>-->
 														<td >{$vo.name}</td>
 														<td >{$vo.tel}</td>
 														<td >{$vo.order_status_name}</td>
 														<td >{$vo.pay_way_name}</td>
-<!--														<td >{$vo.total_price}</td>-->
-<!--														<td >{$vo.coupon_price}</td>-->
-<!--														<td >{$vo.express_fee}</td>-->
-<!--														<td >{$vo.cover_fee}</td>-->
 														<td >{$vo.total_fee}</td>
-														<td >{$vo.paid_money}</td>
-<!--														<td >{$vo.pay_wait_price}</td>-->
-<!--														<td >{$vo.consignee}</td>-->
-<!--														<td >{$vo.telephone}</td>-->
-<!--														<td >{$vo.place}</td>-->
-														<!--{foreach name="vo.order_goods" item="v" key="k"}
-														{eq name="k" value="0"}
-														<td>{$v.goods_name}</td>
-														<td>{$v.goods_code}</td>
-														<td>{$v.store_name}</td>
-														<td>{$v.goods_price}</td>
-														<td>{$v.goods_num}</td>
-														<td>{$v['goods_price'] * $v['goods_num']}</td>
-														<td>{$v['goods_price']* $v['goods_num']-$v['coupon_price']* $v['goods_num']}</td>
-														<td>{$v.sku_info}</td>
-														{/eq}
-														{/foreach}-->
+														<td >{$vo.pay_price}</td>
 														<td>
-															<a  href="{:url('Order/detail',array('order_id'=>$vo['id'],'user_id'=>$vo['user_id']))}" class="btn btn-primary btn-sm" title="查看详情">详情</a>
-															{eq name="vo.is_audit" value="1"}
-															<a href="javascript:void(0);" class="btn btn-primary btn-sm j-editClass" data-id="{$vo.id}" title="审核订单" >审核</a>
+															<a  href="{:url('Order/detail',array('order_id'=>$vo['id']))}" class="btn btn-primary btn-sm" title="查看详情">详情</a>
+															{eq name="vo.order_status" value="3"}
+															<!--<a href="javascript:void(0);" class="btn btn-primary btn-sm j-editClass" data-id="{$vo.id}" title="审核订单" >审核</a>-->
 															{/eq}
-															{eq name="vo.order_status" value="2"}
-															{eq name='vo.sure_status' value="1"}
+															{eq name="vo.order_status" value="4"}
 															<a href="javascript:void(0);" class="btn btn-primary btn-sm j-editClass1" data-id="{$vo.id}">发货</a>
-															{/eq}
 															{/eq}
 														</td>
 													</tr>
-													<!--{foreach name="vo.order_goods" item="v" key="k"}
-													{neq name="k" value="0"}
-													<tr>
-														<td>{$v.goods_name}</td>
-														<td>{$v.goods_code}</td>
-														<td>{$v.store_name}</td>
-														<td>{$v.goods_price}</td>
-														<td>{$v.goods_num}</td>
-														<td>{$v['goods_price'] * $v['goods_num']}</td>
-														<td>{$v['goods_price']* $v['goods_num']-$v['coupon_price']* $v['goods_num']}</td>
-														<td>{$v.sku_info}</td>
-													</tr>
-													{/neq}
-													{/foreach}-->
 													{/foreach}
 													{empty name="order_list"}
 													<tr><td colspan="10" style="text-align: center;">暂无数据</td></tr>
@@ -185,28 +119,6 @@
 													</tbody>
 												</table>
 											</div>
-											<!--<div class="table-responsive table_r col-lg-2">
-												<table class="table table-hover products_table">
-													<tr>
-														<th>操作</th>										
-													</tr>
-													{foreach name="order_list" item="vo"}
-													<tr>
-														<td style="height: {php}echo count($vo['order_goods'])*53{/php}px">
-															<a  href="{:url('Order/detail',array('order_id'=>$vo['id'],'user_id'=>$vo['user_id']))}" title="查看详情">详情</a>
-															{eq name='vo.sure_status' value="0"}
-															{eq name="vo.pay_status" value="1"}
-															{if condition="$vo['is_certificate'] eq 2 or $vo['is_certificate'] eq 0"}
-															<a href="javascript:void(0);" class="j-editClass" data-id="{$vo.id}" title="审核订单">审核</a>
-															{/if}
-															&lt;!&ndash;														<a href="javascript:void(0);" class="btn btn-primary btn-sm j-editClass" data-id="{$vo.id}">发货</a>&ndash;&gt;
-															{/eq}
-															{/eq}
-														</td>
-													</tr>
-													{/foreach}
-												</table>
-											</div>-->
 
 										<div class="page">
 											{$order_list->render()}
@@ -236,13 +148,7 @@
 						<div class="model_address">
 
 							<form class="form-horizontal">
-								<div class="form-group clearfix">
-									<label class="col-sm-2 control-label">使用物流</label>
-									<div class="col-sm-6">
-										<label><input type="radio"  value="1" name="is_check" checked>是</label>
-										<label><input type="radio"  value="0" name="is_check">否</label>
-									</div>
-								</div>
+
 								<div class="is_check_sure" style="display: block">
 									<div class="form-group clearfix">
 										<label class="col-sm-2 control-label">选择物流</label>
@@ -268,26 +174,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="is_check_false" style="display: none">
-									<div class="form-group clearfix">
-										<label class="col-sm-2 control-label">配送员</label>
-										<div class="col-sm-6">
-											<input type="text" id="s_username" class="form-control" >
-										</div>
-									</div>
-									<div class="form-group clearfix">
-										<label class="col-sm-2 control-label">配送电话</label>
-										<div class="col-sm-6">
-											<input type="text" id="s_telephone" class="form-control" >
-										</div>
-									</div>
-								</div>
-								<div class="form-group clearfix">
-									<label class="col-sm-2 control-label">备　　注</label>
-									<div class="col-sm-6">
-										<input type="text" id="s_remark" class="form-control" >
-									</div>
-								</div>
+
 							</form>
 						</div>
 					</div>
@@ -651,45 +538,23 @@
 	$('.sendExpress').click(function(){
 		var wuliu_name = $('#wuliu_name').val();
 		var wuliu_nums = $('#wuliu_nums').val();
-		var s_username = $('#s_username').val();
-		var s_telephone = $('#s_telephone').val();
-		var s_remark = $('#s_remark').val();
 
-		var is_check = $('input[name="is_check"]:checked').val();
-
-		if (is_check == 1) {
-			if(wuliu_name == 0){
-				alert('请选择物流!');
-				return false;
-			}
-
-			if(wuliu_nums == ''){
-				alert('物流单号为空!');
-				return false;
-			}
-		} else {
-			if(s_username == ''){
-				alert('请选择物流!');
-				return false;
-			}
-
-			if(s_telephone == ''){
-				alert('配送电话为空!');
-				return false;
-			}
+		if(wuliu_name == 0){
+			alert('请选择物流!');
+			return false;
 		}
 
-		//alert(id);
+		if(wuliu_nums == ''){
+			alert('物流单号为空!');
+			return false;
+		}
+
 		$.ajax({
 			type: "POST",
 			url: "{:url('Order/fahuo')}",
 			data: {
 				express_name:wuliu_name,
 				express_no:wuliu_nums,
-				shipping_username:s_username,
-				shipping_telephone:s_telephone,
-				shipping_remark:s_remark,
-				shipping_type:is_check,
 				id:id
 			},
 			dataType: "json",

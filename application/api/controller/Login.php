@@ -76,18 +76,23 @@ class Login extends Base
                 } else {
                     $user = false;
                 }
-                if ($info && $user) {
-                    $user_id = $user['id'];
-                    unset($data['create_time']);
-                    $data['update_time'] = time();
-                    $data['login_num'] = $user['login_num'] + 1;
-                    model('user')->save($data, ['id' => $user['id']]);
-                    if ($user['telephone']) {
-                        $is_binging = 0;
+                if ($info) {
+                    if ($user) {
+                        $user_id = $user['id'];
+                        unset($data['create_time']);
+                        $data['update_time'] = time();
+                        $data['login_num'] = $user['login_num'] + 1;
+                        model('user')->save($data, ['id' => $user['id']]);
+                        if ($user['telephone']) {
+                            $is_binging = 0;
+                        } else {
+                            $is_binging = 1;
+                        }
                     } else {
                         $is_binging = 1;
+                        $user_id = model('user')->insertGetId($data);
+                        model('user_access_token')->save(['user_id' => $user_id], ['id' => $info['id']]);
                     }
-
                 } else {
                     $is_binging = 1;
                     $user_id = model('user')->insertGetId($data);
@@ -95,7 +100,7 @@ class Login extends Base
                         'open_id' => $result['openId'],
                         'nickname' => $name,
                         'avatarurl' => $img,
-//                        'user_id' => $user_id,
+                        'user_id' => $user_id,
                         'gender' => $sex,
 //                        'union_id' => $unionId,
                         'create_time' => time()
