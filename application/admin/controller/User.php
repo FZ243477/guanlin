@@ -58,19 +58,9 @@ class User extends Base
             $totalCount = $user_model->where($map)->count();
             $first_row = ($page-1)*$list_row;
             $field = [
-                'id','telephone','head_img','status', 'nickname','create_time',
+                'id','telephone','head_img','status', 'nickname','create_time', 'last_login_time',
             ];
             $lists = $user_model->where($map)->field($field)->limit($first_row, $list_row)->order('id desc')->select();
-
-            foreach ($lists as $k => $v) {
-                $first_leader = model('user')->where(['first_leader' => $v['id']])->count();
-                $lists[$k]['first_leader_num'] = $first_leader?$first_leader:0;
-                $second_leader = model('user')->where(['second_leader' => $v['id']])->count();
-                $lists[$k]['second_leader_num'] = $second_leader?$second_leader:0;
-                $third_leader = model('user')->where(['third_leader' => $v['id']])->count();
-                $lists[$k]['third_leader_num'] = $third_leader?$third_leader:0;
-            }
-
             $pageCount = ceil($totalCount/$list_row);
 
             $data = [

@@ -22,4 +22,14 @@ class User extends Model
 
         return $level_name;
     }
+
+    //获取器 用于读取字段值的修改
+    protected function getLastLoginTimeAttr($value)
+    {
+        if ($value) {
+            $value = date('Y-m-d H:i:s', $value);
+        }
+
+        return $value;
+    }
 }
