@@ -200,7 +200,7 @@ class HousesCase extends Base
             ajaxReturn($json_arr);
         }
 
-        $housesType = model('houses_type')->where(['id' => $houses_type_id])->field('name,area,space')->find();
+        $housesType = model('houses_type')->where(['id' => $houses_type_id])->field('name,area,space,style')->find();
         $housesCase = model('houses_case')
             ->where(['houses_type_id' => $houses_type_id, 'is_display' => 1])
             ->field('id,name,logo,designer_id,type,collection_num')
@@ -209,6 +209,7 @@ class HousesCase extends Base
         foreach ($housesCase as $k => $v) {
             $housesCase[$k]['area'] = $housesType['area'];
             $housesCase[$k]['space'] = $housesType['space'];
+            $housesCase[$k]['style'] = $housesType['style'];
             $housesCase[$k]['designer'] = model('houses_designer')
                 ->where(['id' => $v['designer_id']])
                 ->field('designer_name,designer_logo,city,exp')
