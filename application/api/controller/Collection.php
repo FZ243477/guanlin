@@ -14,6 +14,25 @@ class Collection extends Base
         parent::__construct();
     }
 
+    public function collectionNum()
+    {
+        $collection_model = model('collection');
+        $where['user_id'] = $this->user_id;
+        $where['type'] = 1;
+        $where['status'] = 1;
+        $collection_num1 = $collection_model->where($where)->count();
+        $where['type'] = 2;
+        $collection_num2 = $collection_model->where($where)->count();
+        $where['type'] = 3;
+        $collection_num3 = $collection_model->where($where)->count();
+        $data = [
+            'collection_num1' => $collection_num1,
+            'collection_num2' => $collection_num2,
+            'collection_num3' => $collection_num3,
+        ];
+        $json_arr = ['status' => 1, 'msg' => '操作成功', 'data' => $data];
+        ajaxReturn($json_arr);
+    }
 
     /**
      * 收藏列表

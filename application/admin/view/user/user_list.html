@@ -89,20 +89,20 @@
 													<td class='center'>{{vo.create_time}}<br/>{{vo.last_login_time}}</td>
 													<td class='center'>
 														<a :href="'home_host/User/userDetail/id/'+vo.id" class="btn btn-primary"><i class="fa fa-plus"></i>编辑</a>
-														<!--<a href="javascript:void(0)" class="btn btn-default btn-sm del_user" @click="deluser(vo.id)">删除</a>-->
+														<a href="javascript:void(0)" class="btn btn-default btn-sm del_user" @click="deluser(vo.id)">删除</a>
 													</td>
 												</tr>
 												<tr v-if="userList == ''"><td style='text-align:center' colspan='6'>暂无数据</td></tr>
-												<!--<tr>
+												<tr>
 													<td colspan="12" class="pro_lasttd">
 														<label ><input type="checkbox" class="i-checks all"  name="inputs"><span>全选</span></label>
 
 														<div class="pro_table_contro">
-															<a href="javascript:void(0);" class="btn btn-xs btn-primary btn_del" @click="send('')" >确定发放</a>
+															<a href="javascript:void(0);" class="btn btn-xs btn-primary btn_del"  @click="deluser(0)" >确定删除</a>
 														</div>
 
 													</td>
-												</tr>-->
+												</tr>
 												</tbody>
 											</table>
 
