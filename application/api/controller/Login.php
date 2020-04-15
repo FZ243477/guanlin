@@ -100,7 +100,7 @@ class Login extends Base
                         'open_id' => $result['openId'],
                         'nickname' => $name,
                         'avatarurl' => $img,
-//                        'user_id' => $user_id,
+                        'user_id' => $user_id,
                         'gender' => $sex,
 //                        'union_id' => $unionId,
                         'create_time' => time()
