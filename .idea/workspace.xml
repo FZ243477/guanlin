@@ -16,6 +16,7 @@
     <list default="true" id="c4024c1a-a4b1-4de9-8e2c-5b9909aefc36" name="默认" comment="默认">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application/api/controller/HousesCase.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/api/controller/HousesCase.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/api/controller/Order.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/api/controller/Order.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -167,14 +168,14 @@
           <entry key="dummy" value="17" />
           <entry key="gitignore" value="1" />
           <entry key="html" value="28" />
-          <entry key="php" value="9078" />
+          <entry key="php" value="9109" />
           <entry key="sql" value="16" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="HTML" value="28" />
-          <entry key="PHP" value="9078" />
+          <entry key="PHP" value="9109" />
           <entry key="PLAIN_TEXT" value="18" />
           <entry key="SQL" value="16" />
         </counts>
@@ -256,11 +257,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/application/api/controller/HousesCase.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="409">
-              <caret line="173" column="20" selection-start-line="173" selection-start-column="20" selection-end-line="173" selection-end-column="20" />
+            <state relative-caret-position="192">
+              <caret line="319" column="21" selection-start-line="319" selection-start-column="12" selection-end-line="319" selection-end-column="21" />
               <folding>
                 <element signature="e#36#75#0#PHP" expanded="true" />
               </folding>
@@ -268,11 +269,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/api/controller/Order.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="378">
-              <caret line="43" column="89" selection-start-line="43" selection-start-column="89" selection-end-line="43" selection-end-column="89" />
+            <state relative-caret-position="340">
+              <caret line="342" column="35" selection-start-line="342" selection-start-column="35" selection-end-line="342" selection-end-column="35" />
             </state>
           </provider>
         </entry>
@@ -440,8 +441,8 @@
         <option value="$PROJECT_DIR$/application/common/constant/OrderConstant.php" />
         <option value="$PROJECT_DIR$/application/api/controller/User.php" />
         <option value="$PROJECT_DIR$/application/api/controller/Login.php" />
-        <option value="$PROJECT_DIR$/application/api/controller/Order.php" />
         <option value="$PROJECT_DIR$/application/api/controller/HousesCase.php" />
+        <option value="$PROJECT_DIR$/application/api/controller/Order.php" />
       </list>
     </option>
   </component>
@@ -741,7 +742,7 @@
       <workItem from="1586739206632" duration="12780000" />
       <workItem from="1586756574634" duration="20948000" />
       <workItem from="1586827480909" duration="18694000" />
-      <workItem from="1586911852868" duration="2798000" />
+      <workItem from="1586911852868" duration="4988000" />
     </task>
     <task id="LOCAL-00001" summary="默认">
       <created>1585900330977</created>
@@ -911,11 +912,25 @@
       <option name="project" value="LOCAL" />
       <updated>1586916477847</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="默认">
+      <created>1586917857820</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1586917857820</updated>
+    </task>
+    <task id="LOCAL-00026" summary="默认">
+      <created>1586919019330</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1586919019330</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1118617000" />
+    <option name="totallyTimeSpent" value="1120807000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1394,20 +1409,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/api/controller/Order.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="43" column="89" selection-start-line="43" selection-start-column="89" selection-end-line="43" selection-end-column="89" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/application/api/controller/HousesCase.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="409">
-          <caret line="173" column="20" selection-start-line="173" selection-start-column="20" selection-end-line="173" selection-end-column="20" />
+        <state relative-caret-position="192">
+          <caret line="319" column="21" selection-start-line="319" selection-start-column="12" selection-end-line="319" selection-end-column="21" />
           <folding>
             <element signature="e#36#75#0#PHP" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/api/controller/Order.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="342" column="35" selection-start-line="342" selection-start-column="35" selection-end-line="342" selection-end-column="35" />
         </state>
       </provider>
     </entry>

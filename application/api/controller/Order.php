@@ -340,7 +340,7 @@ class Order extends Base
         $list_row = request()->post('list_row', 10); //每页数据
         $page = request()->post('page', 1); //当前页
 
-        if (!in_array($status, [1, 2, 3, 4, 5, 6, 7, 8])) {
+        if (!in_array($status, [0, 1, 2, 3, 4, 5, 6, 7, 8])) {
             $return_arr = ['status' => 0, 'msg' => '参数status错误']; //
             ajaxReturn($return_arr);
         }
