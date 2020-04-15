@@ -4,7 +4,6 @@
 namespace app\admin\controller;
 use app\admin\helper\ManagerHelper;
 use app\common\helper\EncryptionHelper;
-use app\common\helper\KujialeHelper;
 use app\common\helper\PHPExcelHelper;
 use app\common\constant\SystemConstant;
 use app\common\constant\UserConstant;
@@ -15,7 +14,6 @@ class User extends Base
     use ManagerHelper;
     use EncryptionHelper;
     use PHPExcelHelper;
-    use KujialeHelper;
 
     public function __construct()
     {
@@ -25,8 +23,7 @@ class User extends Base
     public function userList()
     {
         if (request()->isPost()) {
-            $map['is_del'] = 0;
-            $map['is_platform'] = 1;
+            $map = [];
             #手机号 昵称
             $telephone = request()->post('telephone', '', 'trim');
             if($telephone){
@@ -34,7 +31,7 @@ class User extends Base
             }
             $nickname = request()->post('nickname', '', 'trim');
             if($nickname){
-                $map['nickname|realname']=['like', "%".$nickname."%"];
+                $map['nickname']=['like', "%".$nickname."%"];
             }
             $status = request()->post('status');
             if($status != ''){
