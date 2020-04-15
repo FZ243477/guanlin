@@ -165,7 +165,7 @@ class HousesCase extends Base
             $json_arr =  ['status' => 0, 'msg' => '请输入关键词'];
             ajaxReturn($json_arr);
         }
-        $where = ['h.name' => ['like', '%'.$keyword.'%']];
+        $where = ['h.houses_name' => ['like', '%'.$keyword.'%']];
         $housesType = model('houses')
             ->alias('h')
             ->join('houses_type ht', 'ht.houses_id = h.id', 'left')
