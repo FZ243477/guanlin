@@ -294,7 +294,7 @@ class Order extends Base
         $starttime = request()->param("starttime");
         $endtime = request()->param("endtime");
         $status = request()->param("status");
-        $partner_id = request()->param("partner_id");
+
         $this->assign("name", $name);
         $this->assign("order_no", $order_no);
         $this->assign("starttime", $starttime);
@@ -302,10 +302,6 @@ class Order extends Base
         $this->assign("status", $status);
 
         $this->assign("telephone",$name);
-
-        if ($partner_id != '') {
-            $map['a.partner_id'] = $partner_id;
-        }
 
         if ($starttime && $endtime) {
             $map['a.order_time'] = ['between', [$starttime, $endtime]];

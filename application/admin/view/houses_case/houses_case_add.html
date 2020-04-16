@@ -121,14 +121,14 @@
                         </div>
                         <div class="hr-line-dashed"></div>
 
-                        <div class="div_1" {neq name="cache.type" value="1"}style="display: none"{/neq}>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label"><b style="color:red;">*</b>户型：</label>
 
                             <div class="col-sm-9">
                                     <span id="houses_type" style="color: red">
                                           {notempty name="cache.houses_type"}
-                                         <img src='{$cache.houses_designer.designer_name}' height='80'/>&nbsp;&nbsp;
+                                         <img src='{$cache.houses_type.logo}' height='80'/>&nbsp;&nbsp;
                                         {$cache.houses_type.name}  &nbsp;&nbsp;
                                         {$cache.houses_type.area} &nbsp;&nbsp;
                                         {$cache.houses_type.space} &nbsp;&nbsp;
@@ -140,13 +140,14 @@
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
+                        <div class="div_1" {neq name="cache.type" value="1"}style="display: none"{/neq}>
                         <div class="form-group">
                             <label class="col-sm-2 control-label"><b style="color:red;">*</b>商品清单：</label>
                             <div class="col-sm-1"><a href="javascript:void(0);" class="btn btn-primary select_goods">选择商品</a></div>
                             <div class="col-sm-6 goods_info">
                                 <ul class="houses_goods">
                                     {foreach name="cache.houses_goods" item="vo"}
-                                    <li data-goods_id="'+goods_id+'">
+                                    <li data-goods_id="{$vo.goods_id}">
                                         <div class="row">
                                             <div class="col-sm-1 m_goods_logo">
                                                 <img src="{$vo.goods_logo}" width="50">
@@ -368,7 +369,8 @@
         var goods_id = '';
         $('.goods_info ul li').each(function () {
             goods_id += goods_id ? ',' + $(this).attr('data-goods_id') : $(this).attr('data-goods_id');
-        })
+        });
+        console.log(goods_id);
         var url = "{:url('HousesCase/selectGoods')}?goods_id="+goods_id;
         layer.open({
             type: 2,

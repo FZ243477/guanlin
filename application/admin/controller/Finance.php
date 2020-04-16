@@ -48,7 +48,7 @@ class Finance extends Base
         for ($i = strtotime($start_time); $i <= strtotime($end_time); $i+=86400) {
             $between_time = $this->todayTimestamp($i);
             $where = [];
-            $where['order_time'] = ['between', [date('Y-m-d H:i:s', $between_time[0]), date('Y-m-d H:i:s', $between_time[1])]];
+            $where['order_time'] = ['between', $between_time];
             $money = model('order')->where($where)->sum('pay_price');
             $json_data['x_data'][] = date('Y-m-d', $i);
             $json_data['y_data'][] = $money;

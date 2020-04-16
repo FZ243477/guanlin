@@ -38,6 +38,19 @@
 									<div class="row">
 										<form method="get" action="" class="form-inline">
 											<div class="input-group">
+												<select class=" form-control" name="cate_id" >
+													<option value="" style="width:70%;">-请选择分类-</option>
+													{foreach name="goods_cate" item="vo"}
+													<option value="{$vo.id}" {eq name="cate_id" value="$vo.id"}selected{/eq} style="width:100%;background-color: #EAC06C" >
+													{$vo.name}
+													</option>
+													{foreach name="vo.cate" item="vv"}
+													<option  value="{$vv.id}"  {eq name="cate_id" value="$vv.id"}selected{/eq} style="width:70%;">{$vv.name}</option>
+													{/foreach}
+													{/foreach}
+												</select>
+											</div>
+											<div class="input-group">
 												<input type="text" name="keyword" placeholder="名称" class=" form-control" value="{$keyword}" style="width:130px">
 												<span class="input-group-btn">
 												<button type="submit" class="btn btn-sm btn-primary"> 搜索</button> </span>
@@ -49,18 +62,24 @@
 										<table class="table table-hover products_table">
 											<colgroup>
 												<col width="5%">
-												<col width="15%">
-												<col width="15%">
-												<col width="15%">
-												<col width="15%">
-												<col width="15%">
-												<col width="15%">
+												<col width="10%">
+												<col width="10%">
+												<col width="10%">
+												<col width="10%">
+												<col width="10%">
+												<col width="10%">
+												<col width="10%">
+												<col width="10%">
+
 											</colgroup>
 											<thead>
 											<tr >
 												<th></th>
 												<th>ID</th>
 												<th>名称</th>
+												<th>图片</th>
+												<th>一级分类</th>
+												<th>二级分类</th>
 												<th>图片</th>
 												<th>价格</th>
 												<th>原价</th>
@@ -81,6 +100,8 @@
 												<td>{$vo.id}</td>
 												<td>{$vo.goods_name}</td>
 												<td><img src="{$vo.goods_logo}" width="100"/></td>
+												<td>{$goods_pid_array[$vo['pid']]}</td>
+												<td>{$goods_cate_array[$vo['cate_id']]}</td>
 												<td>{$vo.goods_price}</td>
 												<td>{$vo.goods_oprice}</td>
 											</tr>

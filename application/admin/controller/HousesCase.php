@@ -156,7 +156,7 @@ class HousesCase extends Base
         if (!$data['designer_id']) {
             ajaxReturn(['status' => 0, 'msg' => '请选择设计师']);
         }
-        if ($data['type'] == 1 && !$data['houses_type_id']) {
+        if (!$data['houses_type_id']) {
             ajaxReturn(['status' => 0, 'msg' => '请选择户型']);
         }
         if (!$data['name']) {
@@ -317,23 +317,41 @@ class HousesCase extends Base
     {
         $houses_type_model = model('goods');
         $keyword = request()->param('keyword');
+        $cate_id = request()->param('cate_id');
         $goods_id = request()->param('goods_id');
         $where = [];
         if ($keyword) {
             $where['goods_name'] = ['like', "%{$keyword}%"];
         }
+        if ($cate_id) {
+            $where['pid|cate_id'] = $cate_id;
+        }
         if ($goods_id) {
             $where['id'] = ['notin', explode(',', $goods_id)];
         }
         $this->assign('keyword', $keyword);
+        $this->assign('cate_id', $cate_id);
         $list = $houses_type_model
-            ->field('id,cate_id,goods_name,goods_logo,goods_price,goods_oprice')
+            ->field('id,pid,cate_id,goods_name,goods_logo,goods_price,goods_oprice')
             ->where($where)
             ->order('id desc')
             ->paginate(10,false,['query'=>request()->param()]);
-        $this->assign('list', $list);
 
-        $goods_cate = model('goods_cate')->where(['pid' => 0])->select();
+        $this->assign('list', $list);
+        $goods_pid_array = [];
+        $goods_cate_array = [];
+        $goods_cate = model('goods_cate')->where(['pid' => 0])->field('id,name')->order('id asc')->select();
+        foreach ($goods_cate as $k => $v) {
+            $goods_pid_array[$v['id']] = $v['name'];
+            $cate = model('goods_cate')->where(['pid' => $v['id']])->field('id,name')->order('id asc')->select();
+            foreach ($cate as $kk => $vv) {
+                $goods_cate_array[$vv['id']] = $vv['name'];
+            }
+            $goods_cate[$k]['cate'] = $cate;
+        }
+        $this->assign('goods_cate', $goods_cate);
+        $this->assign('goods_pid_array', $goods_pid_array);
+        $this->assign('goods_cate_array', $goods_cate_array);
         return $this->fetch();
     }
 }
