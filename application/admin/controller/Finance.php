@@ -48,18 +48,10 @@ class Finance extends Base
         for ($i = strtotime($start_time); $i <= strtotime($end_time); $i+=86400) {
             $between_time = $this->todayTimestamp($i);
             $where = [];
-            $where['partner_id'] = 0;
-            $where['pay_status'] = OrderConstant::PAY_STATUS_DOING;
-            $where['pay_time'] = ['between', [date('Y-m-d H:i:s', $between_time[0]), date('Y-m-d H:i:s', $between_time[1])]];
-            $money = model('order')->where($where)->select();
-            list(
-                $ali_pay,
-                $we_chat,
-                $unionpay,
-                $certificate,
-                ) = $this->financeInfo($money, $date_time);
+            $where['order_time'] = ['between', [date('Y-m-d H:i:s', $between_time[0]), date('Y-m-d H:i:s', $between_time[1])]];
+            $money = model('order')->where($where)->sum('pay_price');
             $json_data['x_data'][] = date('Y-m-d', $i);
-            $json_data['y_data'][] = $ali_pay + $we_chat + $unionpay + $certificate;
+            $json_data['y_data'][] = $money;
         }
 
         $this->assign('json_data',json_encode($json_data));
@@ -167,41 +159,16 @@ class Finance extends Base
     {
         //查询订单 支付的金额
         $order_model = model('order');
-        $we_map = ['partner_id' => 0];
-        $we_map['pay_time'] = ['between', [$start_time, $end_time]];
-        $we_map['pay_status'] = OrderConstant::PAY_STATUS_DOING;
-        $field = 'order_no,order_status,is_certificate,pay_way,pay_order_status,type,deposit_money,total_fee,order_time';
-        $order = $order_model->where($we_map)->field($field)->select();
+
         $date_time = $this->todayTimestamp();
-        list(
-            $ali_pay,
-            $we_chat,
-            $unionpay,
-            $certificate,
-            $today_ali_pay,
-            $today_we_chat,
-            $today_unionpay,
-            $today_certificate,
-            $order_no
-            ) = $this->financeInfo($order, $date_time);
-        $data = ['refund_status' => 2, 'refund_type' => ['in', [1,2]], 'order_no' => ['in', $order_no]];
-
-        $total_income = $ali_pay + $we_chat + $unionpay + $certificate;
-
-        $data['refund_edit_time'] = ['between', [date('Y-m-d H:i:s', $date_time[0]), date('Y-m-d H:i:s', $date_time[1])]];
-
-        $today_total_income = $today_ali_pay + $today_we_chat + $today_unionpay + $today_certificate;
+        $we_map = [];
+        $we_map['order_time'] = ['between', $date_time];
+        $total_income = $order_model->where($we_map)->sum('pay_price');
+        $we_map['order_time'] = ['between', [$start_time, $end_time]];
+        $today_total_income = $order_model->where($we_map)->sum('pay_price');
 
         $assign = [
-            'ali_pay' => $this->numberToUnit($ali_pay),
-            'we_chat' => $this->numberToUnit($we_chat),
-            'unionpay' => $this->numberToUnit($unionpay),
-            'certificate' => $this->numberToUnit($certificate),
             'total_income' => $this->numberToUnit($total_income),
-            'today_ali_pay' => $this->numberToUnit($today_ali_pay),
-            'today_we_chat' => $this->numberToUnit($today_we_chat),
-            'today_unionpay' => $this->numberToUnit($today_unionpay),
-            'today_certificate' => $this->numberToUnit($today_certificate),
             'today_total_income' => $this->numberToUnit($today_total_income),
 
         ];

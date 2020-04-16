@@ -36,15 +36,6 @@
                                 <div class="col-lg-6">
 
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label"><b style="color:red;"></b>姓名：</label>
-
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control manager_name" name="realname" style="width:32%" :value="userList.realname">
-                                        </div>
-                                    </div>
-                                    <div class="hr-line-dashed"></div>
-
-                                    <div class="form-group">
                                         <label class="col-sm-2 control-label"><b style="color:red;"></b>手机号：</label>
 
                                         <div class="col-sm-9">
@@ -55,15 +46,13 @@
                                     </div>
                                     <div class="hr-line-dashed"></div>
 
-                                    <div class="form-group">
+                                   <!-- <div class="form-group">
                                         <label class="col-sm-2 control-label">密码：</label>
 
                                         <div class="col-sm-9">
                                             <input type="text" class="form-control password" name="password" style="width:32%">
                                         </div>
-                                    </div>
-
-                                    <div class="hr-line-dashed"></div>
+                                    </div>-->
 
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label"><b style="color:red;"></b>昵称：</label>
@@ -89,15 +78,7 @@
                                 </div>
                                 <div class="col-lg-6">
 
-                                    <div class="form-group">
-                                        <label class="col-sm-2 control-label"><b style="color:red;"></b>邮箱：</label>
-
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control email" name="email" style="width:32%"  :value="userList.email">
-                                        </div>
-                                    </div>
-                                    <div class="hr-line-dashed"></div>
-
+<!--
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label"><b style="color:red;"></b>状态：</label>
 
@@ -108,33 +89,33 @@
 
                                         </div>
                                     </div>
-                                    <div class="hr-line-dashed"></div>
+                                    <div class="hr-line-dashed"></div>-->
 
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label"><b style="color:red;"></b>注册时间：</label>
 
                                         <div class="col-sm-9">
                                             <div class="detail_form_right">
-                                                {{userList.reg_time}}
+                                                {{userList.create_time}}
                                             </div>
                                         </div>
                                     </div>
                                     <div class="hr-line-dashed"></div>
-                                    <div class="form-group">
+                                   <!-- <div class="form-group">
                                         <label class="col-sm-2 control-label"><b style="color:red;"></b>注册来源：</label>
 
                                         <div class="col-sm-9">
                                             <div class="detail_form_right">
-                                                <div v-if="userList.type === 1">APP</div>
-                                                <div v-else-if="userList.type === 2">PC</div>
-                                                <div v-else-if="userList.type === 3">手机端</div>
-                                                <div v-else-if="userList.type === 4">后台导入</div>
-                                                <div v-else-if="userList.type === 5">系统添加</div>
+                                                <div v-if="userList.type === 0">小程序</div>
+                                                <div v-else-if="userList.type === 1">PC</div>
+                                                <div v-else-if="userList.type === 2">手机端</div>
+                                                <div v-else-if="userList.type === 3">后台导入</div>
+                                                <div v-else-if="userList.type === 4">系统添加</div>
                                                 <div v-else>未知</div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="hr-line-dashed"></div>
+                                    <div class="hr-line-dashed"></div>-->
 
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label"><b style="color:red;"></b>最后登录时间：</label>
