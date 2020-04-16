@@ -171,6 +171,7 @@ class HousesCase extends Base
             ->join('houses h', 'ht.houses_id = h.id', 'left')
             ->where($where)
             ->field('ht.id,ht.name,ht.logo,ht.area,space')
+            ->order('ht.sort desc')
             ->select();
 
         $where = ['user_id' => $this->user_id, 'keyword' => $keyword];
