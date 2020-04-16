@@ -187,6 +187,7 @@ class Order extends Base
             }
             $order_goods = [
                 'user_id' => $this->user_id,
+                'goods_num' => $goods_num,
                 'order_id' => $order_id,
                 'goods_id' => $goods_id,
                 'goods_name' => $goods['goods_name'],
