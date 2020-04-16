@@ -20,13 +20,12 @@ class Base extends Controller{
 
         if(!$this->manager_id) { //判断是否登陆
             if (request()->isPost()) {
-                echo json_encode(['status' => 0, 'msg' => '您暂未登陆', 'data' => []]);
+                ajaxReturn(['status' => 0, 'msg' => '您暂未登陆']);
             } else {
                 //判断用户是否已经登录
-                //$this->error('请先登录系统!',url('Admin/login'));
-                $this->redirect(getSetting('system.host').url('Admin/login'));
+                $this->error('请先登录系统!',url('Admin/login'));die;
+//                $this->redirect(getSetting('system.host').url('Admin/login'));die;
             }
-            die;
         }
 
         $prefix = config('prefix');
