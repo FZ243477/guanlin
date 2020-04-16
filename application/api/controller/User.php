@@ -2,6 +2,7 @@
 namespace app\api\controller;
 use app\common\constant\OrderConstant;
 use app\common\constant\SystemConstant;
+use app\common\constant\UserConstant;
 use app\common\helper\VerificationHelper;
 use app\common\helper\DatetimeHelper;
 use Think\Db;
@@ -32,9 +33,9 @@ class User extends Base
                 'user' => $user,
                 'order_no' => $order['order_no']
             ];
-            $data = removeNull($data);
+            $this->add_access($this->user_id, UserConstant::USER_ACCESS_HOME_PAGE);
             $json_arr = ['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => $data];
-            exit(json_encode($json_arr));
+            ajaxReturn($json_arr);
         }
     }
 
@@ -90,4 +91,60 @@ class User extends Base
         }
     }
 
+    // 添加访问量记录
+    private function add_access($user_id, $type, $source = UserConstant::REG_SOURCE_PC, $pid = 0){
+        if (!$user_id) {
+            return false;
+        }
+        $where = [
+            'user_id' => $user_id,
+            'type' => $type,
+            'pid' => $pid,
+            'creat_at' => ['between', [time()-60*60*2, time()]]
+        ];
+        $res = model("access")->where($where)->find();
+        if ($res) {
+            return false;
+        }
+        //更新访问量
+        $access['pid'] = $pid;
+        $access['user_id'] = $user_id;
+        $access['creat_at'] = time();
+        $access['source'] = $source;
+        $access['title'] = UserConstant::uer_access_value($type);
+        $hour = date('H',time());
+        if($hour >=0 && $hour < 2){
+            $time_day = "0-2点";
+        }elseif($hour >=2 && $hour < 4){
+            $time_day = "2-4点";
+        }elseif($hour >=4 && $hour < 6){
+            $time_day = "4-6点";
+        }elseif($hour >=6 && $hour < 8){
+            $time_day = "6-8点";
+        }elseif($hour >=8 && $hour < 10){
+            $time_day = "8-10点";
+        }elseif($hour >=10 && $hour < 12){
+            $time_day = "10-12点";
+        }elseif($hour >=12 && $hour < 14){
+            $time_day = "12-14点";
+        }elseif($hour >=14 && $hour < 16){
+            $time_day = "14-16点";
+        }elseif($hour >=16 && $hour < 18){
+            $time_day = "16-18点";
+        }elseif($hour >=18 && $hour < 20){
+            $time_day = "18-20点";
+        }elseif($hour >=20 && $hour < 22){
+            $time_day = "20-22点";
+        }else{
+            $time_day = "22-24点";
+        }
+        $access['time_day'] = $time_day;
+        $access['type'] = $type;
+        $res = model("access")->save($access);
+        if($res){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
