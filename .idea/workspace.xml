@@ -11,14 +11,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c4024c1a-a4b1-4de9-8e2c-5b9909aefc36" name="默认" comment="88">
-      <change afterPath="$PROJECT_DIR$/application/admin/model/HousesDesigner.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/application/admin/model/HousesType.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/yue_pin_hui.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/api/model/HousesDesigner.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/api/model/HousesDesigner.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/api/model/HousesType.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/api/model/HousesType.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -147,7 +142,7 @@
           <entry key="js" value="1" />
           <entry key="json" value="1" />
           <entry key="md" value="2" />
-          <entry key="php" value="196" />
+          <entry key="php" value="202" />
           <entry key="png" value="2" />
           <entry key="rnc" value="3" />
           <entry key="sql" value="2" />
@@ -162,7 +157,7 @@
           <entry key="JSON" value="1" />
           <entry key="JavaScript" value="1" />
           <entry key="Markdown" value="2" />
-          <entry key="PHP" value="196" />
+          <entry key="PHP" value="202" />
           <entry key="PLAIN_TEXT" value="12" />
           <entry key="RNG Compact" value="3" />
           <entry key="SQL" value="2" />
@@ -174,14 +169,14 @@
           <entry key="dummy" value="17" />
           <entry key="gitignore" value="1" />
           <entry key="html" value="2882" />
-          <entry key="php" value="11455" />
+          <entry key="php" value="11561" />
           <entry key="sql" value="16" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="HTML" value="2882" />
-          <entry key="PHP" value="11455" />
+          <entry key="PHP" value="11561" />
           <entry key="PLAIN_TEXT" value="18" />
           <entry key="SQL" value="16" />
         </counts>
@@ -232,20 +227,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/application/admin/model/HousesDesigner.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="147">
-              <caret line="8" column="20" selection-start-line="8" selection-start-column="20" selection-end-line="8" selection-end-column="20" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/api/controller/Order.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="504">
-              <caret line="199" column="14" selection-start-line="199" selection-start-column="14" selection-end-line="199" selection-end-column="14" />
+            <state relative-caret-position="231">
+              <caret line="12" column="41" lean-forward="true" selection-start-line="12" selection-start-column="41" selection-end-line="12" selection-end-column="41" />
             </state>
           </provider>
         </entry>
@@ -254,7 +240,7 @@
         <entry file="file://$PROJECT_DIR$/application/admin/controller/HousesCase.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="693">
-              <caret line="33" column="25" selection-start-line="33" selection-start-column="25" selection-end-line="33" selection-end-column="25" />
+              <caret line="335" column="73" selection-start-line="335" selection-start-column="73" selection-end-line="335" selection-end-column="73" />
               <folding>
                 <element signature="e#40#75#0#PHP" expanded="true" />
               </folding>
@@ -263,61 +249,55 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/admin/view/houses_case/select_goods.html">
+        <entry file="file://$PROJECT_DIR$/application/api/model/HousesDesigner.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="146" column="34" selection-start-line="135" selection-start-column="30" selection-end-line="146" selection-end-column="34" />
+            <state relative-caret-position="399">
+              <caret line="20" column="5" lean-forward="true" selection-start-line="14" selection-start-column="3" selection-end-line="20" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/application/api/model/HousesType.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="252">
+              <caret line="13" column="26" selection-start-line="13" selection-start-column="26" selection-end-line="13" selection-end-column="26" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/admin/model/HousesCase.php">
+        <entry file="file://$PROJECT_DIR$/application/api/model/HousesGoods.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="546">
-              <caret line="27" column="9" selection-start-line="27" selection-start-column="9" selection-end-line="27" selection-end-column="9" />
+            <state relative-caret-position="189">
+              <caret line="9" selection-start-line="9" selection-end-line="15" selection-end-column="5" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/admin/model/Goods.php">
+        <entry file="file://$PROJECT_DIR$/application/api/model/HousesCase.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="693">
-              <caret line="37" column="5" selection-start-line="26" selection-end-line="37" selection-end-column="5" />
+            <state relative-caret-position="420">
+              <caret line="21" column="36" selection-start-line="21" selection-start-column="36" selection-end-line="21" selection-end-column="36" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/admin/view/houses_case/select_type.html">
+        <entry file="file://$PROJECT_DIR$/application/api/model/GoodsImages.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
-              <caret line="129" column="24" selection-start-line="129" selection-start-column="24" selection-end-line="129" selection-end-column="24" />
-              <folding>
-                <element signature="e#25#31#0" expanded="true" />
-                <element signature="e#31#37#0" expanded="true" />
-                <element signature="e#37#43#0" expanded="true" />
-                <element signature="e#43#49#0" expanded="true" />
-                <element signature="e#49#55#0" expanded="true" />
-                <element signature="e#55#61#0" expanded="true" />
-                <element signature="e#61#67#0" expanded="true" />
-                <element signature="e#67#73#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="336">
+              <caret line="16" column="1" lean-forward="true" selection-start-line="16" selection-start-column="1" selection-end-line="16" selection-end-column="1" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/admin/view/houses_case/houses_case_list.html">
+        <entry file="file://$PROJECT_DIR$/application/api/model/Goods.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="606">
-              <caret line="85" column="66" selection-start-line="85" selection-start-column="57" selection-end-line="85" selection-end-column="66" />
-              <folding>
-                <element signature="n#style#0;n#a#0;n#td#5;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#a#1;n#td#5;n#tr#0;n#tbody#0;n#table#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#td#0;n#tr#1;n#tbody#0;n#table#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
+            <state relative-caret-position="252">
+              <caret line="28" column="48" selection-start-line="28" selection-start-column="48" selection-end-line="28" selection-end-column="48" />
             </state>
           </provider>
         </entry>
@@ -361,8 +341,8 @@
       <find>goods_price</find>
       <find>'&lt;</find>
       <find>&gt;'</find>
-      <find>m_good_num</find>
       <find>content</find>
+      <find>m_good_num</find>
     </findStrings>
     <replaceStrings>
       <replace>model('package_scene')</replace>
@@ -393,8 +373,8 @@
       <replace>background</replace>
       <replace>this</replace>
       <replace>&lt;</replace>
-      <replace>houses_type</replace>
       <replace>&gt;</replace>
+      <replace>houses_type</replace>
     </replaceStrings>
     <dirStrings>
       <dir>E:\phpstudy_pro\WWW\ybs\application\admin\helper</dir>
@@ -427,12 +407,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/application/api/model/OrderCertificate.php" />
-        <option value="$PROJECT_DIR$/application/api/model/Goods.php" />
-        <option value="$USER_HOME$/Desktop/yph.sql" />
-        <option value="$PROJECT_DIR$/application/common/helper/OrderHelper.php" />
-        <option value="$PROJECT_DIR$/application/api/model/OrderGoods.php" />
-        <option value="$PROJECT_DIR$/application/api/model/CancelCause.php" />
         <option value="$PROJECT_DIR$/application/api/controller/Index.php" />
         <option value="$PROJECT_DIR$/application/api/controller/Base.php" />
         <option value="$PROJECT_DIR$/application/admin/view/setting/wechat.html" />
@@ -475,9 +449,15 @@
         <option value="$PROJECT_DIR$/application/admin/view/houses_case/houses_case_add.html" />
         <option value="$PROJECT_DIR$/application/admin/view/houses_case/houses_case_list.html" />
         <option value="$PROJECT_DIR$/application/admin/model/HousesCase.php" />
-        <option value="$PROJECT_DIR$/application/admin/controller/HousesCase.php" />
         <option value="$PROJECT_DIR$/application/admin/model/HousesType.php" />
         <option value="$PROJECT_DIR$/application/admin/model/HousesDesigner.php" />
+        <option value="$PROJECT_DIR$/application/admin/controller/HousesCase.php" />
+        <option value="$PROJECT_DIR$/application/api/model/Goods.php" />
+        <option value="$PROJECT_DIR$/application/api/model/HousesGoods.php" />
+        <option value="$PROJECT_DIR$/application/api/model/HousesCase.php" />
+        <option value="$PROJECT_DIR$/application/api/model/GoodsImages.php" />
+        <option value="$PROJECT_DIR$/application/api/model/HousesDesigner.php" />
+        <option value="$PROJECT_DIR$/application/api/model/HousesType.php" />
       </list>
     </option>
   </component>
@@ -544,20 +524,13 @@
               <item name="xmh" type="b2602c69:ProjectViewProjectNode" />
               <item name="xmh" type="462c0819:PsiDirectoryNode" />
               <item name="application" type="462c0819:PsiDirectoryNode" />
-              <item name="admin" type="462c0819:PsiDirectoryNode" />
+              <item name="api" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="xmh" type="b2602c69:ProjectViewProjectNode" />
               <item name="xmh" type="462c0819:PsiDirectoryNode" />
               <item name="application" type="462c0819:PsiDirectoryNode" />
-              <item name="admin" type="462c0819:PsiDirectoryNode" />
-              <item name="helper" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="xmh" type="b2602c69:ProjectViewProjectNode" />
-              <item name="xmh" type="462c0819:PsiDirectoryNode" />
-              <item name="application" type="462c0819:PsiDirectoryNode" />
-              <item name="admin" type="462c0819:PsiDirectoryNode" />
+              <item name="api" type="462c0819:PsiDirectoryNode" />
               <item name="model" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -780,7 +753,7 @@
       <workItem from="1586953805994" duration="975000" />
       <workItem from="1586957484173" duration="621000" />
       <workItem from="1586998114030" duration="706000" />
-      <workItem from="1587011723256" duration="10728000" />
+      <workItem from="1587011723256" duration="11446000" />
     </task>
     <task id="LOCAL-00001" summary="默认">
       <created>1585900330977</created>
@@ -985,11 +958,25 @@
       <option name="project" value="LOCAL" />
       <updated>1587022613408</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="88">
+      <created>1587023620429</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1587023620429</updated>
+    </task>
+    <task id="LOCAL-00031" summary="88">
+      <created>1587024213140</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1587024213140</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1158464000" />
+    <option name="totallyTimeSpent" value="1159182000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1017,7 +1004,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.32936078" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49520257" visible="true" weight="0.21172638" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49520257" weight="0.21172638" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.50479746" side_tool="true" weight="0.41784704" />
       <window_info anchor="bottom" id="检查结果" order="12" weight="0.32936078" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -1159,46 +1146,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/application/admin/controller/Banner.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="975">
-          <caret line="41" column="29" selection-start-line="41" selection-start-column="16" selection-end-line="41" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/database.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="25" column="28" selection-start-line="25" selection-start-column="28" selection-end-line="25" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/common/constant/UserConstant.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="20" column="38" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/admin/controller/Base.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="27" column="13" lean-forward="true" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/admin/view/report/mem_active.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-819" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/admin/view/report/mem_report.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="167" column="103" selection-start-line="167" selection-start-column="103" selection-end-line="167" selection-end-column="103" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/application/admin/view/user/user_list.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="612">
@@ -1520,16 +1467,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/admin/controller/HousesCase.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="693">
-          <caret line="33" column="25" selection-start-line="33" selection-start-column="25" selection-end-line="33" selection-end-column="25" />
-          <folding>
-            <element signature="e#40#75#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/application/admin/view/houses_case/houses_case_add.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="175">
@@ -1565,8 +1502,60 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/application/admin/model/HousesDesigner.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
-          <caret line="8" column="20" selection-start-line="8" selection-start-column="20" selection-end-line="8" selection-end-column="20" />
+        <state relative-caret-position="231">
+          <caret line="12" column="41" lean-forward="true" selection-start-line="12" selection-start-column="41" selection-end-line="12" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/api/model/Goods.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="28" column="48" selection-start-line="28" selection-start-column="48" selection-end-line="28" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/admin/controller/HousesCase.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="693">
+          <caret line="335" column="73" selection-start-line="335" selection-start-column="73" selection-end-line="335" selection-end-column="73" />
+          <folding>
+            <element signature="e#40#75#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/api/model/HousesGoods.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="9" selection-start-line="9" selection-end-line="15" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/api/model/HousesCase.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="21" column="36" selection-start-line="21" selection-start-column="36" selection-end-line="21" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/api/model/GoodsImages.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="16" column="1" lean-forward="true" selection-start-line="16" selection-start-column="1" selection-end-line="16" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/api/model/HousesDesigner.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="399">
+          <caret line="20" column="5" lean-forward="true" selection-start-line="14" selection-start-column="3" selection-end-line="20" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/api/model/HousesType.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="13" column="26" selection-start-line="13" selection-start-column="26" selection-end-line="13" selection-end-column="26" />
         </state>
       </provider>
     </entry>

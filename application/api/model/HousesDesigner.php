@@ -20,7 +20,7 @@ class HousesDesigner extends Model
         return $value;
     }
 
-    protected function getBackgroundAttr($value)
+    protected function getBackgroundLogoAttr($value)
     {
         if ($value) {
             $value = picture_url_dispose($value);
