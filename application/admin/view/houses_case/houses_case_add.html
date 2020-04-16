@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{:getSetting('system.title')} </title>
+
+    <link href="home_url/css/bootstrap.min.css" rel="stylesheet">
+    <link href="home_url/css/font-awesome.css-v=4.4.0.css" rel="stylesheet">
+    <link href="home_url/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="home_url/css/style.min.css" rel="stylesheet">
+
+    <!--编辑器 1-->
+    <script type="text/javascript" charset="utf-8" src="home_url/Ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="home_url/Ueditor/ueditor.all.js"></script>
+    <script type="text/javascript" charset="utf-8" src="home_url/Ueditor/lang/zh-cn/zh-cn.js"></script>
+    <!--编辑器 2-->
+    <style>
+        .contact_mobile_div {
+            position: relative;
+        }
+        .contact_mobile_div a {
+            position: relative;top: -34px;left: 33%;
+        }
+    </style>
+</head>
+{include file="Base:base" /}
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>{empty name='cache'}添加{else/}修改{/empty}信息</h5>
+                </div>
+                <div class="ibox-content">
+                    <form enctype="multipart/form-data" method="post" id="add_step" class="form-horizontal">
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>排序：</label>
+
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control sort" name="sort" style="width:60%" value="{$cache.sort}">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>类型：</label>
+
+                            <div class="col-sm-9">
+                                <label><input type="radio" name="type" value="1" onclick="showDiv(1)" {eq name="cache.type" value="1"}checked{/eq}>VR</label>
+                                <label><input type="radio" name="type" value="2" onclick="showDiv(2)" {eq name="cache.type" value="2"}checked{/eq}>实景案例</label>
+                                <label><input type="radio" name="type" value="3" onclick="showDiv(3)" {eq name="cache.type" value="3"}checked{/eq}>文章</label>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>设计师：</label>
+
+                            <div class="col-sm-9">
+                                <span id="houses_designer" style="color: red"></span>
+                                <input type="button" class="btn btn-primary select_designer" value="选择设计师">
+                                <input type="hidden" name="designer_id" value="{$cache['designer_id']}">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>户型：</label>
+
+                            <div class="col-sm-9">
+                                <span id="houses_type" style="color: red"></span>
+                                <input type="button" class="btn btn-primary select_type" value="选择户型">
+                                <input type="hidden" name="houses_type_id" value="{$cache['houses_type_id']}">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>名称：</label>
+
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="name" style="width:60%" value="{$cache.name}">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><b style='color:red;'>*</b>上传logo：</label>
+                            <div class="col-sm-9">
+                                <div class="col-sm-9">
+                                    <div class="info_heads">
+                                        <input type="file"
+                                               class="file xuanze"
+                                               name="upload_pic"
+                                               style="position: absolute;z-index: 999;opacity: 0;width: 80px;height: 80px;cursor: pointer;"
+                                               accept="image/jpg,image/jpeg,image/png"
+                                               data-name="logo"
+                                               data-type="single" >
+                                        <img  class='banner_logo' src="home_url/images/addimg.png" />
+                                        <div class="xuanze_showimge mgr10" data-nums='15' style="position:relative;" >
+                                            {notempty name='cache.logo'}
+                                            <div style='float:left;position:relative;'>
+                                                <img src="{$cache['logo']}" class="mgr10 mgt10 " style="max-width: 100%">
+                                                <input type="hidden" name="logo" class="logo" value="{$cache['logo']}">
+                                            </div>
+                                            {/notempty}
+                                        </div>
+                                    </div>
+                                    <div class="xuanze_progress fl mgr15" style="display:none">
+                                        <img src="home_url/images/loadings.gif" style="width: 30px;height: 30px;" />
+                                        <span class="xuanze_percent">80%</span>
+                                    </div>
+                                    <div style="clear: both;"></div>
+                                    <span class="help-block m-b-none" style="color:red">
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="div_1">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><b style="color:red;">*</b>全景图链接：</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="vr" style="width:60%" value="{$cache.vr}">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                        </div>
+                        <div class="div_2">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><b style='color:red;'>*</b>上传背景图：</label>
+                                <div class="col-sm-9">
+                                    <div class="col-sm-9">
+                                        <div class="info_heads">
+                                            <input type="file"
+                                                   class="file xuanze"
+                                                   name="upload_pic"
+                                                   style="position: absolute;z-index: 999;opacity: 0;width: 80px;height: 80px;cursor: pointer;"
+                                                   accept="image/jpg,image/jpeg,image/png"
+                                                   data-name="background"
+                                                   data-type="single" >
+                                            <img  class='banner_background' src="home_url/images/addimg.png" />
+                                            <div class="xuanze_showimge mgr10" data-nums='15' style="position:relative;" >
+                                                {notempty name='cache.background'}
+                                                <div style='float:left;position:relative;'>
+                                                    <img src="{$cache['background']}" class="mgr10 mgt10 " style="max-width: 100%">
+                                                    <input type="hidden" name="background" class="background" value="{$cache['background']}">
+                                                </div>
+                                                {/notempty}
+                                            </div>
+                                        </div>
+                                        <div class="xuanze_progress fl mgr15" style="display:none">
+                                            <img src="home_url/images/loadings.gif" style="width: 30px;height: 30px;" />
+                                            <span class="xuanze_percent">80%</span>
+                                        </div>
+                                        <div style="clear: both;"></div>
+                                        <span class="help-block m-b-none" style="color:red">
+                                    </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><b style="color:red;">*</b>文章详情：</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="vr" style="width:60%" value="{$cache.vr}">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <input type="hidden" name="id"  value="{$cache.id}">
+                                <a href="javascript:history.back();" class="btn btn-white" type="submit">返回</a>
+                                <a class="btn btn-primary save" href="javascript:void(0)" >保存</a>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="home_url/js/jquery.min.js"></script>
+
+<!--拖拽图片排序-->
+<link rel="stylesheet" href="home_url/upload_img/uploadImg.css"/>
+<link rel="stylesheet" href="home_url/upload_img/jquery.dad.css"/>
+<script src="home_url/upload_img/jquery.dad.min.js"></script>
+<script language="javascript">
+    $('#J_imageView_1').dad({
+        draggable: 'img'//拖拽区域
+    });
+</script>
+<!--拖拽图片排序-->
+<script src="home_url/js/bootstrap.min.js"></script>
+<script src="home_url/js/plugins/peity/jquery.peity.min.js"></script>
+<script src="home_url/js/content.min.js"></script>
+<script src="home_url/js/plugins/iCheck/icheck.min.js"></script>
+<script src="home_url/js/peity-demo.min.js"></script>
+<script src="home_url/js/plugins/layer/layer.min.js"></script>
+
+<!--保存-->
+<script>
+    var flag = true;
+    $('.save').click(function(){
+        if (flag == false) {
+            return false;
+        }
+        flag = false;
+        var that = $(this);
+        that.removeClass('btn-primary').addClass('btn-default').html('保存中').css('cursor', 'wait');
+        var post = $('#add_step').serializeArray();
+        $.post("{:url('HousesCase/housesCaseHandle')}",post, function(data){
+            flag = true;
+            that.removeClass('btn-default').addClass('btn-primary').html('保存').css('cursor', 'pointer');
+            if(data.status){
+                dialog.showTips(data.msg,"", "{:url('HousesCase/housesCaseList')}");
+            }else{
+                alert(data.msg);
+            }
+        }, "json");
+        return false;
+    });
+</script>
+<script>
+    showDiv("{$cache.type|default=1}");
+    function showDiv(type)
+    {
+        if (type == 1) {
+            $('.div_1').show();
+            $('.div_2').hide();
+        } else if (type == 2) {
+            $('.div_1').hide();
+            $('.div_2').show();
+        } else if (type == 3) {
+            $('.div_1').hide();
+            $('.div_2').show();
+        } else {
+            $('.div_1').hide();
+            $('.div_2').hide();
+        }
+    }
+    $('.select_designer').click(function(){
+        var url = "{:url('HousesCase/selectDesigner')}";
+        layer.open({
+            type: 2,
+            title: '选择设计师',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['60%', '60%'],
+            content: url,
+        });
+    });
+    $('.select_type').click(function(){
+        var url = "{:url('HousesCase/selectType')}";
+        layer.open({
+            type: 2,
+            title: '选择户型',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['60%', '60%'],
+            content: url,
+        });
+    });
+    // 选择商品返回
+    function call_back(goods_id, goods_name)
+    {
+        $('#goods_name').html(goods_name);
+        $('#goods_id').val(goods_id);
+        layer.closeAll('iframe');
+    }
+    // 选择商品返回
+    function call_back(goods_id, goods_name)
+    {
+        $('#goods_name').html(goods_name);
+        $('#goods_id').val(goods_id);
+        layer.closeAll('iframe');
+    }
+
+
+    /*编辑器 1*/
+    var ue = UE.getEditor('banner_detail', {
+        toolbars: [[
+            'fullscreen', 'source', '|', 'undo', 'redo', '|',
+            'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',
+            'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
+            'directionalityltr', 'directionalityrtl', 'indent', '|',
+            'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'touppercase', 'tolowercase', '|',
+            'link', 'unlink', 'anchor', '|', 'imagenone', 'imageleft', 'imageright', 'imagecenter', '|',
+            'simpleupload', 'insertimage', 'insertvideo', 'music', 'attachment', 'map', 'gmap', 'insertframe', 'pagebreak', 'template', 'background', '|',
+            'horizontal', 'spechars', 'snapscreen', 'wordimage', '|',
+            'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
+            'preview', 'searchreplace',
+        ]],
+        elementPathEnabled: false,
+        autoHeightEnabled: false,
+        initialFrameHeight: 300,
+    });
+    /*编辑器 2*/
+</script>
+
+
+
+<script type="text/javascript" src="home_url/js/jquery-form.js"></script>
+
+
+
+<script type="text/javascript">
+
+
+    $(function () {
+
+        /*图片上传*/
+        $(".xuanze").wrap("<form class='myupload' action='{:url('Index/addImage')}' method='post' enctype='multipart/form-data'></form>");
+        $(".xuanze").change(function(){ //选择文件
+
+            var obj = $(this);
+            var type = obj.attr('data-type'); // single 单图 multiple 多图
+            var xuanze_progress = obj.parents('.form-group').find('.xuanze_progress');
+            var xuanze_percent = obj.parents('.form-group').find('.xuanze_percent');
+            var xuanze_showimge = obj.parents('.form-group').find('.xuanze_showimge');
+            var name = obj.attr('data-name');
+            obj.parents('.myupload').ajaxSubmit({
+                dataType:  'json', //数据格式为json
+                beforeSend: function() { //开始上传
+                    xuanze_progress.show(); //显示进度条
+                    var percentVal = '0%';
+                    xuanze_percent.html(percentVal);
+                },
+                uploadProgress: function(event, position, total, percentComplete) {
+                    var percentVal = percentComplete + '%'; //获得进度
+                    xuanze_percent.html(percentVal); //显示上传进度百分比
+                },
+                success: function(g) { //成功
+                    if (type == 'multiple') { //多图
+                        var img = '<div class="banner_imgs">' +
+                            '<img src="'+ g.data.file_name +'" width="150"  class="mgr10 mgt10 ">' +
+                            '<input type="hidden" name="'+ name +'[]" class="'+ name +'"  value="'+ g.data.file_name +'">' +
+                            '<em class="close" title="移除这张图片" onclick="delImgs(this)">×</em>' +
+                            '</div>';
+
+                        xuanze_showimge.append(img);
+
+                        $('#J_imageView_1').dad({
+                            draggable: 'img'//拖拽区域
+                        });
+                    } else { // 单图
+                        var img = '<img src="'+ g.data.file_name +'" width="150">' +
+                            '<input type="hidden" name="'+ name +'" class="'+name+'" value="'+ g.data.file_name +'">';
+                        xuanze_showimge.html(img);
+                    }
+
+                    xuanze_progress.hide();
+                },
+                error:function(xhr){ //上传失败
+                    console.log(xhr.status)
+                }
+            });
+        });
+
+    });
+
+    function delImgs(obj){
+        $(obj).parent(".banner_imgs").remove();
+        $(obj).remove();
+
+    }
+</script>
+</body>
+
+</html>

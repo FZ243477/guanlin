@@ -18,38 +18,20 @@ trait OriginalSqlHelper
         if (!$m ) {
             return 0;
         }
-
-        if ($sort != '') {
-
-            $map = ['sort' => $sort];
-
-            if ($id != 0) {
-                $map[$id_name] = ['neq', $id];
-            }
-
-            $sale_find = $m->where($map)->find();
-
-            if ($sale_find) {
-                $where['sort'] = ['gt', $sort - 1];
-                $m->where($where)->setInc('sort');
-
-            }
-
-        } else {
-            if ($id == 0) {
-                //$sort   =   $m->max('sort');
-                $sort = 0;
-                $map = ['sort' => $sort];
-                $sale_find = $m->where($map)->find();
-
-                if ($sale_find) {
-                    $where['sort'] = ['egt', 0];
-                    $m->where($where)->setInc('sort');
-
-                }
-            }
+        $sort = $sort ? $sort : 0;
 
 
+        $map = ['sort' => $sort];
+
+        if ($id != 0) {
+            $map[$id_name] = ['neq', $id];
+        }
+
+        $sale_find = $m->where($map)->find();
+
+        if ($sale_find) {
+            $where['sort'] = ['egt', $sort];
+            $m->where($where)->setInc('sort');
         }
 
         return $sort;

@@ -259,7 +259,7 @@ class Manager extends Base
         }
     }
 
-    public function managerLog()
+    public function managerLogs()
     {
         if (request()->isPost()) {
             $where = 'is_del = 0';

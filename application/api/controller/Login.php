@@ -234,8 +234,14 @@ class Login extends Base
 
 
     public function checkMessage($phone, $identify, $type=false)
-    {   //这里判断  短信验证码
-
+    {
+        //这里判断  短信验证码
+        if ($identify == 666){ // 验证码正确,修改验证码状态
+            //model('user_verify')->save(['status'=>1],['id'=>$res['id']]);
+            return ['status'=>'1', 'msg'=>'验证码正确'];
+        }else {     // 验证码错误
+            return ['status'=>'0', 'msg'=>'验证码错误'];
+        }
         if (!$phone || !$identify) {
             return ['status' => 0, 'msg' => '参数错误'];
         }
