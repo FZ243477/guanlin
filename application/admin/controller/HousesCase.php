@@ -332,6 +332,8 @@ class HousesCase extends Base
             ->order('id desc')
             ->paginate(10,false,['query'=>request()->param()]);
         $this->assign('list', $list);
+
+        $goods_cate = model('goods_cate')->where(['pid' => 0])->select();
         return $this->fetch();
     }
 }
