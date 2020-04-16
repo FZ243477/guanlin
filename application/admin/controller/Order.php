@@ -320,10 +320,9 @@ class Order extends Base
             $this->assign("name", $name);
         }
         if ($order_no) {
-            $map['a.order_no|a.only_order_no'] = ["like", "%$order_no%"];
+            $map['a.order_no'] = ["like", "%$order_no%"];
             $this->assign("order_no", $order_no);
         }
-
 
         $refund = model('order')->alias('a')
             ->join('tb_user b', 'a.user_id = b.id', 'left')
@@ -331,7 +330,6 @@ class Order extends Base
             ->order('a.order_time desc')
             ->where($map)
             ->select();
-
 
         $data_info = [];
         foreach ($refund as $k => $v) {
@@ -341,15 +339,15 @@ class Order extends Base
             $data_info[$k]['name'] = $user['user_name'];
             $data_info[$k]['tel'] = $user['telephone'];
             $data_info[$k]['order_status'] = OrderConstant::order_status_array_value($v['order_status']);
-            $data_info[$k]['pay_way'] = OrderConstant::order_pay_array_value($v['pay_way']);
+//            $data_info[$k]['pay_way'] = OrderConstant::order_pay_array_value($v['pay_way']);
             $data_info[$k]['total_fee'] = $v['total_fee'];
-            $data_info[$k]['consignee'] = $v['consignee'];
-            $data_info[$k]['telephone'] = $v['telephone'];
             $data_info[$k]['pay_price'] = $v['pay_price'];
             $data_info[$k]['pay_wait_price'] = $v['total_fee'] - $v['pay_price'];
+            $data_info[$k]['consignee'] = $v['consignee'];
+            $data_info[$k]['telephone'] = $v['telephone'];
+            $data_info[$k]['address'] = $v['province'].$v['city'].$v['district'].$v['place'];
         }
-
-        $filename = '订单';
+        $headArr = ['订单编号','下单时间','下单人姓名','下单人手机号','订单状态','订单金额','已付金额','待付金额','收货人姓名','收货人手机号','收货地址'];
 
         $before_json = [];
         $after_json = [];
@@ -357,7 +355,7 @@ class Order extends Base
         $content = '导出订单信息';
         $this->managerLog($this->manager_id, $content, $before_json, $after_json);
 
-        $this->exportOrder($data_info, $filename);
+        $this->excelExport('订单信息表', $headArr, $data_info);
 
     }
 

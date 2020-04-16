@@ -165,7 +165,6 @@ class User extends Base
 
         $this->managerLog($this->manager_id, $content, $before_json, $after_json);
 
-
         $this->excelExport('用户信息表', $headArr, $data_info);
     }
 
