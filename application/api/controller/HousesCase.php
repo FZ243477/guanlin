@@ -166,9 +166,9 @@ class HousesCase extends Base
             ajaxReturn($json_arr);
         }
         $where = ['h.houses_name' => ['like', '%'.$keyword.'%']];
-        $housesType = model('houses')
-            ->alias('h')
-            ->join('houses_type ht', 'ht.houses_id = h.id', 'left')
+        $housesType = model('houses_type')
+            ->alias('ht')
+            ->join('houses h', 'ht.houses_id = h.id', 'left')
             ->where($where)
             ->field('ht.id,ht.name,ht.logo,ht.area,space')
             ->select();
