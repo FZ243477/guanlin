@@ -255,11 +255,12 @@
                 </div>
                 <div class="hr-line-dashed"></div>
 
+
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><b style="color:red;">*</b>文章详情：</label>
 
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" name="content" style="width:60%" value="{$cache.content}">
+                        <textarea  id="content" name="content" maxlength="500" cols="100" rows="8" style="text-align: left;resize:none">{$cache.content}</textarea>
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
@@ -407,19 +408,7 @@
         layer.closeAll('iframe');
     }
     /*编辑器 1*/
-    var ue = UE.getEditor('banner_detail', {
-        toolbars: [[
-            'fullscreen', 'source', '|', 'undo', 'redo', '|',
-            'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',
-            'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
-            'directionalityltr', 'directionalityrtl', 'indent', '|',
-            'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'touppercase', 'tolowercase', '|',
-            'link', 'unlink', 'anchor', '|', 'imagenone', 'imageleft', 'imageright', 'imagecenter', '|',
-            'simpleupload', 'insertimage', 'insertvideo', 'music', 'attachment', 'map', 'gmap', 'insertframe', 'pagebreak', 'template', 'background', '|',
-            'horizontal', 'spechars', 'snapscreen', 'wordimage', '|',
-            'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
-            'preview', 'searchreplace',
-        ]],
+    var ue = UE.getEditor('content', {
         elementPathEnabled: false,
         autoHeightEnabled: false,
         initialFrameHeight: 300,

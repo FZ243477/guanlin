@@ -35,7 +35,7 @@ class HousesCase extends Base
             ->join('houses_type ht', 'ht.id = hc.houses_type_id', 'left')
             ->join('houses_designer hd', 'hd.id = hc.designer_id', 'left')
             ->where($where)
-            ->field('hc.id,hc.name,hc.logo,hc.sort,hc.is_display,ht.name as ht_name,hd.designer_name')
+            ->field('hc.id,hc.type,hc.name,hc.logo,hc.sort,hc.is_display,ht.name as ht_name,hd.designer_name')
             ->order('sort desc, id desc')
             ->paginate(10,false,['query'=>request()->param()]);
 
