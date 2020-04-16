@@ -4,12 +4,10 @@
 namespace app\admin\controller;
 
 use app\admin\helper\ManagerHelper;
-use app\common\constant\OrderConstant;
 use app\common\helper\EncryptionHelper;
 use app\common\helper\PHPExcelHelper;
 use app\common\helper\GoodsHelper;
 use app\common\constant\SystemConstant;
-use app\common\constant\GoodsConstant;
 use Think\Db;
 
 class Goods extends Base
@@ -33,34 +31,6 @@ class Goods extends Base
         if($keyword){
             dump($keyword);exit;
         }
-//        $name=$data['name'];
-//        $cate_id=$data['cate'];
-//        $where=[];
-//        if($name!=""){
-//            $where['a.goods_name']=array('like',"$name%");
-//        }else{}
-//        if($cate_id!=""){
-//            $where['b.id']=$cate_id;
-//        }else{}
-//        $goods = Db::name('goods')->alias('a')
-//            ->field('a.id,a.cate_id,a.goods_name,a.goods_describe,a.goods_price,a.goods_oprice,a.collection_num,a.goods_logo,b.name')
-//            ->join('goods_cate b', 'b.id=a.cate_id')
-//            //->whereLike('a.goods_name',"%".$name."%")
-//            ->order('a.id desc')
-//            ->where($where)
-//            ->select();
-//        $list = [];
-//        foreach ($goods as $v => $k) {
-//            $list[$v]['id'] = $k['id'];
-//            $list[$v]['goods_name'] = $k['goods_name'];
-//            $list[$v]['goods_describe'] = $k['goods_describe'];
-//            $list[$v]['cate_name'] = $k['name'];
-//            $list[$v]['goods_price'] = $k['goods_price'];
-//            $list[$v]['goods_oprice'] = $k['goods_oprice'];
-//            $list[$v]['collection_num'] = $k['collection_num'];
-//            $list[$v]['goods_logo'] = $k['goods_logo'];
-//        }
-//        $this->assign("list", $list);
 
         $goods_cate=db('goods_cate')->where('pid',0)->field('id,pid,name')->select();
         foreach ($goods_cate as $k=> $v){
@@ -79,8 +49,6 @@ class Goods extends Base
 
     public function goodsListref()
     {
-        $banner_model = model('banner');
-
         $goods_cate=db('goods_cate')->where('pid',0)->field('id,pid,name')->select();
         foreach ($goods_cate as $k=> $v){
             $children=db('goods_cate')->where('pid',$v['id'])->field('id,pid,name')->select();
@@ -105,53 +73,15 @@ class Goods extends Base
         }
         $this->assign('keyword', $name);
         $this->assign('cate_id', $cate_id);
-        $goods_model = model('goods');
         $goods = Db::name('goods')->alias('a')
             ->field('a.id,a.cate_id,a.goods_name,a.goods_describe,a.goods_price,a.goods_oprice,a.collection_num,a.goods_logo,b.name')
             ->join('goods_cate b', 'b.id=a.cate_id')
+            ->where('a.delete_time','null')
             ->order('a.id desc')
             ->where($where)
             ->paginate(10,false,['query'=>request()->param()]);
         $this->assign("goods", $goods);
-        //dump($goods);exit;
-       // $goods = $goods ? $goods->toArray() : [];
-
         return $this->fetch();
-    }
-
-    public function search(){
-        if(request()->isPost()) {
-            $data=input();
-            $name=$data['name'];
-            $cate_id=$data['cate'];
-            $where=[];
-            if($name!=""){
-                $where['a.goods_name']=array('like',"$name%");
-            }else{}
-            if($cate_id!=""){
-                $where['b.id']=$cate_id;
-            }else{}
-                $goods = Db::name('goods')->alias('a')
-                    ->field('a.id,a.cate_id,a.goods_name,a.goods_describe,a.goods_price,a.goods_oprice,a.collection_num,a.goods_logo,b.name')
-                    ->join('goods_cate b', 'b.id=a.cate_id')
-                    //->whereLike('a.goods_name',"%".$name."%")
-                    ->order('a.id desc')
-                    ->where($where)
-                    ->select();
-            $list = [];
-            foreach ($goods as $v => $k) {
-                $list[$v]['id'] = $k['id'];
-                $list[$v]['goods_name'] = $k['goods_name'];
-                $list[$v]['goods_describe'] = $k['goods_describe'];
-                $list[$v]['cate_name'] = $k['name'];
-                $list[$v]['goods_price'] = $k['goods_price'];
-                $list[$v]['goods_oprice'] = $k['goods_oprice'];
-                $list[$v]['collection_num'] = $k['collection_num'];
-                $list[$v]['goods_logo'] = $k['goods_logo'];
-            }
-            $this->assign("list", $list);
-            return $this->success('success','',$list);
-        }
     }
 
     //新增商品页面
@@ -310,7 +240,11 @@ class Goods extends Base
     public function del_goods(){
         if (request()->isPost()) {
             $data=input();
-            $del=Db::name('goods')->where('id',$data['id'])->delete();
+            $del_id=explode('-',$data['id']);
+            foreach ($del_id as $k=>$v){
+                //$del=Db::name('goods')->where('id',$v)->delete();
+                $del = model('goods')->destroy($v);
+            }
             if ($del) {
                 ajaxReturn(["status" => 1, "msg" => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => []]);
             } else {

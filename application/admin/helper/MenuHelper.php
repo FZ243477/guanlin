@@ -19,7 +19,15 @@ trait MenuHelper
                 ['name'=>'商品列表','act'=>'goodsListref','control'=>'Goods'],
                 ['name'=>'商品分类','act'=>'goodsCate','control'=>'Goods'],
             ]],
-
+            'Village' =>['name'=>'户型管理','icon'=>'iconfont icon-shangpinguanli','sub_menu'=>[
+                ['name'=>'小区列表','act'=>'xiaoquList','control'=>'Village'],
+                ['name'=>'户型列表','act'=>'villageList','control'=>'Village'],
+                ['name'=>'户型分类','act'=>'villageCate','control'=>'Village'],
+            ]],
+            'Designer' =>['name'=>'设计师管理','icon'=>'iconfont icon-shangpinguanli','sub_menu'=>[
+                ['name'=>'设计师列表','act'=>'designerList','control'=>'Designer'],
+                ['name'=>'设计师分类','act'=>'designerCate','control'=>'Designer'],
+            ]],
             'User' =>['name'=>'用户管理','icon'=>'iconfont icon-yonghu','sub_menu'=>[
                 ['name'=>'用户列表','act'=>'userList','control'=>'User'],
             ]],

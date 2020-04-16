@@ -42,30 +42,14 @@
                                 <div class="ibox-content-del">
 
                                     <div class="row">
-                                        <!-- <form method="get" action="{:url('Manage/admin/status')}"> -->
                                         <form method="get" action="" class="form-inline">
-
-                                            <div class="input-group">
-                                                <select class=" form-control" name="cate_id" >
-                                                    <option value="" style="width:70%;">-请选择分类-</option>
-                                                    {volist name="cateres" id="cate"}
-                                                    <option value="{$cate.id}" {eq name="cate_id" value="$cate.id"}selected{/eq} style="width:100%;background-color: #EAC06C" >
-                                                    {$cate.name}
-                                                    </option>
-                                                    <?php foreach($cate['children'] as $k2=>$v2): ?>
-                                                    <option  value="{$v2.id}"  {eq name="cate_id" value="$v2.id"}selected{/eq} style="width:70%;">{$v2.name}</option>
-                                                    <?php endforeach; ?>
-                                                    {/volist}
-                                                </select>
-                                            </div>
-
 
                                             <div class="input-group">
                                                 <input type="text" name="keyword" placeholder="名称" class=" form-control" value="{$keyword}" style="width:130px">
                                                 <span class="input-group-btn">
 												<button type="submit" class="btn btn-sm btn-primary"> 搜索</button> </span>
                                             </div>
-                                            <a href="{:url('goods/goods_addrea')}" class="btn btn-sm btn-primary">添加</a>
+                                            <a href="{:url('village/village_add')}" class="btn btn-sm btn-primary">添加</a>
                                         </form>
 
                                     </div>
@@ -73,45 +57,38 @@
                                     <div class="table-responsive">
                                         <table class="table table-hover products_table" >
                                             <colgroup>
-                                                <col width="7%">
-                                                <col width="7%">
-                                                <col width="7%">
-                                                <col width="7%">
-                                                <col width="7%">
-                                                <col width="7%">
-                                                <col width="7%">
-                                                <col width="7%">
-                                                <col width="7%">
+                                                <col width="9%">
+                                                <col width="9%">
+                                                <col width="9%">
+                                                <col width="9%">
+                                                <col width="9%">
+                                                <col width="9%">
+                                                <col width="9%">
                                             </colgroup>
                                             <thead>
                                             <tr>
                                                 <th></th>
                                                 <th>ID</th>
-                                                <th>商品名称</th>
-                                                <th>商品描述</th>
-                                                <th>商品分类</th>
-                                                <th>商品原价</th>
-                                                <th>商品价格</th>
-                                                <th>商品数量</th>
-                                                <th>商品logo</th>
+                                                <th>楼盘名称</th>
+                                                <th>所在区域</th>
+                                                <th>排序</th>
+                                                <th>是否热门</th>
+                                                <th>热门排序</th>
                                                 <th>操作</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            {foreach name="goods" item="vo"}
+                                            {foreach name="house_list" item="vo"}
                                             <tr >
                                                 <td>
                                                     <input type="checkbox" class="i-checks checkbox" name="input" value="{$vo.id}">
                                                 </td>
                                                 <td>{$vo.id}</td>
-                                                <td>{$vo.goods_name}</td>
-                                                <td>{$vo.goods_describe}</td>
-                                                <td>{$vo.name}</td>
-                                                <td>{$vo.goods_price}</td>
-                                                <td>{$vo.goods_oprice}</td>
-                                                <td>{$vo.collection_num}</td>
-                                                <td><a href="{$vo.goods_logo}" target="_blank"><img src="{$vo.goods_logo}" width="100"/></a></td>
-
+                                                <td>{$vo.houses_name}</td>
+                                                <td>{$vo.houses_city}</td>
+                                                <td>{$vo.sort}</td>
+                                                <td>{$vo.is_hot}</td>
+                                                <td>{$vo.hot_sort}</td>
                                                 <td>
                                                     <a href="javaScript:;" data-banner_id="" class="btn  btn-primary " onclick=goodsshow("{$vo.id}") data-num="-1" title="上移">详情</a>
                                                     <a href="javaScript:;" onclick=goodsedit("{$vo.id}") class="btn btn-primary"><i class="fa fa-plus"></i>编辑</a>
@@ -119,7 +96,7 @@
                                                 </td>
                                             </tr>
                                             {/foreach}
-                                            {empty name="goods"}
+                                            {empty name="house_list"}
                                             <tr><td style='text-align:center' colspan='10'>暂无数据</td></tr>
                                             {/empty}
                                             <tr>
@@ -135,7 +112,7 @@
 
                                         <div class="text-center">
                                             <div class="page">
-                                                {$goods->render()}
+                                                {$house_list->render()}
                                             </div>
                                         </div>
 
@@ -163,10 +140,10 @@
 <script type="text/javascript">
 
     function goodsshow(e){
-        location.href='goods_addrea/id/'+e+'/type/show';
+        location.href='xiaoqu_add/id/'+e+'/type/show';
     }
     function goodsedit(e){
-        location.href='goods_addrea/id/'+e+'';
+        location.href='village_add/id/'+e+'';
     }
     function goodsdel(e){
         var id = e;
@@ -184,7 +161,7 @@
         }
         dialog.showTips('确定要删除吗？', "firm", function(){
             $.ajax({
-                url: "{:url('Goods/del_goods')}",
+                url: "{:url('Village/del_houses')}",
                 type: "post",
                 dataType: "json",
                 data: {
@@ -258,7 +235,7 @@
         dialog.showTips('确定要删除吗？', "firm", function(){
 
             $.ajax({
-                url: "{:url('Goods/del_goods')}",
+                url: "{:url('Village/del_houses')}",
                 type: "post",
                 dataType: "json",
                 data: {
