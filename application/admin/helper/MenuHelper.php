@@ -33,11 +33,11 @@ trait MenuHelper
             ]],
             'Bill' =>['name'=>'账单管理','icon'=>'iconfont icon-zhangdan','sub_menu'=>[
                 ['name'=>'财务统计','act'=>'finance','control'=>'Finance'],
-                ['name'=>'资金明细','act'=>'moneyDetail','control'=>'Bill'],
+//                ['name'=>'资金明细','act'=>'moneyDetail','control'=>'Bill'],
             ]],
             'Setting' =>['name'=>'系统配置','icon'=>'fa fa-envelope','sub_menu'=>[
                 ['name'=>'系统配置','act'=>'index','control'=>'Setting'],
-                ['name'=>'订单配置','act'=>'order','control'=>'Setting'],
+//                ['name'=>'订单配置','act'=>'order','control'=>'Setting'],
                 ['name'=>'短信配置','act'=>'sms','control'=>'Setting'],
                 ['name'=>'微信配置','act'=>'wechat','control'=>'Setting'],
             ]],

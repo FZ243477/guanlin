@@ -290,7 +290,10 @@ class Login extends Base
         if(!$this->VerifyTelephone($telephone)){
             ajaxReturn(['status'=>0, 'msg'=>'手机号码格式错误']);
         }
-
+        $is_close = 1;
+        if ($is_close == 1) {
+            ajaxReturn(['status'=>0, 'msg'=>'功能关闭']);
+        }
         //验证码
         $code = '';
         $strings = '0123456789';

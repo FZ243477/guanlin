@@ -165,7 +165,7 @@
                     {foreach name="data" item="vo"}
                     <tr>
                         <td></td>
-                        <td><a href="{:url('User/userdetail', ['user_id' => $vo['id']])}">{$vo.user_name|default='未填写'}</a></td>
+                        <td><a href="{:url('User/userdetail', ['user_id' => $vo['id']])}">{$vo.nickname|default='未填写'}</a></td>
                         <td><a href="{$vo.head_img}" target="_blank"><img src="{$vo.head_img}" height="60"/></a></td>
                         <td>{$vo.telephone}</td>
                         <td>{$vo.sex==1?'男':'女'}</td>
