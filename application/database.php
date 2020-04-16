@@ -12,14 +12,14 @@
 return [
     // 数据库类型
     'type'            => 'mysql',
-    // 服务器地址
-    'hostname'        => '127.0.0.1',
-    // 数据库名
+// 服务器地址
+    'hostname'        => '125.124.142.51',
+// 数据库名
     'database'        => 'yph',
-    // 用户名
-    'username'        => 'root',
-    // 密码
-    'password'        => '243477S',
+// 用户名
+    'username'        => 'yph',
+// 密码
+    'password'        => 'yph',
     // 端口
     'hostport'        => '',
     // 连接dsn
