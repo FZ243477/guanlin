@@ -27,6 +27,40 @@ class Goods extends Base
 
     public function goodsListrea()
     {
+        $data=input();
+        $keyword = request()->param('keyword');
+        $this->assign('keyword', $keyword);
+        if($keyword){
+            dump($keyword);exit;
+        }
+//        $name=$data['name'];
+//        $cate_id=$data['cate'];
+//        $where=[];
+//        if($name!=""){
+//            $where['a.goods_name']=array('like',"$name%");
+//        }else{}
+//        if($cate_id!=""){
+//            $where['b.id']=$cate_id;
+//        }else{}
+//        $goods = Db::name('goods')->alias('a')
+//            ->field('a.id,a.cate_id,a.goods_name,a.goods_describe,a.goods_price,a.goods_oprice,a.collection_num,a.goods_logo,b.name')
+//            ->join('goods_cate b', 'b.id=a.cate_id')
+//            //->whereLike('a.goods_name',"%".$name."%")
+//            ->order('a.id desc')
+//            ->where($where)
+//            ->select();
+//        $list = [];
+//        foreach ($goods as $v => $k) {
+//            $list[$v]['id'] = $k['id'];
+//            $list[$v]['goods_name'] = $k['goods_name'];
+//            $list[$v]['goods_describe'] = $k['goods_describe'];
+//            $list[$v]['cate_name'] = $k['name'];
+//            $list[$v]['goods_price'] = $k['goods_price'];
+//            $list[$v]['goods_oprice'] = $k['goods_oprice'];
+//            $list[$v]['collection_num'] = $k['collection_num'];
+//            $list[$v]['goods_logo'] = $k['goods_logo'];
+//        }
+//        $this->assign("list", $list);
 
         $goods_cate=db('goods_cate')->where('pid',0)->field('id,pid,name')->select();
         foreach ($goods_cate as $k=> $v){
@@ -41,6 +75,48 @@ class Goods extends Base
         }
             $this->assign("cateres", $cateres);
             return $this->fetch();
+    }
+
+    public function goodsListref()
+    {
+        $banner_model = model('banner');
+
+        $goods_cate=db('goods_cate')->where('pid',0)->field('id,pid,name')->select();
+        foreach ($goods_cate as $k=> $v){
+            $children=db('goods_cate')->where('pid',$v['id'])->field('id,pid,name')->select();
+            if($children){
+                $cateres[$k]['id']=$v['id'];
+                $cateres[$k]['name']=$v['name'];
+                $cateres[$k]['children']=$children;
+            }else{
+                $cateres[$k]['children']=0;
+            }
+        }
+        $this->assign("cateres", $cateres);
+        $name = request()->param('keyword');
+        $cate_id = request()->param('cate_id');
+        $where = [];
+        if ($name) {
+            $where['a.goods_name'] = ['like', "%{$name}%"];
+        }
+        if ($cate_id) {
+
+            $where['b.id'] = $cate_id;
+        }
+        $this->assign('keyword', $name);
+        $this->assign('cate_id', $cate_id);
+        $goods_model = model('goods');
+        $goods = Db::name('goods')->alias('a')
+            ->field('a.id,a.cate_id,a.goods_name,a.goods_describe,a.goods_price,a.goods_oprice,a.collection_num,a.goods_logo,b.name')
+            ->join('goods_cate b', 'b.id=a.cate_id')
+            ->order('a.id desc')
+            ->where($where)
+            ->paginate(10,false,['query'=>request()->param()]);
+        $this->assign("goods", $goods);
+        //dump($goods);exit;
+       // $goods = $goods ? $goods->toArray() : [];
+
+        return $this->fetch();
     }
 
     public function search(){
@@ -83,13 +159,26 @@ class Goods extends Base
         $data=input();
         if(isset($data['id'])){
             $edit_goods = Db::name('goods')->alias('a')
-                ->field('a.id,a.cate_id,a.goods_name,a.goods_describe,a.goods_price,a.goods_oprice,a.sort,a.collection_num,a.goods_logo,b.name')
+                ->field('a.id,a.cate_id,a.goods_name,a.goods_describe,a.goods_price,a.goods_oprice,a.sort,
+                a.collection_num,a.goods_logo,b.name')
                 ->join('goods_cate b', 'b.id=a.cate_id')
                 ->order('sort desc,a.id desc')
                 ->where('a.id',$data['id'])
                 ->find();
+            $detail_tujilogo=Db::name('goods_images')
+                ->where('goods_id',$edit_goods['id'])
+                ->where('type',0)
+                ->field('goods_id,type,logo')
+                ->select();
+            $detail_xqlogo=Db::name('goods_images')
+                ->where('goods_id',$edit_goods['id'])
+                ->where('type',1)
+                ->field('goods_id,type,logo')
+                ->select();
             $edit_goods['type']=1;
             $this->assign("edit_goods", $edit_goods);
+            $this->assign("detail_tujilogo", $detail_tujilogo);
+            $this->assign("detail_xqlogo", $detail_xqlogo);
         }else{
             $edit_goods=[
                 'goods_name'=>'',
@@ -153,6 +242,9 @@ class Goods extends Base
             if(!$data['multiple_logo']){
                 ajaxReturn(['status' => 0, 'msg' => '请上传商品图集', 'data' => []]);
             }
+            if(!$data['detail_logo']){
+                ajaxReturn(['status' => 0, 'msg' => '请上传商品图集', 'data' => []]);
+            }
             if(!$data['editid']){
                 $cate_pid=Db::name('goods_cate')->where('id',$data['brand'])->field('id,pid')->find();
             $save_content=[
@@ -178,6 +270,15 @@ class Goods extends Base
                ];
                $save_logo=Db::name('goods_images')->insertGetId($save_images);
            }
+            $detail=$data['detail_logo'];
+                foreach($detail as $k=>$v){
+                    $detail_images=[
+                        'goods_id'=>$goods_id,
+                        'type'=>1,
+                        'logo'=>$v
+                    ];
+                    $save_detail=Db::name('goods_images')->insertGetId($detail_images);
+                }
             if ($save) {
                 ajaxReturn(['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => []]);
             } else {

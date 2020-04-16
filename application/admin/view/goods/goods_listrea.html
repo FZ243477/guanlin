@@ -31,7 +31,7 @@
                             <form method="get" action="" class="form-inline order_search">
                                 <div class="form-group" style="margin-left: 10px;">
                                     <label for="exampleInputEmail1"  class="sr-only">商品名称</label>
-                                    <input type="text" name="name" value="" placeholder="商品名称" id="exampleInputEmail1" class="form-control">
+                                    <input type="text" name="name" value="{$keyword}" placeholder="商品名称" id="exampleInputEmail1" class="form-control">
                                 </div>
 
                                 <div class="form-group">
@@ -49,8 +49,8 @@
                                 <div class="form-group">
 
                                 </div>
-
-                                <a class="btn btn-primary"  onclick="exportOrder()">搜索</a>
+                                <button type="submit" class="btn btn-sm btn-primary"> 搜索</button> </span>
+                                <!--<a class="btn btn-primary"  onclick="exportOrder()">搜索</a>-->
                                 <a href="{:url('goods/goods_addrea')}" class="btn btn-primary" >添加商品</a>
                             </form>
 
@@ -357,43 +357,43 @@
 <script src="home_url/js/peity-demo.min.js"></script>
 <script src="home_url/js/plugins/layer/laydate/laydate.js"></script>
 <script>
-    $(document).ready(function( ){
-        var name = "";
-        console.log(name);
-        var cate = "";
-        console.log(cate);
-        $.ajax({
-            type: "POST",
-            url: "{:url('Goods/search')}",
-            data: {
-                name:name,
-                cate:cate,
-            },
-            dataType: "json",
-            success:function(res){
-                var res1 = res.data
-                var html='';
-                console.log(res1);
-                $.each(res1,function(i,v){
-                    var eid=v.id;
-                    html+="<tr>"
-                    html+="<td class=\"editida\" >"+v.id+"</td>"
-                    html+="<td>"+v.goods_name+"</td>"
-                    html+="<td>"+v.goods_describe+"</td>"
-                    html+="<td>"+v.cate_name+"</td>"
-                    html+="<td>"+v.goods_price+"</td>"
-                    html+="<td>"+v.goods_oprice+"</td>"
-                    html+="<td>"+v.collection_num+"</td>"
-                    html+="<td class=\"center\"> <img width=\"20\" height=\"20\" src="+v.goods_logo+"> </td>"
-                    html+="<td> <a  href=\"javascript:void(0);\" class=\"btn btn-primary btn-sm\" onclick=goodsshow("+v.id+") title=\"查看详情\">详情</a>" +
-                        " <a href=\"javascript:void(0);\" class=\"btn btn-primary btn-sm j-editClass\"  onclick=goodsedit("+v.id+") data-id=\"\" title=\"编辑\" >编辑</a>" +
-                        " <a href=\"javascript:void(0);\" class=\"btn btn-primary btn-sm j-editClass1\" onclick=goodsdel("+v.id+") data-id=\"\">删除</a></td>"
-                    html+="</tr>"
-                })
-                $("#xun").html(html)
-            }
-        });
-    })
+    // $(document).ready(function( ){
+    //     var name = "";
+    //     console.log(name);
+    //     var cate = "";
+    //     console.log(cate);
+    //     $.ajax({
+    //         type: "POST",
+    //         url: "{:url('Goods/search')}",
+    //         data: {
+    //             name:name,
+    //             cate:cate,
+    //         },
+    //         dataType: "json",
+    //         success:function(res){
+    //             var res1 = res.data
+    //             var html='';
+    //             console.log(res1);
+    //             $.each(res1,function(i,v){
+    //                 var eid=v.id;
+    //                 html+="<tr>"
+    //                 html+="<td class=\"editida\" >"+v.id+"</td>"
+    //                 html+="<td>"+v.goods_name+"</td>"
+    //                 html+="<td>"+v.goods_describe+"</td>"
+    //                 html+="<td>"+v.cate_name+"</td>"
+    //                 html+="<td>"+v.goods_price+"</td>"
+    //                 html+="<td>"+v.goods_oprice+"</td>"
+    //                 html+="<td>"+v.collection_num+"</td>"
+    //                 html+="<td class=\"center\"> <img width=\"20\" height=\"20\" src="+v.goods_logo+"> </td>"
+    //                 html+="<td> <a  href=\"javascript:void(0);\" class=\"btn btn-primary btn-sm\" onclick=goodsshow("+v.id+") title=\"查看详情\">详情</a>" +
+    //                     " <a href=\"javascript:void(0);\" class=\"btn btn-primary btn-sm j-editClass\"  onclick=goodsedit("+v.id+") data-id=\"\" title=\"编辑\" >编辑</a>" +
+    //                     " <a href=\"javascript:void(0);\" class=\"btn btn-primary btn-sm j-editClass1\" onclick=goodsdel("+v.id+") data-id=\"\">删除</a></td>"
+    //                 html+="</tr>"
+    //             })
+    //             $("#xun").html(html)
+    //         }
+    //     });
+    // })
     function goodsshow(e){
         location.href='goods_addrea/id/'+e+'/type/show';
     }

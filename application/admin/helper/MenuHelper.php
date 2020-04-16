@@ -16,7 +16,7 @@ trait MenuHelper
                 ['name'=>'广告位分类','act'=>'bannerCateList','control'=>'Banner'],
             ]],
             'Goods' =>['name'=>'商品管理','icon'=>'iconfont icon-shangpinguanli','sub_menu'=>[
-                ['name'=>'商品列表','act'=>'goodsListrea','control'=>'Goods'],
+                ['name'=>'商品列表','act'=>'goodsListref','control'=>'Goods'],
                 ['name'=>'商品分类','act'=>'goodsCate','control'=>'Goods'],
             ]],
 
