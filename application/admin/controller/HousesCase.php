@@ -167,7 +167,7 @@ class HousesCase extends Base
         if (!$data['name']) {
             ajaxReturn(['status' => 0, 'msg' => '请填写名称']);
         }
-        if (!$data['logo']) {
+        if (!isset($data['logo']) || !$data['logo']) {
             ajaxReturn(['status' => 0, 'msg' => '请填上传logo']);
         }
         if ($data['type'] == 1 && !$data['vr']) {
