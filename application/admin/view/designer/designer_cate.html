@@ -297,7 +297,7 @@ $(".upd").click(function(){
 		$("#img_url").attr("src","home_url/images/addimg.png");
 	}
 
-	$("[name='name']").val($(this).attr("data-name"));
+	$("[name='level_name']").val($(this).attr("data-name"));
 	// $("[name='englishname']").val($(this).attr("data-englishname"));
 	$("[name='sort']").val($(this).attr("data-sort"));
 	$("[name='status']").parent().removeClass('checked');
@@ -311,7 +311,7 @@ $("#add").click(function(){
 	// $("#select option").css("display","");
 	$("[name='pid']").val('0');
 	$("#img_url").attr("src","home_url/images/addimg.png");
-	$("[name='name']").val("");
+	$("[name='level_name']").val("");
 	$("[name='englishname']").val("");
 	$("[name='sort']").val("");
 	$("[name='status']").parent().removeClass('checked');
