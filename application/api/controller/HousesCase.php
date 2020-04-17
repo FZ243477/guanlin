@@ -290,10 +290,11 @@ class HousesCase extends Base
             ->field($field)
             ->find();
 
-        $list = model('goods_cate')->where(['pid' => 0])->field('id,name')->select();
+
+        $list = db('goods_cate')->where(['pid' => 0, 'delete_time' => null])->field('id,name')->select();
 
         foreach ($list as $k => $v) {
-            $list[$k]['cate'] = model('goods_cate')->where(['pid' => $v['id']])->field('id,name')->select()->toArray();
+            $list[$k]['cate'] = db('goods_cate')->where(['pid' => $v['id'], 'delete_time' => null])->field('id,name')->select();
             foreach ($list[$k]['cate'] as $k1 => $v1) {
                 $list[$k]['cate'][$k1]['goods_info'] = model('houses_goods')
                     ->alias('hg')
@@ -301,7 +302,7 @@ class HousesCase extends Base
                     ->where(['hg.houses_case_id' => $houses_case_id, 'hg.cate_id' => $v1['id']])
                     ->field('g.id,goods_name,goods_logo,goods_price,goods_oprice,
                              goods_size,goods_unit,express_fee,install_fee,hg.goods_num')
-                    ->select()->toArray();
+                    ->select();
             }
         }
         $data = [
