@@ -173,7 +173,7 @@ class HousesCase extends Base
         if ($data['type'] == 1 && !$data['vr']) {
             ajaxReturn(['status' => 0, 'msg' => '请填全景图链接']);
         }
-        if (($data['type'] == 2 || $data['type'] == 3) && !$data['background']) {
+        if (($data['type'] == 2 || $data['type'] == 3) && (!isset($data['background']) || !$data['background'])) {
             ajaxReturn(['status' => 0, 'msg' => '请填上传背景图']);
         }
         if (($data['type'] == 2 || $data['type'] == 3) && !$data['content']) {

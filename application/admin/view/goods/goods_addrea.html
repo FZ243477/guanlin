@@ -60,7 +60,7 @@
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>商品原价：</label>
+                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>商品售价：</label>
 
                             <div class="col-sm-9">
                                 <input type="text" oninput="value=value.replace(/[^\d]/g,'')" class="form-control" id="goods_price" name="goods_price" style="width:60%" value="{$edit_goods.goods_price}">
@@ -68,18 +68,23 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>商品售价：</label>
+                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>商品原价：</label>
                             <div class="col-sm-9">
                                 <input type="text" oninput="value=value.replace(/[^\d]/g,'')" class="form-control" id="goods_oprice" name="goods_oprice" style="width:60%" value="{$edit_goods.goods_oprice}">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>商品数量：</label>
+                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>商品单位：</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="collection_num" name="collection_num" style="width:60%" value="{$edit_goods.collection_num}">
+                                <input type="text" class="form-control" id="goods_unit" name="goods_unit" style="width:60%" value="{$edit_goods.goods_unit}">
                             </div>
                         </div>
-
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>商品规格：</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="goods_size" name="goods_size" style="width:60%" value="{$edit_goods.goods_size}">
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label"><b style="color:red;">*</b>商品排序：</label>
                             <div class="col-sm-9">
@@ -217,7 +222,7 @@
                             <div class="col-sm-4 col-sm-offset-2">
                                 <input type="hidden" name="id"  value="">
                                 <a href="javascript:history.back();" class="btn btn-white" type="submit">返回</a>
-                                <a class="btn btn-primary save" onclick="addproduct()" href="javascript:void(0)" >保存</a>
+                                <a class="btn btn-primary save"  href="javascript:void(0)" >保存</a>
                             </div>
                         </div>
                         {/empty}
@@ -248,21 +253,26 @@
 <script src="home_url/js/peity-demo.min.js"></script>
 
 <script>
-    function addproduct(){
-
-        //console.log(goods_name,goods_describe,goods_price,goods_oprice,collection_num,cate,);
+    var flag = true;
+    $('.save').click(function(){
+        if (flag == false) {
+            return false;
+        }
+        flag = false;
+        var that = $(this);
+        that.removeClass('btn-primary').addClass('btn-default').html('保存中').css('cursor', 'wait');
         var post = $('#add_step').serializeArray();
-        console.log(post);
         $.post("{:url('Goods/save_product')}",post, function(data){
-
+            flag = true;
+            that.removeClass('btn-default').addClass('btn-primary').html('保存').css('cursor', 'pointer');
             if(data.status){
-                dialog.showTips(data.msg,"", "{:url('Goods/goodsListref')}");
+                dialog.showTips(data.msg,"", "{:url('HousesCase/housesCaseList')}");
             }else{
                 alert(data.msg);
             }
         }, "json");
         return false;
-    }
+    });
     /*编辑器 1*/
     var ue = UE.getEditor('goods_detail', {
         toolbars: [[
