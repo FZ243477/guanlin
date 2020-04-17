@@ -236,7 +236,7 @@ class HousesCase extends Base
             $json_arr =  ['status' => 0, 'msg' => SystemConstant::SYSTEM_NONE_PARAM];
             ajaxReturn($json_arr);
         }
-        $field = 'id,name,vr,background,content,type,designer_id,houses_type_id';
+        $field = 'id,name,vr,background,content,type,designer_id,houses_type_id,collection_num';
         $housesCase = model('houses_case')->where(['id' => $houses_case_id])->field($field)->find();
         $field = 'area,space,style';
         $housesType = model('houses_type')->where(['id' => $housesCase['houses_type_id']])->field($field)->find();
@@ -245,6 +245,7 @@ class HousesCase extends Base
         $detail['name'] = $housesCase['name'];
         $detail['vr'] = $housesCase['vr'];
         $detail['background'] = $housesCase['background'];
+        $detail['collection_num'] = $housesCase['collection_num'];
         $detail['content'] = $housesCase['content'];
         $detail['area'] = $housesType['area'];
         $detail['space'] = $housesType['space'];
