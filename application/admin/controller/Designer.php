@@ -22,7 +22,7 @@ class Designer extends Base
     }
 
     public function designerList(){
-        $designer_cate=Db::name('houses_designer_level')->select();
+        $designer_cate=Db::name('houses_designer_level') ->where('delete_time','null')->select();
         $this->assign('designer_cate',$designer_cate);
         $name = request()->param('keyword');
         $cate_id = request()->param('cate_id');
@@ -44,6 +44,7 @@ class Designer extends Base
             ->where($where)
             ->paginate(10,false,['query'=>request()->param()]);
         $this->assign('designer_list',$designer_list);
+
         return $this->fetch();
     }
     //新增户型页面
@@ -52,7 +53,8 @@ class Designer extends Base
         if(isset($data['id'])){
             $edit_goods=Db::name('houses_designer')->alias('a')
                 ->field('a.id,a.designer_name,a.designer_logo,a.background_logo,a.designer_describe,a.telephone,
-                a.city,a.exp,a.level_id,b.id,b.level_name ')
+                a.city,a.exp,a.level_id,b.level_name ')
+                ->where('b.delete_time','null')
                 ->join('houses_designer_level b', 'b.id=a.level_id')
                 ->where('a.id',$data['id'])
                 ->find();
@@ -77,7 +79,7 @@ class Designer extends Base
             $goods_show=$data['type'];
             $this->assign('goods_show',$goods_show);
         }
-        $house_cate=Db::name('houses_designer_level')->select();
+        $house_cate=Db::name('houses_designer_level')->where('delete_time','null')->select();
         $this->assign('house_cate',$house_cate);
         return $this->fetch();
     }
@@ -167,4 +169,71 @@ class Designer extends Base
         }
     }
 
+    public function designerCate(){
+        $cate_list=Db::name('houses_designer_level')
+            ->field('id,level_name')
+            ->where('delete_time','null')
+            ->paginate(10,false,['query'=>request()->param()]);
+        $this->assign('cate_list',$cate_list);
+        return $this->fetch();
+    }
+
+    // 增加设计师级别
+    public function addCate()
+    {
+        if (request()->isPost()) {
+            $data = input("post.");
+            if (!$data['level_name']) {
+                ajaxReturn(["status" => 0, "msg" => "请填写分类名称！"]);
+            }
+            $res=Db::name('houses_designer_level')->where('level_name',$data['level_name'])->find();
+            if ($res) {
+                ajaxReturn(["status" => 0, "msg" => "类名已存在！"]);
+            }
+            if(!$data['id']) {
+                $save_content = [
+                    'level_name' => $data['level_name'],
+                    'create_time' => time()
+                ];
+                $end = Db::name('houses_designer_level')->insert($save_content);
+            }else{
+                $rea=Db::name('houses_designer_level')->where('id',$data['id'])->find();
+                if (!$rea) {
+                    ajaxReturn(["status" => 0, "msg" => "此级别不存在！"]);
+                }else{
+                    $update_content = [
+                        'level_name' => $data['level_name'],
+                        'update_time' => time()
+                    ];
+                    $end = Db::name('houses_designer_level')->where('id',$data['id'])->update($update_content);
+                }
+            }
+            if ($end) {
+                ajaxReturn(["status" => 1, "msg" => SystemConstant::SYSTEM_OPERATION_SUCCESS]);
+            } else {
+                ajaxReturn(["status" => 0, "msg" => SystemConstant::SYSTEM_OPERATION_FAILURE]);
+            }
+        }
+    }
+
+    /**
+     * 删除设计师级别
+     */
+    public function delCate()
+    {
+        $id = input("id");
+        if (!$id) {
+            ajaxReturn(["status" => 0, "msg" => SystemConstant::SYSTEM_NONE_PARAM]);
+        }
+        $rea=Db::name('houses_designer_level')->where('id',$id)->find();
+        if (!$rea) {
+            ajaxReturn(["status" => 0, "msg" => "分类不存在！"]);
+        }
+        $del = model('houses_designer_level')->destroy($id);
+        if ($del) {
+            ajaxReturn(["status" => 1, "msg" => SystemConstant::SYSTEM_OPERATION_SUCCESS]);
+        } else {
+            ajaxReturn(["status" => 0, "msg" => SystemConstant::SYSTEM_OPERATION_FAILURE]);
+        }
+    }
 }

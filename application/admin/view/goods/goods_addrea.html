@@ -154,7 +154,7 @@
                                             {volist name="detail_tujilogo" id="vo"}
                                             <div class="goods_imgs" style='float:left;position:relative;margin-right: 8px;'>
                                                 <img src="{$vo.logo}" style="width: 150px;" class="mgr10 mgt10 ">
-                                                <input type="hidden" name="multiple_logo" class="multiple_logo" value="{$vo.logo}">
+                                                <input type="hidden" name="multiple_logo[]" class="multiple_logo" value="{$vo.logo}">
                                                 <em class="close" style="float: right;" title="移除这张图片" onclick="delImgs(this)">×</em>
                                             </div>
                                             {/volist}
@@ -192,7 +192,7 @@
                                             {volist name="detail_xqlogo" id="vo"}
                                             <div class="goods_imgs" style='float:left;position:relative;margin-right: 8px;'>
                                                 <img src="{$vo.logo}" style="width: 150px;"  class="mgr10 mgt10 ">
-                                                <input type="hidden" name="detail_logo" class="detail_logo" value="{$vo.logo}">
+                                                <input type="hidden" name="detail_logo[]" class="detail_logo" value="{$vo.logo}">
                                                 <em class="close" style="float: right;" title="移除这张图片" onclick="delImgs(this)">×</em>
                                             </div>
                                             {/volist}
