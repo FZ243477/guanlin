@@ -11,11 +11,6 @@ trait MenuHelper
     {
         $left_menu = [
             'Index' =>['name'=>'主页','icon'=>'fa-index','sub_menu'=>[],'act'=>'main','control'=>'Index'],
-            'Banner' =>['name'=>'广告位管理','icon'=>'fa fa-sticky-note','sub_menu'=>[
-                ['name'=>'广告位列表','act'=>'bannerList','control'=>'Banner'],
-                ['name'=>'广告位分类','act'=>'bannerCateList','control'=>'Banner'],
-            ]],
-
             'Goods' =>['name'=>'商品管理','icon'=>'iconfont icon-shangpinguanli','sub_menu'=>[
                 ['name'=>'商品列表','act'=>'goodsListref','control'=>'Goods'],
                 ['name'=>'商品分类','act'=>'goodsCate','control'=>'Goods'],
