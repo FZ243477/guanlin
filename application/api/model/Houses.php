@@ -10,4 +10,12 @@ class Houses extends Model
 {
     use SoftDelete;
     protected $deleteTime = 'delete_time';
+
+    protected function getLogoAttr($value)
+    {
+        if ($value) {
+            $value = picture_url_dispose($value);
+        }
+        return $value;
+    }
 }

@@ -670,9 +670,7 @@ form.form-inline.order_search .btn-primary{
 [v-cloak] {
     display: none;
 }
-.gray-bg {
-    overflow: auto;
-}
+
 .wrapper {
     margin: 0 auto;
 }

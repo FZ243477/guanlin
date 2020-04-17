@@ -26,7 +26,7 @@ class Goods extends Model
     protected function getGoodsLogoAttr($value, $data)
     {
         if ($value) {
-            $value = picture_url_dispose($value).'?x-oss-process=image/resize,m_fill,h_400,w_400';
+            $value = picture_url_dispose($value);
         }
         return $value;
     }

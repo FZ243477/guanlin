@@ -44,6 +44,11 @@
 												<button type="submit" class="btn btn-sm btn-primary"> 搜索</button> </span>
 											</div>
 											<a href="{:url('HousesCase/housesCaseAdd')}" class="btn btn-sm btn-primary">添加</a>
+											&nbsp;
+											vr精选:<span style="color:red">{$hot_vr}</span>
+											<a href="javascript:void(0)" class="btn btn-sm btn-primary" onclick="show_case(1)">设置vr精选</a>
+											文章精选:<span style="color:red">{$hot_article}</span>
+											<a href="javascript:void(0)" class="btn btn-sm btn-primary" onclick="show_case(3)">设置文章精选</a>
 										</form>
 
 									</div>
@@ -53,13 +58,14 @@
 											<colgroup>
 												<col width="5%">
 												<col width="5%">
-												<col width="15%">
+												<col width="13%">
 												<col width="10%">
 												<col width="10%">
 												<col width="10%">
 												<col width="8%">
-												<col width="15%">
 												<col width="8%">
+												<col width="8%">
+												<!--<col width="8%">-->
 											</colgroup>
 											<thead>
 											<tr >
@@ -72,6 +78,7 @@
 												<th>排序</th>
 												<th>图片</th>
 												<th>是否显示</th>
+												<!--<th>是否精选</th>-->
 												<th>操作</th>
 											</tr>
 											</thead>
@@ -99,6 +106,17 @@
 													</a>
 													{/eq}
 												</td>
+												<!--<td>
+													{eq name="vo.is_hot" value="1"}
+													<a style='color:#0C0;font-size:20px;text-align:center;cursor:pointer;' onclick="status({$vo.id},'is_hot', this)" >
+														√
+													</a>
+													{else/}
+													<a style='color:#c00;font-size:20px;text-align:center;cursor:pointer;' onclick="status({$vo.id},'is_hot', this)" >
+														×
+													</a>
+													{/eq}
+												</td>-->
 												<td>
 													<a href="{:url('HousesCase/housesCaseAdd', ['id' => $vo['id']])}" class="btn btn-primary"><i class="fa fa-plus"></i>编辑</a>
 													<a href="javaScript:;" data-id="{$vo['id']}" class="btn  btn-primary updown" data-num="-1" title="上移">上移</a>
@@ -273,6 +291,22 @@
 		})
 
 	}
+	
+	function show_case(type) {
+        var url = "{:url('HousesCase/selectHousesCase')}?type="+type;
+        layer.open({
+            type: 2,
+            title: '选择方案',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['60%', '60%'],
+            content: url,
+        });
+    }
+    function call_back()
+    {
+        layer.closeAll('iframe');
+    }
 </script>
 
 <script>

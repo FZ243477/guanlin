@@ -10,4 +10,21 @@ class HousesDesigner extends Model
 {
     use SoftDelete;
     protected $deleteTime = 'delete_time';
+
+
+    protected function getDesignerLogoAttr($value)
+    {
+        if ($value) {
+            $value = picture_url_dispose($value);
+        }
+        return $value;
+    }
+
+    protected function getBackgroundLogoAttr($value)
+    {
+        if ($value) {
+            $value = picture_url_dispose($value);
+        }
+        return $value;
+    }
 }

@@ -35,11 +35,16 @@ class HousesCase extends Base
             ->join('houses_type ht', 'ht.id = hc.houses_type_id', 'left')
             ->join('houses_designer hd', 'hd.id = hc.designer_id', 'left')
             ->where($where)
-            ->field('hc.id,hc.type,hc.name,hc.logo,hc.sort,hc.is_display,ht.name as ht_name,hd.designer_name')
+            ->field('hc.id,hc.type,hc.name,hc.logo,hc.sort,hc.is_display,hc.is_hot,ht.name as ht_name,hd.designer_name')
             ->order('sort desc, id desc')
             ->paginate(10,false,['query'=>request()->param()]);
 
         $this->assign('list', $list);
+
+        $hot_vr = $houses_case_model->where(['is_hot' => 1, 'type' => 1])->value('name');
+        $hot_article = $houses_case_model->where(['is_hot' => 1, 'type' => 3])->value('name');
+        $this->assign('hot_vr', $hot_vr);
+        $this->assign('hot_article', $hot_article);
         return $this->fetch();
     }
 
@@ -73,7 +78,7 @@ class HousesCase extends Base
                 ->order('hg.sort asc')
                 ->select();
         }
-        $this->assign("cache", $cache);
+        $this->assign('cache', $cache);
         return $this->fetch();
     }
 
@@ -156,13 +161,13 @@ class HousesCase extends Base
         if (!$data['designer_id']) {
             ajaxReturn(['status' => 0, 'msg' => '请选择设计师']);
         }
-        if ($data['type'] == 1 && !$data['houses_type_id']) {
+        if (!$data['houses_type_id']) {
             ajaxReturn(['status' => 0, 'msg' => '请选择户型']);
         }
         if (!$data['name']) {
             ajaxReturn(['status' => 0, 'msg' => '请填写名称']);
         }
-        if (!$data['logo']) {
+        if (!isset($data['logo']) || !$data['logo']) {
             ajaxReturn(['status' => 0, 'msg' => '请填上传logo']);
         }
         if ($data['type'] == 1 && !$data['vr']) {
@@ -196,9 +201,9 @@ class HousesCase extends Base
                 $after_json = ['id' => $id, $item => 1-$coupon[$item]];
 
                 $this->managerLog($this->manager_id, $content, $before_json, $after_json);
-                $json_arr = ["status"=>1, "msg"=> SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => [$item => 1-$coupon[$item]]];
+                $json_arr = ['status'=>1, 'msg'=> SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => [$item => 1-$coupon[$item]]];
             }else{
-                $json_arr = ["status"=>0, "msg"=>SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []];
+                $json_arr = ['status'=>0, 'msg'=>SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []];
             }
             return $json_arr;
         }
@@ -215,7 +220,7 @@ class HousesCase extends Base
 
             $houses_case_model = model('houses_case');
             if (!$ids) {
-                ajaxReturn(["status"=>0, "msg"=>SystemConstant::SYSTEM_NONE_PARAM, 'data' => []]);
+                ajaxReturn(['status'=>0, 'msg'=>SystemConstant::SYSTEM_NONE_PARAM, 'data' => []]);
             }
 
             $arr = array_unique(explode('-',($ids)));
@@ -230,9 +235,9 @@ class HousesCase extends Base
                 $content = '删除houses_case';
 
                 $this->managerLog($this->manager_id, $content, $before_json, $after_json);
-                ajaxReturn(["status"=>1, "msg"=>SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => []]);
+                ajaxReturn(['status'=>1, 'msg'=>SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => []]);
             }else{
-                ajaxReturn(["status"=>0, "msg"=>SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []]);
+                ajaxReturn(['status'=>0, 'msg'=>SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []]);
             }
 
         }
@@ -298,7 +303,7 @@ class HousesCase extends Base
         $keyword = request()->param('keyword');
         $where = [];
         if ($keyword) {
-            $where['designer_name'] = ['like', "%{$keyword}%"];
+            $where['name'] = ['like', "%{$keyword}%"];
         }
         $this->assign('keyword', $keyword);
         $list = $houses_type_model
@@ -317,21 +322,82 @@ class HousesCase extends Base
     {
         $houses_type_model = model('goods');
         $keyword = request()->param('keyword');
+        $cate_id = request()->param('cate_id');
         $goods_id = request()->param('goods_id');
         $where = [];
         if ($keyword) {
             $where['goods_name'] = ['like', "%{$keyword}%"];
         }
+        if ($cate_id) {
+            $where['pid|cate_id'] = $cate_id;
+        }
         if ($goods_id) {
             $where['id'] = ['notin', explode(',', $goods_id)];
         }
         $this->assign('keyword', $keyword);
+        $this->assign('cate_id', $cate_id);
         $list = $houses_type_model
-            ->field('id,cate_id,goods_name,goods_logo,goods_price,goods_oprice')
+            ->field('id,pid,cate_id,goods_name,goods_logo,goods_price,goods_oprice')
             ->where($where)
             ->order('id desc')
             ->paginate(10,false,['query'=>request()->param()]);
+
         $this->assign('list', $list);
+        $goods_pid_array = [];
+        $goods_cate_array = [];
+        $goods_cate = model('goods_cate')->where(['pid' => 0])->field('id,name')->order('id asc')->select();
+        foreach ($goods_cate as $k => $v) {
+            $goods_pid_array[$v['id']] = $v['name'];
+            $cate = model('goods_cate')->where(['pid' => $v['id']])->field('id,name')->order('id asc')->select();
+            foreach ($cate as $kk => $vv) {
+                $goods_cate_array[$vv['id']] = $vv['name'];
+            }
+            $goods_cate[$k]['cate'] = $cate;
+        }
+        $this->assign('goods_cate', $goods_cate);
+        $this->assign('goods_pid_array', $goods_pid_array);
+        $this->assign('goods_cate_array', $goods_cate_array);
         return $this->fetch();
+    }
+
+    /**
+     * 选择方案
+     */
+    public function selectHousesCase()
+    {
+        $houses_case_model = model('houses_case');
+        $keyword = request()->param('keyword', '', 'trim');
+        $type = request()->param('type', '', 'trim');
+        $where = ['hc.type' => $type, 'is_display' => 1];
+        if ($keyword) {
+            $where['hc.name|hd.designer_name|ht.name'] = ['like', "%{$keyword}%"];
+        }
+        $this->assign('keyword', $keyword);
+        $list = $houses_case_model
+            ->alias('hc')
+            ->join('houses_type ht', 'ht.id = hc.houses_type_id', 'left')
+            ->join('houses_designer hd', 'hd.id = hc.designer_id', 'left')
+            ->where($where)
+            ->field('hc.id,hc.type,hc.name,hc.logo,hc.sort,hc.is_display,hc.is_hot,ht.name as ht_name,hd.designer_name')
+            ->order('sort desc, id desc')
+            ->paginate(10,false,['query'=>request()->param()]);
+
+        $this->assign('list', $list);
+        $this->assign('type', $type);
+        return $this->fetch();
+    }
+
+    public function selectHousesCaseHot()
+    {
+        if (request()->isPost()) {
+            $id = request()->post('id');
+            $type = request()->post('type');
+            if (!$id || !$type) {
+                ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_NONE_PARAM]);
+            }
+            model('houses_case')->update(['is_hot' => 0], ['is_hot' => 1, 'type' => $type ]);
+            model('houses_case')->update(['is_hot' => 1], ['id' => $id]);
+            ajaxReturn(['status' => 1, 'msg'=>SystemConstant::SYSTEM_OPERATION_SUCCESS]);
+        }
     }
 }

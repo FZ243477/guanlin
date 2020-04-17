@@ -70,7 +70,7 @@ trait PHPExcelHelper
 
         header('Cache-Control: max-age=0');
 
-        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 
         $objWriter->save('php://output'); // 文件通过浏览器下载
 

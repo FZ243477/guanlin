@@ -38,7 +38,7 @@ class Designer extends Base
         }
         //在售商品
         $designer['case_num'] = model('houses_case')->where(['type' => 1, 'designer_id' => $designer_id, 'is_display' => 1])->count();
-        $designer['case_num'] = $designer['case_num'] ? $designer['case_num'] : 0;
+//        $designer['case_num'] = $designer['case_num'] ? $designer['case_num'] : 0;
         if ($this->user_id) {
             $is_collect = model('collection')
                 ->where(['param_id' => $designer_id, 'user_id' => $this->user_id, 'type' => 2])
