@@ -23,35 +23,11 @@ class Goods extends Base
         parent::__construct();
     }
 
-    public function goodsListrea()
-    {
-        $data=input();
-        $keyword = request()->param('keyword');
-        $this->assign('keyword', $keyword);
-        if($keyword){
-            dump($keyword);exit;
-        }
-
-        $goods_cate=db('goods_cate')->where('pid',0)->field('id,pid,name')->select();
-        foreach ($goods_cate as $k=> $v){
-            $children=db('goods_cate')->where('pid',$v['id'])->field('id,pid,name')->select();
-            if($children){
-                $cateres[$k]['id']=$v['id'];
-                $cateres[$k]['name']=$v['name'];
-                $cateres[$k]['children']=$children;
-            }else{
-                $cateres[$k]['children']=0;
-            }
-        }
-            $this->assign("cateres", $cateres);
-            return $this->fetch();
-    }
-
     public function goodsListref()
     {
-        $goods_cate=db('goods_cate')->where('pid',0)->field('id,pid,name')->select();
+        $goods_cate=db('goods_cate')->where('delete_time','null')->where('pid',0)->field('id,pid,name')->select();
         foreach ($goods_cate as $k=> $v){
-            $children=db('goods_cate')->where('pid',$v['id'])->field('id,pid,name')->select();
+            $children=db('goods_cate')->where('delete_time','null')->where('pid',$v['id'])->field('id,pid,name')->select();
             if($children){
                 $cateres[$k]['id']=$v['id'];
                 $cateres[$k]['name']=$v['name'];
@@ -61,6 +37,7 @@ class Goods extends Base
             }
         }
         $this->assign("cateres", $cateres);
+        $this->assign("goods_cate", $goods_cate);
         $name = request()->param('keyword');
         $cate_id = request()->param('cate_id');
         $where = [];
@@ -68,11 +45,10 @@ class Goods extends Base
             $where['a.goods_name'] = ['like', "%{$name}%"];
         }
         if ($cate_id) {
-
             $where['b.id'] = $cate_id;
         }
         $this->assign('keyword', $name);
-        $this->assign('cate_id', $cate_id);
+       $this->assign('cate_id', $cate_id);
         $goods = Db::name('goods')->alias('a')
             ->field('a.id,a.cate_id,a.goods_name,a.goods_describe,a.goods_price,a.goods_oprice,a.collection_num,a.goods_logo,b.name')
             ->join('goods_cate b', 'b.id=a.cate_id')
@@ -93,6 +69,7 @@ class Goods extends Base
                 a.collection_num,a.goods_logo,b.name')
                 ->join('goods_cate b', 'b.id=a.cate_id')
                 ->order('sort desc,a.id desc')
+                ->where('b.delete_time','null')
                 ->where('a.id',$data['id'])
                 ->find();
             $detail_tujilogo=Db::name('goods_images')
@@ -129,9 +106,9 @@ class Goods extends Base
             $goods_show=$data['type'];
             $this->assign('goods_show',$goods_show);
         }
-        $goods_cate=db('goods_cate')->where('pid',0)->field('id,pid,name')->select();
+        $goods_cate=db('goods_cate')->where('delete_time','null')->where('pid',0)->field('id,pid,name')->select();
         foreach ($goods_cate as $k=> $v){
-            $children=db('goods_cate')->where('pid',$v['id'])->field('id,pid,name')->select();
+            $children=db('goods_cate')->where('delete_time','null')->where('pid',$v['id'])->field('id,pid,name')->select();
             if($children){
                 $cateres[$k]['id']=$v['id'];
                 $cateres[$k]['name']=$v['name'];
@@ -228,6 +205,26 @@ class Goods extends Base
                     'update_time'=>time()
                 ];
                 $edit=Db::name('goods')->where('id',$data['editid'])->update($edit_content);
+                $goods_id = $data['editid'];
+                $logo=$data['multiple_logo'];
+                $delete_logo=Db::name('goods_images')->where('goods_id',$goods_id)->delete();
+                foreach($logo as $k=>$v){
+                    $save_images=[
+                        'goods_id'=>$goods_id,
+                        'type'=>0,
+                        'logo'=>$v
+                    ];
+                    $save_logo=Db::name('goods_images')->insertGetId($save_images);
+                }
+                $detail=$data['detail_logo'];
+                foreach($detail as $k=>$v){
+                    $detail_images=[
+                        'goods_id'=>$goods_id,
+                        'type'=>1,
+                        'logo'=>$v
+                    ];
+                    $save_detail=Db::name('goods_images')->insertGetId($detail_images);
+                }
                 if ($edit) {
                     ajaxReturn(['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => []]);
                 } else {
@@ -236,7 +233,9 @@ class Goods extends Base
             }
         }
     }
-
+    /**
+     * 删除商品 1
+     */
     public function del_goods(){
         if (request()->isPost()) {
             $data=input();
@@ -252,349 +251,7 @@ class Goods extends Base
             }
         }
     }
-    public function goodsList()
-    {
 
-        if (request()->isPost()) {
-            $map = [];
-            $status = request()->post('status', 0, 'intval');
-            $type = request()->post('type', 0, 'intval');
-            $audit = request()->post('audit', -1, 'intval');
-
-            $map0 = [];
-
-            $map1 = ['is_del' => 0, 'is_sale' => 1, 'stores' => ['gt', 0]];
-            $map2 = ['is_del' => 0, 'is_sale' => 1, 'stores' => 0];
-            $map3 = ['is_del' => 0, 'is_sale' => 0];
-            $map4 = ['is_del' => 1];
-            $map5 = ['is_audit' => 0];
-
-            if ($type == 1) {
-                if ($audit != -1) {
-                    $map0['is_audit'] = $audit;
-                    $map1['is_audit'] = $audit;
-                    $map2['is_audit'] = $audit;
-                    $map3['is_audit'] = $audit;
-                    $map4['is_audit'] = $audit;
-                    $map['is_audit'] = $audit;
-                }
-            } else {
-                $map0['is_audit'] = 0;
-                $map1['is_audit'] = 0;
-                $map2['is_audit'] = 0;
-                $map3['is_audit'] = 0;
-                $map4['is_audit'] = 0;
-                $map['is_audit'] = 0;
-            }
-
-            if ($status == 0) {//全部
-            } elseif ($status == 1) {//出售中
-                $map = $map1;
-            } elseif ($status == 2) {//已售罄
-                $map = $map2;
-            } elseif ($status == 3) {//仓库中
-                $map = $map3;
-            } elseif ($status == 4) {//回收站
-                $map = $map4;
-            }
-
-            $keyword = request()->post('keyword', '', 'trim');
-
-            if ($keyword) {
-                $map0['goods_name|goods_code'] = ['like', "%$keyword%"];
-                $map1['goods_name|goods_code'] = ['like', "%$keyword%"];
-                $map2['goods_name|goods_code'] = ['like', "%$keyword%"];
-                $map3['goods_name|goods_code'] = ['like', "%$keyword%"];
-                $map4['goods_name|goods_code'] = ['like', "%$keyword%"];
-                $map5['goods_name|goods_code'] = ['like', "%$keyword%"];
-                $map['goods_name|goods_code'] = ['like', "%$keyword%"];
-            }
-
-            //商品分类
-            $cate = request()->post('cate');
-
-            if ($cate) {
-                $map0['cate_id|cate_two_id'] = $cate;
-                $map1['cate_id|cate_two_id'] = $cate;
-                $map2['cate_id|cate_two_id'] = $cate;
-                $map3['cate_id|cate_two_id'] = $cate;
-                $map4['cate_id|cate_two_id'] = $cate;
-                $map5['cate_id|cate_two_id'] = $cate;
-                $map['cate_id|cate_two_id'] = $cate;
-            }
-            //商品分类
-            $brand = request()->post('brand');
-
-            if ($brand) {
-                $map0['brand_id|brand_two_id'] = $brand;
-                $map1['brand_id|brand_two_id'] = $brand;
-                $map2['brand_id|brand_two_id'] = $brand;
-                $map3['brand_id|brand_two_id'] = $brand;
-                $map4['brand_id|brand_two_id'] = $brand;
-                $map5['brand_id|brand_two_id'] = $brand;
-                $map['brand_id|brand_two_id'] = $brand;
-            }
-            $id = request()->post('id', '', 'trim');
-
-            if ($id) {
-                $map0['id'] = $id;
-                $map1['id'] = $id;
-                $map2['id'] = $id;
-                $map3['id'] = $id;
-                $map4['id'] = $id;
-                $map5['id'] = $id;
-                $map['id'] = $id;
-            }
-
-            $goods_model = model('Goods');
-
-            $count0 = $goods_model->where($map0)->count();
-            //出售中
-            $count1 = $goods_model->where($map1)->count();
-
-            //已售馨
-            $count2 = $goods_model->where($map2)->count();
-
-            // 仓库中
-            $count3 = $goods_model->where($map3)->count();
-
-            // 回收站
-            $count4 = $goods_model->where($map4)->count();
-
-            //待审核
-            $count5 = $goods_model->where($map5)->count();
-
-            $list_row = input('post.list_row', 10); //每页数据
-            $page = input('post.page', 1); //当前页
-
-            $totalCount = $goods_model->where($map)->count();
-            $first_row = ($page - 1) * $list_row;
-            $field = [
-                'id', 'oprice','goods_name', 'brand_id', 'goods_code', 'goods_logo', 'price', 'cost_price','p_price', 'stores', 'sort', 'is_sale', 'is_new', 'is_hot', 'is_del', 'is_recommend', 'is_audit'
-            ];
-            $lists = $goods_model->where($map)->field($field)->limit($first_row, $list_row)->order('sort desc, id desc')->select();
-
-            foreach ($lists as $k => $v) {
-                $lists[$k]['sku_info'] = model('spec_goods_price')->where(['goods_id' => $v['id']])->select();
-            }
-            $pageCount = ceil($totalCount / $list_row);
-            //商品分类
-            $goods_cate = model('goods_cate')->field('id,classname,pid')->where(['pid' => 0, 'status' => '1'])->order('sort desc')->select();
-            $goods_cate_new = [];
-            foreach ($goods_cate as $key => $item) {
-                $goods_cate_new[] = $item;
-                $cate_list = model('goods_cate')->field('id,classname,pid')->where(['pid' => $item['id'], 'status' => '1'])->order('sort desc')->select();
-                foreach ($cate_list as $k => $v) {
-                    $v['classname'] = '&nbsp;&nbsp;|--' . $v['classname'];
-                    $goods_cate_new[] = $v;
-                }
-            }
-            $manager_cate_id = model('manager')->where(['id' => $this->manager_id])->value('manager_cate_id');
-            if ($manager_cate_id <= 3) {
-                $is_cost_price = 1;
-            } else {
-                $is_cost_price = 0;
-            }
-            $data = [
-                'list' => $lists ? $lists : [],
-                'pageCount' => $pageCount ? $pageCount : 0,
-                'totalCount' => $totalCount ? $totalCount : 0,
-                'count0' => $count0 ? $count0 : 0,
-                'count1' => $count1 ? $count1 : 0,
-                'count2' => $count2 ? $count2 : 0,
-                'count3' => $count3 ? $count3 : 0,
-                'count4' => $count4 ? $count4 : 0,
-                'count5' => $count5 ? $count5 : 0,
-                'goods_cate_new' => $goods_cate_new ? $goods_cate_new : [],
-                'is_cost_price' => $is_cost_price,
-            ];
-            $json_arr = ['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => $data];
-            ajaxReturn($json_arr);
-        } else {
-            return $this->fetch();
-        }
-    }
-    /**
-     * 商品状态修改
-     */
-    public function goodsStatus()
-    {
-        if (request()->isPOST()) {
-            $id = request()->post('id');
-            $item = request()->post('item');
-            $type = request()->post('type');
-            $val = request()->post('val');
-            if (!$id || !$item) {
-                exit(json_encode(['status' => 0, 'msg' => SystemConstant::SYSTEM_NONE_PARAM, 'data' => []]));
-            }
-
-            $data = ['id' => $id];
-
-            $goods = model('goods')->where($data)->field($item)->find();
-
-            $result = model('goods')->where($data)->setField($item, 1 - $goods[$item]);
-            $new_item = 1 - $goods[$item];
-            $before_json = ['id' => $id, $item => $goods[$item]];
-            $after_json = ['id' => $id, $item => $new_item];
-
-
-            if ($result) {
-                $content = '修改商品状态';
-
-                $this->managerLog($this->manager_id, $content, $before_json, $after_json);
-                $json_arr = ["status" => 1, "msg" => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => [$item => $new_item]];
-                ajaxReturn($json_arr);
-            } else {
-                $json_arr = ["status" => 0, "msg" => SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []];
-                ajaxReturn($json_arr);
-            }
-        }
-    }
-
-    /**
-     * 删除商品
-     */
-    public function delGoods()
-    {
-        if (request()->isPOST()) {
-
-            $ids = input('post.id');
-
-            if (!$ids) {
-                $json_arr = ["status" => 0, "msg" => SystemConstant::SYSTEM_NONE_PARAM, 'data' => []];
-                ajaxReturn($json_arr);
-            }
-
-            $arr = array_unique(explode('-', ($ids)));
-
-            $data = [];
-            foreach ($arr as $k => $v) {
-                $data[$k] = model('Goods')->where(['id' => $v])->find();
-                $del = model('Goods')->destroy($v);
-                if (!$del) {
-                    $json_arr = ["status" => 0, "msg" => SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []];
-                    ajaxReturn($json_arr);
-                }
-
-            }
-            $before_json = $data;
-            $after_json = [];
-            $content = '删除商品';
-
-            $this->managerLog($this->manager_id, $content, $before_json, $after_json);
-
-            $json_arr = ["status" => 1, "msg" => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => []];
-            ajaxReturn($json_arr);
-        }
-    }
-
-
-    public function goodsAdd()
-    {
-        return $this->fetch();
-    }
-
-    public function goodsDetail()
-    {
-        if (request()->isPost()) {
-            $goods = model('goods');
-            $id = request()->post('id');
-            /*if (!$id) {
-                $json_arr = ["status" => 0, "msg" => SystemConstant::SYSTEM_NONE_PARAM, 'data' => []];
-                ajaxReturn($json_arr);
-            }*/
-            $goods_list = $goods->where(['id' => $id])->find();
-
-            #商品参数
-            $goods_param = explode(";", $goods_list['goods_param']);
-            $goods_param_new = [];
-
-            foreach ($goods_param as $key => $value) {
-                $str = explode(':', $value);
-                if (count($str) == 2) {
-                    $goods_param_new[$key] = ['param_name' => $str[0], 'param_val' => $str[1]];
-                }
-            }
-            $goods_list['goods_param'] = $goods_param_new;
-            /*$msl = model('SkuList');
-            $skulist = [];
-            if($goods_list['is_sku']){
-                $skulist = $msl->where(['goods_id'=>$id,'is_del'=>'0'])->select();
-            }
-
-            if($skulist){
-                //$skulist = json_encode($skulist);
-                $guigeshuxing = json_decode($goods_list['goods_sku_info'],true);
-                $goods_list['guigeshuxing']=$guigeshuxing;
-            }else{
-                $goods_list['is_sku'] = 0;
-            }
-            $goods_list['skulist'] = $skulist;
-            */
-
-            if (!$id) {
-                $goods_list['is_sale'] = 1;
-                $goods_list['is_exp'] = 1;
-            }
-
-            $goods_cate = model('goods_cate')->field('id,classname,sort,pid')->where(['pid' => 0, 'status' => '1'])->order('sort desc')->select();
-            $goods_cate_new = [];
-            foreach ($goods_cate as $key => $item) {
-                //$goods_cate_new[] = $item;
-                $cate_list = model('goods_cate')->field('id,classname,pid')->where(['pid' => $item['id'], 'status' => '1'])->order('sort desc')->select();
-                $cate_list_two = [];
-                foreach ($cate_list as $k => $v) {
-                    $v['cate_list'] = model('goods_cate')->field('id,classname,pid')->where(['pid' => $v['id'], 'status' => '1'])->order('sort desc')->select();
-                    $cate_list_two[$v['id']] = [
-                        'id' => $v['id'],
-                        'classname' => $v['classname'],
-                        'pid' => $v['pid'],
-                        'cate_list' => $v['cate_list'],
-                    ];
-                }
-                $item['cate_list'] = $cate_list_two;
-                $goods_cate_new[$item['id']] = [
-                    'id' => $item['id'],
-                    'sort' => $item['sort'],
-                    'classname' => $item['classname'],
-                    'pid' => $item['pid'],
-                    'cate_list' => $item['cate_list'],
-                ];
-            }
-
-
-            $goods_brand = model('goods_brand')->field('id,classname,pid')->where(['pid' => 0, 'status' => '1'])->order('sort desc')->select();
-            $goods_brand_new = [];
-            foreach ($goods_brand as $key => $item) {
-                //$goods_brand_new[] = $item;
-                $brand_list = model('goods_brand')->field('id,classname,pid')->where(['pid' => $item['id'], 'status' => '1'])->order('sort desc')->select();
-                $item['brand_list'] = $brand_list;
-                $goods_brand_new[$item['id']] = [
-                    'id' => $item['id'],
-                    'classname' => $item['classname'],
-                    'pid' => $item['pid'],
-                    'brand_list' => $item['brand_list'],
-                ];
-            }
-            $manager_cate_id = model('manager')->where(['id' => $this->manager_id])->value('manager_cate_id');
-            if ($manager_cate_id <= 3) {
-                $is_cost_price = 1;
-            } else {
-                $is_cost_price = 0;
-            }
-            $store = model('store')->select();
-            $data = [
-                'list' => $goods_list,
-                'store' => $store,
-                'goods_cate' => $goods_cate_new,
-                'goods_brand' => $goods_brand_new,
-                'is_cost_price' => $is_cost_price,
-            ];
-            $json_arr = ['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => $data];
-            ajaxReturn($json_arr);
-        }
-        return $this->fetch();
-    }
 
     public function goodsHandle()
     {
@@ -761,61 +418,8 @@ class Goods extends Base
         }
         $objPHPExcel->setactivesheetindex(0);
         $objPHPExcel->getActiveSheet()->setTitle('sheet1');
-        $goods_cate = model('goods_cate')->where(['status' => 1, 'pid' => 0])->column('classname');
+        $goods_cate = model('goods_cate')->where(['status' => 1, 'pid' => 0])->column('name');
         $this->getSelect($objPHPExcel, $goods_cate, 'B');
-//        $goods_cate = model('goods_cate')->where(['status' => 1, 'level' => 2])->column('classname');
-//        $this->getSelect($objPHPExcel, $goods_cate, 'C');
-//        $goods_cate = model('goods_cate')->where(['status' => 1, 'level' => 3])->column('classname');
-//        $this->getSelect($objPHPExcel, $goods_cate, 'D');
-        /*$data = [];
-        foreach ($goods_cate as $k => $v) {
-            $data[$k]['name'] = $v['classname'];
-            $children = model('goods_cate')->field('id,classname')->where(['status' => 1, 'pid' => $v['id']])->select();
-            $data2 = [];
-            foreach ($children as $k1 => $v1) {
-                $data2[$k1]['name'] = $v1['classname'];
-                $children2 = model('goods_cate')
-                    ->field('id,classname')
-                    ->where(['status' => 1, 'pid' => $v1['id']])
-                    ->select();
-                $data3 = [];
-                foreach ($children2 as $k2 => $v2) {
-                    $data3[$k1]['name'] = $v2['classname'];
-                }
-                $data2[$k1]['children'] = $data3;
-            }
-            $data[$k]['children'] = $data2;
-        }*/
-
-
-        /* $col = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-             'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-
-         $sheet_name = 'support1';
-         $supportSheet = new \PHPExcel_Worksheet($objPHPExcel, $sheet_name); //创建一个工作表
-         $objPHPExcel->addSheet($supportSheet); //插入工作表
-         $char = ['B','C','D'];
-         $this->getMySheetInfo($objPHPExcel, $data, $char, $col, $sheet_name);*/
-//        $goods_brand = model('goods_brand')->where(['status' => 1, 'pid' => 0])->column('classname');
-//        $this->getSelect($objPHPExcel, $goods_brand, 'C');
-//        $goods_cate = model('goods_brand')->where(['status' => 1, 'level' => 2])->column('classname');
-//        $this->getSelect($objPHPExcel, $goods_cate, 'F');
-        /*$data = [];
-        foreach ($goods_cate as $k => $v) {
-            $data[$k]['name'] = $v['classname'];
-            $children = model('goods_brand')->field('id,classname')->where(['status' => 1, 'pid' => $v['id']])->select();
-            $data2 = [];
-            foreach ($children as $k1 => $v1) {
-                $data2[$k1]['name'] = $v1['classname'];
-                $data2[$k1]['children'] = [];
-            }
-            $data[$k]['children'] = $data2;
-        }
-        $sheet_name = 'support2';
-        $supportSheet = new \PHPExcel_Worksheet($objPHPExcel, $sheet_name); //创建一个工作表
-        $objPHPExcel->addSheet($supportSheet); //插入工作表
-        $char = ['E', 'F'];
-        $this->getMySheetInfo($objPHPExcel, $data, $char, $col, $sheet_name);*/
 
         $objPHPExcel->setActiveSheetIndex(0);
         //输出表格
@@ -848,7 +452,7 @@ class Goods extends Base
         }
         $objPHPExcel->setactivesheetindex(0);
         $objPHPExcel->getActiveSheet()->setTitle('sheet1');
-        $goods_cate = model('goods_cate')->where(['status' => 1, 'pid' => 0])->column('classname');
+        $goods_cate = model('goods_cate')->where(['status' => 1, 'pid' => 0])->column('name');
         $this->getSelect($objPHPExcel, $goods_cate, 'B');
         $objPHPExcel->setActiveSheetIndex(0);
         $lists = model('goods')->where(['is_import' => 1])->select();
@@ -857,9 +461,9 @@ class Goods extends Base
         $objActSheet->getDefaultStyle()->getAlignment()->setWrapText(TRUE);
         $i = 2;
         foreach($lists as $k=>$v){
-            $v['class_two_name'] = model('goods_cate')->where(['id' => $v['cate_two_id']])->value('classname');
-            $v['class_tree_name'] = model('goods_cate')->where(['id' => $v['cate_three_id']])->value('classname');
-            $v['brand_two_name'] = model('goods_brand')->where(['id' => $v['brand_two_id']])->value('classname');
+            $v['class_two_name'] = model('goods_cate')->where(['id' => $v['cate_two_id']])->value('name');
+            $v['class_tree_name'] = model('goods_cate')->where(['id' => $v['cate_three_id']])->value('name');
+            $v['brand_two_name'] = model('goods_brand')->where(['id' => $v['brand_two_id']])->value('name');
             $objActSheet->setCellValue('A'.$i,$v['sort']);
             $objActSheet->setCellValue('B'.$i, $v['class_name']);
             $objActSheet->setCellValue('C'.$i, $v['class_two_name']);
@@ -1000,8 +604,8 @@ class Goods extends Base
                 //将数据保存到数据库
             }
 
-            $cate = model('goods_cate')->column('classname,id');
-            $brand = model('goods_brand')->column('classname,id');
+            $cate = model('goods_cate')->column('name,id');
+            $brand = model('goods_brand')->column('name,id');
             $success = [];
             $failure = [];
             $before_json = [];
@@ -1245,7 +849,7 @@ class Goods extends Base
         foreach ($lists as $k => $v) {
             $lists[$k]['final_price'] = $v['price'];
             $lists[$k]['goods_num'] = 0;
-            $lists[$k]['goods_brand'] = model('goods_brand')->where(['id' => $v['brand_id']])->value('classname');
+            $lists[$k]['goods_brand'] = model('goods_brand')->where(['id' => $v['brand_id']])->value('name');
             $spec_goods_price = model('spec_goods_price')->where(['goods_id' => $v['id']])->select();
             if ($spec_goods_price) {
                 foreach ($spec_goods_price as $k1 => $v1) {
@@ -1388,7 +992,7 @@ class Goods extends Base
 
                 $where = ['id' => $v['goods_id']];
                 if ($data[$k]['brand_name']) {
-                    $brand = model('goods_brand')->where(['classname' => $data[$k]['brand_name']])->find();
+                    $brand = model('goods_brand')->where(['name' => $data[$k]['brand_name']])->find();
                     if (!$brand) {
                         $msg['msg'] = '第' . $k . '行商品品牌不存在';
                         $failure[] = $msg;
@@ -1431,7 +1035,7 @@ class Goods extends Base
                             'cost_price' => $v['cost_price'],
                         ];
                     }
-                    $brand = model('goods_brand')->where(['id' => $goods['brand_id']])->value('classname');
+                    $brand = model('goods_brand')->where(['id' => $goods['brand_id']])->value('name');
                     if ($goods['price'] == $v['goods_price']
                         && $goods['cost_price'] == $v['cost_price']
                         && $brand == $v['brand_name']) {
@@ -1466,18 +1070,14 @@ class Goods extends Base
     {
         $c = model("goods_cate");
         $where = [];
-        $where['is_del'] = 0;
         $where['pid'] = 0;
-        // $count=$c->where($where)->order('sort desc')->count();
-        // $p=getpage1($count,10);
-        // $page=$p->show1();
         $goods_cate = $c->where($where)->order('sort desc')->select();
         $list = [];
         foreach ($goods_cate as $key => $item) {
             $list[] = $item;
-            $cate_list = model('goods_cate')->field('id,classname,pid')->where(['pid' => $item['id'], 'status' => '1'])->order('sort desc')->select();
+            $cate_list = model('goods_cate')->field('id,name,pid')->where(['pid' => $item['id']])->order('sort desc')->select();
             foreach ($cate_list as $k => $v) {
-                $v['classname'] = '&nbsp;&nbsp;|--' . $v['classname'];
+                $v['name'] = '&nbsp;&nbsp;|--' . $v['name'];
                 $list[] = $v;
             }
         }
@@ -1501,23 +1101,23 @@ class Goods extends Base
     {
         if (request()->isPost()) {
             $data = input("post.");
-
             if (isset($data['img_url'])) {
                 $data['logo_pic'] = $data['img_url'];
                 unset($data['img_url']);
             }
             $m = model("goods_cate");
-
-            $res = $m->where(["classname" => $data['classname'], "pid" => $data['pid'], "id" => ["neq", $data['id']]])->find();
-
-            if (!$data['classname']) {
+            //$res = $m->where(["name" => $data['name'], "pid" => $data['pid']])->find();
+            $res= Db::name('goods_cate')
+                  ->where(["name" => $data['name'], "pid" => $data['pid']])
+                    ->find();
+            if (!$data['name']) {
                 ajaxReturn(["status" => 0, "msg" => "请填写分类名称！"]);
             }
 
             if ($res) {
                 ajaxReturn(["status" => 0, "msg" => "类名已存在！"]);
             }
-
+            //$idpid=explode("+",$data['pid']);
             if ($data['id'] > 0) {
                 $parid = $m->where(["id" => $data['id'],])->value("pid");
                 if ($data['pid'] == $data['id']) {
@@ -1540,10 +1140,13 @@ class Goods extends Base
                 unset($data['id']);
                 $before_json = [];
                 $content = '添加商品分类';
-                $res = $m->save($data);
+                //$res = $m->save($data);
+                $max_id=Db::name('goods_cate')->max('id');
+                $insert_id=$max_id+1;
+                $data['id']=$insert_id;
+                $res =Db::name('goods_cate')->insert($data);
                 $data['id'] = $m->getLastInsID();
                 $after_json = $data;
-
             }
             if ($res) {
                 $this->managerLog($this->manager_id, $content, $before_json, $after_json);
@@ -1681,8 +1284,8 @@ class Goods extends Base
 
             $m = model("goods_brand");
 
-            $res = $m->where(["classname" => $data['classname'], "pid" => $data['pid'], "id" => ["neq", $data['id']]])->find();
-            if (!$data['classname']) {
+            $res = $m->where(["name" => $data['name'], "pid" => $data['pid'], "id" => ["neq", $data['id']]])->find();
+            if (!$data['name']) {
                 ajaxReturn(["status" => 0, "msg" => "请填写分类名称！"]);
             }
             if ($res) {
@@ -1827,13 +1430,13 @@ class Goods extends Base
         $goods_cate_new = [];
         foreach ($goods_cate as $key => $item) {
             $goods_cate_new[] = $item;
-            $cate_list = model('goods_cate')->field('id,classname,pid')->where(['pid' => $item['id'], 'status' => '1'])->select();
+            $cate_list = model('goods_cate')->field('id,name,pid')->where(['pid' => $item['id'], 'status' => '1'])->select();
             foreach ($cate_list as $k => $v) {
-                $v['classname'] = '&nbsp;&nbsp;|--' . $v['classname'];
+                $v['name'] = '&nbsp;&nbsp;|--' . $v['name'];
                 $goods_cate_new[] = $v;
-                $cate_list1 = model('goods_cate')->field('id,classname,pid')->where(['pid' => $v['id'], 'status' => '1'])->select();
+                $cate_list1 = model('goods_cate')->field('id,name,pid')->where(['pid' => $v['id'], 'status' => '1'])->select();
                 foreach ($cate_list1 as $k1 => $v1) {
-                    $v1['classname'] = '&nbsp;&nbsp;&nbsp;&nbsp;|--' . $v1['classname'];
+                    $v1['name'] = '&nbsp;&nbsp;&nbsp;&nbsp;|--' . $v1['name'];
                     $goods_cate_new[] = $v1;
                 }
             }

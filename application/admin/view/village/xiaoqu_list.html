@@ -49,7 +49,7 @@
                                                 <span class="input-group-btn">
 												<button type="submit" class="btn btn-sm btn-primary"> 搜索</button> </span>
                                             </div>
-                                            <a href="{:url('village/village_add')}" class="btn btn-sm btn-primary">添加</a>
+                                            <a href="{:url('village/xiaoqu_add')}" class="btn btn-sm btn-primary">添加</a>
                                         </form>
 
                                     </div>
@@ -143,7 +143,7 @@
         location.href='xiaoqu_add/id/'+e+'/type/show';
     }
     function goodsedit(e){
-        location.href='village_add/id/'+e+'';
+        location.href='xiaoqu_add/id/'+e+'';
     }
     function goodsdel(e){
         var id = e;
@@ -161,7 +161,7 @@
         }
         dialog.showTips('确定要删除吗？', "firm", function(){
             $.ajax({
-                url: "{:url('Village/del_houses')}",
+                url: "{:url('Village/del_xiaoqu')}",
                 type: "post",
                 dataType: "json",
                 data: {
@@ -235,7 +235,7 @@
         dialog.showTips('确定要删除吗？', "firm", function(){
 
             $.ajax({
-                url: "{:url('Village/del_houses')}",
+                url: "{:url('Village/del_xiaoqu')}",
                 type: "post",
                 dataType: "json",
                 data: {

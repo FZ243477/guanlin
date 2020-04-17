@@ -51,7 +51,7 @@
 				                    <div class="row">
 				                        <div class="col-sm-9 m-b-xs">
 
-				                        <a class="btn btn-primary" id="add" href="#" data-toggle="modal" data-target="#myModal1"><i class="fa fa-plus"></i>&nbsp;添加分类</a>
+				                        <a class="btn btn-primary" id="add" href="#" data-toggle="modal" data-target="#myModal1"><i class="fa fa-plus"></i>&nbsp;添加级别</a>
 
 				                        </div>
 
@@ -72,66 +72,28 @@
 				                            <tr>
 				                            	<th></th>
 				                                <th>分类名称</th>
-				                                <th>排序</th>
 				                                <th>操作</th>
 				                            </tr>
 				                            </thead>
 				                            <tbody>
-					                            {foreach name="lists" item="vo"}
+					                            {foreach name="cate_list" item="vo"}
 
 												<tr>
 													<td>
 														<input type="checkbox" class="i-checks" name="input[]">
 													</td>
-													<td class="cate" data-id="{$vo.id}" data-open="0">{notempty name="vo.cate_list"}<span class="colorBlue bold">+　</span>{/notempty}{$vo.name}</td>
+													<td class="cate" data-id="{$vo.id}" data-open="0">{notempty name="vo.cate_list"}<span class="colorBlue bold">+　</span>{/notempty}{$vo.level_name}</td>
 
-													<td>{$vo.sort}</td>
 
 													<td>
-														<a class="btn btn-primary upd" data-toggle="modal" data-target="#myModal1" data-id="{$vo.id}" data-pid="{$vo.pid}" data-name="{$vo.name}"   data-sort="{$vo.sort}"  data-target="#myModal1"><i class="fa fa-plus"></i>&nbsp;编辑</a>
+														<a class="btn btn-primary upd" data-toggle="modal" data-target="#myModal1" data-id="{$vo.id}"  data-name="{$vo.level_name}"     data-target="#myModal1"><i class="fa fa-plus"></i>&nbsp;编辑</a>
 														<button type="button" class="btn btn-default btn-sm" onclick="J_Change(this)" data-item="is_del" data-id="{$vo.id}">删除</button>
 													</td>
 												</tr>
-												{foreach name="vo.cate_list" item="vv"}
-
-												<tr class="subcate_{$vo.id}_{$vv.id}" style="display:none;">
-													<td>
-														<input type="checkbox" class="i-checks" name="input[]">
-													</td>
-													<td class="cate" data-id="{$vv.id}" data-open="0">　　{notempty name="vv.cate_list"}<span class="colorBlue bold">+　</span>{/notempty}{$vv.name}</td>
-
-													<td>{$vv.sort}</td>
-
-													<td>
-														<a class="btn btn-primary upd" data-toggle="modal" data-target="#myModal1" data-id="{$vv.id}" data-pid="{$vv.pid}" data-name="{$vv.name}"   data-sort="{$vv.sort}" data-target="#myModal1"><i class="fa fa-plus"></i>&nbsp;编辑</a>
-														<button type="button" class="btn btn-default btn-sm"  onclick="J_Change(this)" data-item="is_del" data-id="{$vv.id}">删除</button>
-													</td>
-												</tr>
-												{foreach name="vv.cate_list" item="v2"}
-
-												<tr class="subcate_{$vv.id}_{$v2.id} subcate_{$vo.id}" style="display:none;">
-													<td>
-														<input type="checkbox" class="i-checks" name="input[]">
-													</td>
-													<td>　　　　|-|-{$v2.name}</td>
-
-													<td>{$v2.sort}</td>
-
-													<td>
-														<a class="btn btn-primary upd" data-toggle="modal" data-target="#myModal1" data-id="{$v2.id}" data-pid="{$v2.pid}" data-name="{$v2.name}"   data-sort="{$v2.sort}"  data-target="#myModal1"><i class="fa fa-plus"></i>&nbsp;编辑</a>
-														<button type="button" class="btn btn-default btn-sm"  onclick="J_Change(this)" data-item="is_del" data-id="{$v2.id}">删除</button>
-													</td>
-												</tr>
-												{/foreach}
-												{/foreach}
 
 												{/foreach}
 				                            <tr>
 				                                <td colspan="8" class="pro_lasttd">
-				                                	<!--<label><input type="checkbox" class="i-checks" name="input[]"><span>全选</span></label>
-				                                	<div class="pro_table_contro">
-				                                		<a class="btn btn-xs btn-white">作废</a>
-				                                	</div>-->
 				                                </td>
 				                            </tr>
 				                            </tbody>
@@ -139,7 +101,7 @@
 
 				                        <div class="text-center">
 					                        <div class="btn-group">
-					                            {$lists->render()}
+					                            {$cate_list->render()}
 					                        </div>
 					                    </div>
 
@@ -173,7 +135,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
                 </button>
 
-                <h5 class="model_tit">操作商品分类</h5>
+                <h5 class="model_tit">操作设计师级别</h5>
 
 
             </div>
@@ -184,88 +146,16 @@
                 	<div class="model_address">
 
                 		<form class="form-horizontal" id="form1">
-	                		<input type="hidden" name="id" value="">
+							<input type="hidden" name="id" value="">
 	                        <div class="form-group clearfix">
 
-	                            <label class="col-sm-3 control-label">上级分类</label>
+	                            <label class="col-sm-3 control-label">级别名称</label>
 	                            <div class="col-sm-9">
 
-	                                 <select class="form-control" id="select" name="pid">
-	                                    <option value="0" >--作为顶级分类--</option>
-	                                    {foreach name="list" item="vo2"}
-		                                    <option value="{$vo2.id}" >{$vo2.name}</option>
-	                                    {/foreach}
-	                                </select>
+	                                <input type="text" class="form-control" name="level_name" placeholder="请输入级别名称">
 
 	                            </div>
 	                        </div>
-
-                        	<!--<div class="form-group clearfix">-->
-
-	                            <!--<label class="col-sm-3 control-label">分类图片</label>-->
-	                            <!--<div class="col-sm-9">-->
-	                            	<!--<div class="col-sm-9">-->
-		                                <!--<div class="info_head">-->
-		                                    <!--<input type="file"  accept="image/jpg,image/jpeg,image/png" name="upload_pic" id="xuanze" class="file" >-->
-
-		                                    <!--<div class="xuanze_showimge">-->
-		                                            <!--<img id="img_url" src="home_url/images/addimg.png"/>-->
-		                                    <!--</div>-->
-		                                <!--</div>-->
-		                                <!--<span class="help-block m-b-none">建议尺寸：330px*540px，大小不超过1M</span>-->
-		                            <!--</div>-->
-	                            <!--</div>-->
-	                        <!--</div>-->
-
-
-	                        <div class="form-group clearfix">
-
-	                            <label class="col-sm-3 control-label">分类名称</label>
-	                            <div class="col-sm-9">
-
-	                                <input type="text" class="form-control" name="name" placeholder="请输入分类名称">
-
-	                            </div>
-	                        </div>
-
-	                        <!--<div class="form-group clearfix">
-
-	                            <label class="col-sm-3 control-label">英文名称</label>
-	                            <div class="col-sm-9">
-
-	                                <input type="text" class="form-control" name="englishname" placeholder="请输入英文名称">
-
-	                            </div>
-	                        </div>-->
-
-	                        <div class="form-group clearfix">
-
-	                            <label class="col-sm-3 control-label">排序</label>
-	                            <div class="col-sm-9">
-
-	                                <input type="text" class="form-control" name="sort" placeholder="请输入排序">
-
-	                            </div>
-	                        </div>
-
-	                        <!--<div class="form-group">-->
-	                            <!--<label class="col-sm-3 control-label">状态</label>-->
-
-	                            <!--<div class="col-sm-9">-->
-	                                <!--<div class="radio i-checks admin_info_sex prodot_taun">-->
-	                                    <!--<label>-->
-	                                        <!--<input type="radio" value="1" name="status" checked="checked">-->
-	                                        <!--<i></i> 显示-->
-	                                    <!--</label>-->
-	                                    <!--<label>-->
-	                                        <!--<input type="radio" value="0" name="status">-->
-	                                        <!--<i></i> 隐藏-->
-	                                    <!--</label>-->
-	                                <!--</div>-->
-
-	                            <!--</div>-->
-	                        <!--</div>-->
-
 
                         </form>
 
@@ -317,7 +207,7 @@
 		post.item = $(obj).attr("data-item");
 		dialog.showTips("确定要进行操作吗?", "firm", function () {
 			$.ajax({
-				url: '{:url("Goods/delCate")}',
+				url: '{:url("Designer/delCate")}',
 				type: "post",
 				dataType: "json",
 				data: post,
@@ -358,7 +248,7 @@ $(document).ready(function () {
 $("#tj").click(function(){
 	var post=$("#form1").serialize();
 	console.log(post);
-	$.post("{:url('Goods/addCate')}",post, function (data){
+	$.post("{:url('Designer/addCate')}",post, function (data){
 		alert(data.msg);
         if(data.status==1){
           window.location.reload();
@@ -395,6 +285,7 @@ $("#xuanze").change(function(){ //选择文件
 $(".upd").click(function(){
 	var id=$(this).attr("data-id");
 	$("[name='id']").val(id);
+	console.log(id);
 	var pid=$(this).attr("data-pid");
 	/*if(pid==0){
 		$("#select option[value='"+id+"']").css("display","none");
