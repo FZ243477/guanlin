@@ -10,13 +10,7 @@
     <bookmark url="file://$PROJECT_DIR$/application/api/controller/Collection.php" description="/**" line="78" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c4024c1a-a4b1-4de9-8e2c-5b9909aefc36" name="默认" comment="88">
-      <change afterPath="$PROJECT_DIR$/application/admin/view/houses_case/select_houses_case.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/admin/controller/Case.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/admin/controller/HousesCase.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/controller/HousesCase.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/admin/view/houses_case/houses_case_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/view/houses_case/houses_case_list.html" afterDir="false" />
-    </list>
+    <list default="true" id="c4024c1a-a4b1-4de9-8e2c-5b9909aefc36" name="默认" comment="88" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,7 +119,7 @@
     <session id="-1580706661">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="7" />
+          <entry key="project.closed" value="8" />
           <entry key="project.open.time.0" value="7" />
           <entry key="project.open.time.16" value="1" />
           <entry key="project.open.time.3" value="1" />
@@ -172,7 +166,7 @@
           <entry key="dummy" value="17" />
           <entry key="gitignore" value="1" />
           <entry key="html" value="3231" />
-          <entry key="php" value="12462" />
+          <entry key="php" value="12475" />
           <entry key="sql" value="16" />
         </counts>
       </usages-collector>
@@ -180,7 +174,7 @@
         <counts>
           <entry key="CSS" value="1" />
           <entry key="HTML" value="3231" />
-          <entry key="PHP" value="12462" />
+          <entry key="PHP" value="12475" />
           <entry key="PLAIN_TEXT" value="18" />
           <entry key="SQL" value="16" />
         </counts>
@@ -273,8 +267,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/admin/controller/HousesCase.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="546">
-              <caret line="44" column="76" selection-start-line="44" selection-start-column="76" selection-end-line="44" selection-end-column="76" />
+            <state relative-caret-position="294">
+              <caret line="161" column="59" lean-forward="true" selection-start-line="161" selection-start-column="59" selection-end-line="161" selection-end-column="59" />
               <folding>
                 <element signature="e#40#75#0#PHP" expanded="true" />
               </folding>
@@ -784,7 +778,7 @@
       <workItem from="1586953805994" duration="975000" />
       <workItem from="1586957484173" duration="621000" />
       <workItem from="1586998114030" duration="706000" />
-      <workItem from="1587011723256" duration="18955000" />
+      <workItem from="1587011723256" duration="21123000" />
     </task>
     <task id="LOCAL-00001" summary="默认">
       <created>1585900330977</created>
@@ -1045,11 +1039,25 @@
       <option name="project" value="LOCAL" />
       <updated>1587029552561</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="88">
+      <created>1587031964742</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1587031964742</updated>
+    </task>
+    <task id="LOCAL-00039" summary="88">
+      <created>1587034056615</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1587034056615</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1166691000" />
+    <option name="totallyTimeSpent" value="1168859000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1642,8 +1650,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/application/admin/controller/HousesCase.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="546">
-          <caret line="44" column="76" selection-start-line="44" selection-start-column="76" selection-end-line="44" selection-end-column="76" />
+        <state relative-caret-position="294">
+          <caret line="161" column="59" lean-forward="true" selection-start-line="161" selection-start-column="59" selection-end-line="161" selection-end-column="59" />
           <folding>
             <element signature="e#40#75#0#PHP" expanded="true" />
           </folding>
