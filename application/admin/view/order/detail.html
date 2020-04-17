@@ -154,7 +154,7 @@
                                                 {$info.province} {$info.city} {$info.district} {$info.place}
                                                 {eq name="info.address_num" value="0"}
                                                 {eq name="info.is_shipping" value="0"}
-                                                <a href="javascript:void(0)" class="edit_address">修改地址</a>
+                                                <a href="javascript:void(0)" class="btn btn-primary edit_address">修改地址</a>
                                                 {/eq}
                                                 {/eq}
                                             </td>
@@ -505,7 +505,45 @@
     <script src="home_url/js/content.min.js"></script>
     <script src="home_url/js/area.js"></script>
     <script src="home_url/js/plugins/iCheck/icheck.min.js"></script>
-    <script type="text/javascript">_init_area();</script>
+    <script type="text/javascript">
+        _init_area();
+        $('#s_province').change();
+        var province = "{$info.province}";
+        if (province) {
+            $('#s_province option').each(function () {
+                $(this).removeAttr('selected');
+                if ($(this).val() == province) {
+                    $(this).attr('selected', 'selected');
+                    $('#s_province').change();
+                }
+            });
+        }
+
+        var city = "{$info.city}"
+
+        if (city) {
+            $('#s_city option').each(function () {
+                $(this).removeAttr('selected');
+                if ($(this).val() == city) {
+                    $(this).attr('selected', 'selected');
+                }
+                $('#s_city').change();
+            });
+
+        }
+        var county = "{$info.district}"
+
+        if (county) {
+            $('#s_county option').each(function () {
+                $(this).removeAttr('selected');
+                if ($(this).val() == county) {
+                    $(this).attr('selected', 'selected');
+                    $('#s_county').change();
+                }
+            });
+            estate();
+        }
+    </script>
 
     <script type="text/javascript">
 
@@ -776,15 +814,9 @@
                 dataType: "json",
                 success: function(g){
                     if(g.status==1){
-                        alert(g.info);
-                        setTimeout(function(){
-                            window.location.href = g.url;
-                        },300);
+                        dialog.showTips(g.msg, '', 1);
                     }else{
-                        alert(g.info);
-                        setTimeout(function(){
-                            window.location.href = g.url;
-                        },300);
+                        alert(g.msg);
                     }
                 }
             });

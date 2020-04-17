@@ -338,6 +338,7 @@ class Order extends Base
             'telephone' => $telephone,
             'address_num' => $order['address_num'] + 1,
         ],['id'=>$order_id]);
+        ajaxReturn(["status" => 1, "msg" => SystemConstant::SYSTEM_OPERATION_SUCCESS]);
     }
 
     /**
