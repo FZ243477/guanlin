@@ -100,6 +100,9 @@ class HousesCase extends Base
             $m_cate_id = '';
             if (isset($data['m_goods_id'])) {
                 $m_goods_id = $data['m_goods_id'];
+                if ($data['type'] == 1) {
+                    $data['total_price'] = model('goods')->where(['id' => ['in', $m_goods_id]])->sum('goods_price');
+                }
                 $m_cate_id = $data['m_cate_id'];
                 $m_goods_num = $data['m_goods_num'] ? $data['m_goods_num'] : 1;
                 unset($data['m_goods_id']);
