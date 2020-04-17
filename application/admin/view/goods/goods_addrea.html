@@ -266,7 +266,7 @@
             flag = true;
             that.removeClass('btn-default').addClass('btn-primary').html('保存').css('cursor', 'pointer');
             if(data.status){
-                dialog.showTips(data.msg,"", "{:url('HousesCase/housesCaseList')}");
+                dialog.showTips(data.msg,"", "{:url('Goods/goodsListref')}");
             }else{
                 alert(data.msg);
             }
