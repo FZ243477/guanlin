@@ -51,7 +51,7 @@ class Goods extends Base
         $this->assign('cate_id', $cate_id);
         $goods = Db::name('goods')->alias('a')
             ->field('a.id,a.cate_id,a.goods_name,a.goods_describe,a.goods_price,a.goods_oprice,a.collection_num,a.goods_logo,b.name')
-            ->join('goods_cate b', 'b.id=a.cate_id')
+            ->join('goods_cate b', 'b.id=a.cate_id', 'left')
             ->where('a.delete_time','null')
             ->order('a.id desc')
             ->where($where)
@@ -66,7 +66,7 @@ class Goods extends Base
         if(isset($data['id'])){
             $edit_goods = Db::name('goods')->alias('a')
                 ->field('a.*,b.name')
-                ->join('goods_cate b', 'b.id=a.cate_id')
+                ->join('goods_cate b', 'b.id=a.cate_id', 'left')
                 ->order('sort desc,a.id desc')
                 ->where('b.delete_time','null')
                 ->where('a.id',$data['id'])
