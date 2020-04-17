@@ -14,6 +14,7 @@ use app\common\helper\PayHelper;
 use app\common\helper\PHPExcelHelper;
 use app\common\constant\SystemConstant;
 use app\common\constant\OrderConstant;
+use app\common\helper\VerificationHelper;
 use think\Db;
 
 class Order extends Base
@@ -26,6 +27,7 @@ class Order extends Base
     use GoodsHelper;
     use MessageHelper;
     use CurlHelper;
+    use VerificationHelper;
 
     public function __construct()
     {
@@ -279,6 +281,63 @@ class Order extends Base
         } else {
             ajaxReturn(["status" => 0, "msg" => "网络繁忙，请稍后~~"]);
         }
+    }
+
+    public function updateAddress()
+    {
+        $order_id = request()->post('orderid');
+        if (!$order_id) {
+            ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_NONE_PARAM]);
+        }
+        $order = model('order')->where(['id'=>$order_id])->find();
+        if (!$order) {
+            ajaxReturn(['status' => 0, 'msg' => '订单不存在']);
+        }
+        if ($order['address_num'] > 0) {
+            ajaxReturn(['status' => 0, 'msg' => '只可以修改一次']);
+        }
+        $province = request()->post('province');
+        $city = request()->post('city');
+        $district = request()->post('district');
+        $place = request()->post('address');
+        $consignee = request()->post('consignee');
+        $telephone = request()->post('telephone');
+        if (!$province) {
+            ajaxReturn(['status' => 0, 'msg' => '请填写省']);
+        }
+        if (!$city) {
+            ajaxReturn(['status' => 0, 'msg' => '请填写市']);
+        }
+        if (!$district) {
+            ajaxReturn(['status' => 0, 'msg' => '请填写区']);
+        }
+        if (!$place) {
+            ajaxReturn(['status' => 0, 'msg' => '请填写详细地址']);
+        }
+        if (!$consignee) {
+            ajaxReturn(['status' => 0, 'msg' => '请填写收货人']);
+        }
+        if (!$telephone) {
+            ajaxReturn(['status' => 0, 'msg' => '请填写手机号']);
+        }
+        if (!$this->VerifyTelephone($telephone)) {
+            ajaxReturn(['status' => 0, 'msg' => '手机号格式不正确']);
+        }
+        $province = request()->post('province');
+        $city = request()->post('city');
+        $district = request()->post('district');
+        $place = request()->post('address');
+        $consignee = request()->post('consignee');
+        $telephone = request()->post('telephone');
+        model('order')->save([
+            'province' => $province,
+            'city' => $city,
+            'district' => $district,
+            'place' => $place,
+            'consignee' => $consignee,
+            'telephone' => $telephone,
+            'address_num' => $order['address_num'] + 1,
+        ],['id'=>$order_id]);
     }
 
     /**

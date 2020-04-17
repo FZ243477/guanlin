@@ -31,10 +31,16 @@ class Village extends Base
         if ($name) {
             $where['houses_name'] = ['like', "%{$name}%"];
         }
+        $type = request()->param('type', 1);
+        if ($type == 1) {
+            $order = 'sort desc';
+        } else {
+            $order = 'hot_sort desc';
+        }
         $this->assign('keyword', $name);
         $house_list=Houses::field('id,houses_name,houses_city,is_hot,sort,hot_sort')
             ->where('delete_time','null')
-            ->order('id desc')
+            ->order($order)
             ->where($where)
             ->paginate(10,false,['query'=>request()->param()]);
         $this->assign('house_list',$house_list);
@@ -137,7 +143,33 @@ class Village extends Base
             }
         }
     }
+    /**
+     * 操作方案状态
+     */
+    public function status()
+    {
+        if (request()->isPOST()) {
+            $id = request()->post('id');
+            $item = request()->post('item');
+            if (!$id) {
+                ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_NONE_PARAM, 'data' => []]);
+            }
+            $data =['id' => $id];
+            $coupon = model('houses')->where($data)->field($item)->find();
+            $result = model('houses')->where($data)->setField($item, 1-$coupon[$item]);
+            if($result){
+                $content = '修改楼盘显示状态';
+                $before_json = ['id' => $id, $item => $coupon[$item]];
+                $after_json = ['id' => $id, $item => 1-$coupon[$item]];
 
+                $this->managerLog($this->manager_id, $content, $before_json, $after_json);
+                $json_arr = ['status'=>1, 'msg'=> SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => [$item => 1-$coupon[$item]]];
+            }else{
+                $json_arr = ['status'=>0, 'msg'=>SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []];
+            }
+            return $json_arr;
+        }
+    }
     //户型列表
    public function villageList(){
         $house_cate=Db::name('houses')->where('delete_time','null')->field('id,houses_name')->select();

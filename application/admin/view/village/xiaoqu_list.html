@@ -50,6 +50,8 @@
 												<button type="submit" class="btn btn-sm btn-primary"> 搜索</button> </span>
                                             </div>
                                             <a href="{:url('village/xiaoqu_add')}" class="btn btn-sm btn-primary">添加</a>
+                                            <a href="{:url('village/xiaoquList', ['type' => 1])}?keyword={$keyword}" class="btn btn-sm btn-primary">普通排序</a>
+                                            <a href="{:url('village/xiaoquList', ['type' => 2])}?keyword={$keyword}" class="btn btn-sm btn-primary">热门排序</a>
                                         </form>
 
                                     </div>
@@ -87,7 +89,17 @@
                                                 <td>{$vo.houses_name}</td>
                                                 <td>{$vo.houses_city}</td>
                                                 <td>{$vo.sort}</td>
-                                                <td>{$vo.is_hot}</td>
+                                                <td>
+                                                    {eq name="vo.is_hot" value="1"}
+                                                    <a style='color:#0C0;font-size:20px;text-align:center;cursor:pointer;' onclick="status({$vo.id},'is_hot', this)" >
+                                                        √
+                                                    </a>
+                                                    {else/}
+                                                    <a style='color:#c00;font-size:20px;text-align:center;cursor:pointer;' onclick="status({$vo.id},'is_hot', this)" >
+                                                        ×
+                                                    </a>
+                                                    {/eq}
+                                                </td>
                                                 <td>{$vo.hot_sort}</td>
                                                 <td>
                                                     <a href="javaScript:;" data-banner_id="" class="btn  btn-primary " onclick=goodsshow("{$vo.id}") data-num="-1" title="上移">详情</a>
@@ -279,13 +291,13 @@
         })
     });
 
-    function status(banner_id, item, obj){
+    function status(id, item, obj){
         var $_this = $(obj);
         $.ajax({
-            url: "{:url('Banner/bannerStatus')}",
+            url: "{:url('Village/status')}",
             type: "post",
             dataType: "json",
-            data: {banner_id:banner_id,item:item},
+            data: {id:id,item:item},
         }).done(function (data) {
             if (data.data[item] == 1) {
                 $_this.css('color', '#0C0');
