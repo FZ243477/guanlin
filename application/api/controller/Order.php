@@ -99,14 +99,13 @@ class Order extends Base
      */
     public function state_list(){
         $map['uid'] = $this->user_id;
-        $state = request()->get('state', 0);
-        $list_row = request()->get('list_row', 10); //每页数据
-        $page = request()->get('page', 1); //当前页
+        $state = request()->post('state', 0);
+        $list_row = request()->post('list_row', 10); //每页数据
+        $page = request()->post('page', 1); //当前页
         if (!in_array($state, [0, 1, 2, 3, 4])) {
             $return_arr = ['status' => 0, 'msg' => '参数status错误']; //
             ajaxReturn($return_arr);
         }
-
         $order_data = [];
         $order_data['uid'] = $this->user_id;
 

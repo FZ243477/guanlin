@@ -36,12 +36,12 @@ class UserAddress extends Base
     public function add(){
         $map['uid'] =$this->user_id;
         $data = input();
-        $data['real_name'] = request()->get('real_name', 0);
-        $data['phone'] = request()->get('phone', 0);
-        $data['province'] = request()->get('province', 0);
-        $data['city'] = request()->get('city', 0);
-        $data['district'] = request()->get('district', 0);
-        $data['detail'] = request()->get('detail', 0);
+        $data['real_name'] = request()->post('real_name', 0);
+        $data['phone'] = request()->post('phone', 0);
+        $data['province'] = request()->post('province', 0);
+        $data['city'] = request()->post('city', 0);
+        $data['district'] = request()->post('district', 0);
+        $data['detail'] = request()->post('detail', 0);
         if($data['real_name']==''){
             $return_arr = ['status'=>0, 'msg'=>'姓名不能为空','data'=> []];
             exit(json_encode($return_arr));

@@ -15,10 +15,10 @@ class User extends Base
     //实名登记
     public function edituid(){
         $map['id'] = 1;
-        $data = input();
-        $data['nickname'] = request()->get('nickname', 0);
-        $data['id_type'] = request()->get('nickname', 0);
-        $data['id_card'] = request()->get('nickname', 0);
+        //$data = input();
+        $data['nickname'] = request()->post('nickname', 0);
+        $data['id_type'] = request()->post('id_type', 0);
+        $data['id_card'] = request()->post('id_card', 0);
         if($data['nickname']==''){
             $return_arr = ['status'=>0, 'msg'=>'请填写姓名','data'=> []];
             exit(json_encode($return_arr));
