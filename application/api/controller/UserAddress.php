@@ -17,7 +17,7 @@ class UserAddress extends Base
     /**
      * 收货地址列表
      */
-    public function list(){
+    public function index_list(){
         $map['uid'] = $this->user_id;
         $field = 'id, uid, real_name, phone, country, province, city, district,detail';
         $list = model('user_address')->where($map)->field($field)->order('id desc')->select();

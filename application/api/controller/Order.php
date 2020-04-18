@@ -74,10 +74,16 @@ class Order extends Base
             'delivery_id'=>$data['fast_order'],
             'fname'=>$faddress['real_name'],
             'fphone'=>$faddress['phone'],
+            'fprovince'=>$faddress['province'],
+            'fcity'=>$faddress['city'],
+            'fdistrict'=>$faddress['district'],
             'faddress'=>$faddress['country'].$faddress['province'].$faddress['city'].$faddress['district'],
             'fdetailaddress'=>$faddress['detail'],
             'take_name'=>$takeaddress['real_name'],
             'take_phone'=>$takeaddress['phone'],
+            'take_province'=>$takeaddress['province'],
+            'take_city'=>$takeaddress['city'],
+            'take_district'=>$takeaddress['district'],
             'take_address'=>$takeaddress['country'].$takeaddress['province'].$takeaddress['city'].$takeaddress['district'],
             'take_detailaddress'=>$takeaddress['detail'],
             'remarks'=>$data['remarks'],
@@ -96,6 +102,43 @@ class Order extends Base
             $return_arr = ['status'=>0, 'msg'=>'添加失败','data'=> []];
             exit(json_encode($return_arr));
         }
+    }
+
+    /**
+     * 未支付邮费订单数据
+     */
+    public function postage_list(){
+        $map['uid'] = $this->user_id;
+        $state = 0;
+        $list_row = request()->post('list_row', 10); //每页数据
+        $page = request()->post('page', 1); //当前页
+        $order_data = [];
+        $order_data['uid'] = $this->user_id;
+
+        if ($state) {
+            $order_data['state'] = $state;
+        }
+
+        $totalCount = model('order')->where($order_data)->count();
+
+        $pageCount = ceil($totalCount / $list_row);
+        $field = 'id,order_id,state,urgent_type,fname,fphone,faddress,fdetailaddress,take_name,take_phone,take_address,take_detailaddress';
+        $first_row = ($page - 1) * $list_row;
+        $order_list = model('order')
+            ->where($order_data)
+            ->order('create_time desc')
+            ->limit($first_row, $list_row)
+            ->field($field)
+            ->select();
+
+        $data = [
+            'totalCount' => $totalCount ? $totalCount : 0,
+            'pageCount' => $pageCount ? $pageCount : 0,
+            'list' => $order_list ? $order_list : [],
+        ];
+
+        $json_arr = ['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => $data];
+        ajaxReturn($json_arr);
     }
 
     /**
