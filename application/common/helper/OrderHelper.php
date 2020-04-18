@@ -84,7 +84,7 @@ trait OrderHelper
             $btn_arr['shipping_btn'] = 1; // 查看物流
         }
         if ($order['is_certificate'] == 1 && ($order['order_status'] == OrderConstant::ORDER_STATUS_WAIT_SEND
-            ||$order['order_status'] == OrderConstant::ORDER_STATUS_FINAL_ORDER)) {
+                ||$order['order_status'] == OrderConstant::ORDER_STATUS_FINAL_ORDER)) {
             $btn_arr['certificate_btn'] = 1; // 是否要凭证
         }
         /*if($order['shipping_status'] == 2 && $order['order_status'] == 1) // 部分发货
@@ -100,6 +100,47 @@ trait OrderHelper
     {
         $order_no = date('YmdHis', time()) . substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 10), 1))), 0, 4); // 获取生成订单号
         return $order_no;
+    }
+
+    /**
+     * @param $order_no
+     * @param string $transaction_id
+     * @param int $total_fee
+     * @param int $pay_way
+     * @return array
+     */
+    private function successPayOperation($order_no, $transaction_id = '', $total_fee = 0, $pay_way = 0)
+    {
+        $m = model('order');
+        $map = [];
+        $map['order_id'] = $order_no;
+        $order = $m->where($map)->select();
+        if (!$order) {
+            $return = ['status' => 0, 'msg' => '订单不存在'];
+            return $return;
+        }
+        Db::startTrans();
+        if ($order['paid'] == OrderConstant::PAY_STATUS_DOING) {
+            $msg = '订单不能支付2';
+            return ['status' => 0, 'msg' => $msg];
+        }
+        $data = [
+            'state' => 1,
+            'paid' => OrderConstant::PAY_STATUS_DOING,
+            'trade_no' => $transaction_id,
+//            'pay_price' => $total_fee,
+//            'pay_way' => $pay_way,
+            'paid_time' => time()
+        ];
+        $res = $m->update($data, ['id' => $order['id']]);
+        if (!$res) {
+            Db::rollback();
+            $msg = '支付失败';
+            return ['status' => 0, 'msg' => $msg];
+        }
+
+        Db::commit();
+        return ['status' => 1, 'msg' => '支付成功'];
     }
 
 
@@ -123,10 +164,10 @@ trait OrderHelper
             return $return_arr;
         }
 
-       /* if ($order_info['pay_status'] == 1) {
-            $return_arr = ['status' => 0, 'msg' => '已支付的订单不能取消', 'data' => []]; //
-            return $return_arr;
-        }*/
+        /* if ($order_info['pay_status'] == 1) {
+             $return_arr = ['status' => 0, 'msg' => '已支付的订单不能取消', 'data' => []]; //
+             return $return_arr;
+         }*/
 
         //取消订单
         $res = model('order')->where($order_data)->setField('order_status', 0);

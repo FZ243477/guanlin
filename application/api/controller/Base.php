@@ -71,7 +71,7 @@ class Base extends Controller
         ];
         $controller_name = strtolower(request()->controller());
         $action_name = strtolower(request()->action());
-        $is_login = false;
+        $is_login = true;
         foreach ($action_arr as $k => $v) {
             if ($controller_name == $k) {
                 if (empty($v) || in_array($action_name, $v)) {
@@ -79,9 +79,9 @@ class Base extends Controller
                 }
             }
         }
-        if ($is_login == true && $user_id == 0) {
-            ajaxReturn(['status' => -1, 'msg' => '无效token']);
-        }
+//        if ($is_login == true && $user_id == 0) {
+//            ajaxReturn(['status' => -1, 'msg' => '无效token']);
+//        }
 
     }
 }

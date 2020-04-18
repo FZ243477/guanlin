@@ -14,7 +14,7 @@ class User extends Base
     }
     //实名登记
     public function edituid(){
-        $map['id'] = 1;
+        $map['id'] = $this->user_id;
         //$data = input();
         $data['nickname'] = request()->post('nickname', 0);
         $data['id_type'] = request()->post('id_type', 0);

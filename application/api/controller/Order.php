@@ -29,13 +29,13 @@ class Order extends Base
     //获得信息 生成订单
     public function create_order(){
         $map['uid'] = $this->user_id;
-        $data['logi_id'] = request()->get('logi_id', 0);
-        $data['urgent_type'] = request()->get('urgent_type', 0);
-        $data['fast_order'] = request()->get('fast_order', 0);
-        $data['faddress_id'] = request()->get('faddress_id', 0);
-        $data['take_address_id'] = request()->get('take_address_id', 0);
-        $data['goods_cate_id'] = request()->get('goods_cate_id', 0);
-        $data['remarks'] = request()->get('remarks', 0);
+        $data['logi_id'] = request()->post('logi_id', 0);
+        $data['urgent_type'] = request()->post('urgent_type', 0);
+        $data['fast_order'] = request()->post('fast_order', 0);
+        $data['faddress_id'] = request()->post('faddress_id', 0);
+        $data['take_address_id'] = request()->post('take_address_id', 0);
+        $data['goods_cate_id'] = request()->post('goods_cate_id', 0);
+        $data['remarks'] = request()->post('remarks', 0);
         if($data['logi_id']==''){
             $return_arr = ['status'=>0, 'msg'=>'请选择物流公司','data'=> []];
             exit(json_encode($return_arr));
@@ -82,7 +82,11 @@ class Order extends Base
             'take_detailaddress'=>$takeaddress['detail'],
             'remarks'=>$data['remarks'],
             'urgent_type'=>$data['urgent_type'],
+            'goods_cate_id'=>$data['goods_cate_id'],
+            'has_take'=>0,
+            'paid'=>0,
             'state'=>0,
+            'create_time'=>time(),
         ];
         $save = model('order')->insertGetId($save_content);
         if($save){

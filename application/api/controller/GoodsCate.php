@@ -17,7 +17,7 @@ class GoodsCate extends Base
     /**
      * 收货地址列表
      */
-    public function list(){
+    public function index_list(){
         $field = 'id, name';
         $list = model('goods_cate')->field($field)->select();
         if($list){
