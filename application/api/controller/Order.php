@@ -21,11 +21,120 @@ class Order extends Base
     public function __construct()
     {
         parent::__construct();
-        if (!$this->user_id) {
-            ajaxReturn(['status' => -1, 'msg' => '请登录']);
+//        if (!$this->user_id) {
+//            ajaxReturn(['status' => -1, 'msg' => '请登录']);
+//        }
+    }
+
+    //获得信息 生成订单
+    public function create_order(){
+        $map['uid'] = $this->user_id;
+        $data['logi_id'] = request()->get('logi_id', 0);
+        $data['urgent_type'] = request()->get('urgent_type', 0);
+        $data['fast_order'] = request()->get('fast_order', 0);
+        $data['faddress_id'] = request()->get('faddress_id', 0);
+        $data['take_address_id'] = request()->get('take_address_id', 0);
+        $data['goods_cate_id'] = request()->get('goods_cate_id', 0);
+        $data['remarks'] = request()->get('remarks', 0);
+        if($data['logi_id']==''){
+            $return_arr = ['status'=>0, 'msg'=>'请选择物流公司','data'=> []];
+            exit(json_encode($return_arr));
+        }
+        if($data['fast_order']==''){
+            $return_arr = ['status'=>0, 'msg'=>'请填写快递单号','data'=> []];
+            exit(json_encode($return_arr));
+        }
+        if($data['faddress_id']==''){
+            $return_arr = ['status'=>0, 'msg'=>'请填写发货人地址','data'=> []];
+            exit(json_encode($return_arr));
+        }
+        if($data['take_address_id']==''){
+            $return_arr = ['status'=>0, 'msg'=>'请填写收货人地址','data'=> []];
+            exit(json_encode($return_arr));
+        }
+         if($data['goods_cate_id']==''){
+             $return_arr = ['status'=>0, 'msg'=>'请填选择物品分类','data'=> []];
+             exit(json_encode($return_arr));
+         }
+         $faddress=model('user_address')->where('id',$data['faddress_id'])->find();
+         if(!$faddress){
+             $return_arr = ['status'=>0, 'msg'=>'发货人地址不存在','data'=> []];
+             exit(json_encode($return_arr));
+         }
+         $takeaddress=model('user_address')->where('id',$data['take_address_id'])->find();
+        if(!$takeaddress){
+            $return_arr = ['status'=>0, 'msg'=>'收货人地址不存在','data'=> []];
+            exit(json_encode($return_arr));
+        }
+        $order_no = $this->get_order_sn();
+        $save_content=[
+            'order_id'=>$order_no,
+            'uid'=>$map['uid'],
+            'logi_id'=>$data['logi_id'],
+            'delivery_id'=>$data['fast_order'],
+            'fname'=>$faddress['real_name'],
+            'fphone'=>$faddress['phone'],
+            'faddress'=>$faddress['country'].$faddress['province'].$faddress['city'].$faddress['district'],
+            'fdetailaddress'=>$faddress['detail'],
+            'take_name'=>$takeaddress['real_name'],
+            'take_phone'=>$takeaddress['phone'],
+            'take_address'=>$takeaddress['country'].$takeaddress['province'].$takeaddress['city'].$takeaddress['district'],
+            'take_detailaddress'=>$takeaddress['detail'],
+            'remarks'=>$data['remarks'],
+            'urgent_type'=>$data['urgent_type'],
+            'state'=>0,
+        ];
+        $save = model('order')->insertGetId($save_content);
+        if($save){
+            $return_arr = ['status'=>1, 'msg'=>'添加成功','data'=> []];
+            exit(json_encode($return_arr));
+        }else{
+            $return_arr = ['status'=>0, 'msg'=>'添加失败','data'=> []];
+            exit(json_encode($return_arr));
         }
     }
 
+    /**
+     * 请求订单列表数据
+     */
+    public function state_list(){
+        $map['uid'] = $this->user_id;
+        $state = request()->get('state', 0);
+        $list_row = request()->get('list_row', 10); //每页数据
+        $page = request()->get('page', 1); //当前页
+        if (!in_array($state, [0, 1, 2, 3, 4])) {
+            $return_arr = ['status' => 0, 'msg' => '参数status错误']; //
+            ajaxReturn($return_arr);
+        }
+
+        $order_data = [];
+        $order_data['uid'] = $this->user_id;
+
+        if ($state) {
+            $order_data['state'] = $state;
+        }
+
+        $totalCount = model('order')->where($order_data)->count();
+
+        $pageCount = ceil($totalCount / $list_row);
+        $field = 'id,order_id,state,urgent_type,fname,fphone,faddress,fdetailaddress,take_name,take_phone,take_address,take_detailaddress';
+        $first_row = ($page - 1) * $list_row;
+        $order_list = model('order')
+            ->where($order_data)
+            ->order('create_time desc')
+            ->limit($first_row, $list_row)
+            ->field($field)
+            ->select();
+
+        $data = [
+            'totalCount' => $totalCount ? $totalCount : 0,
+            'pageCount' => $pageCount ? $pageCount : 0,
+            'list' => $order_list ? $order_list : [],
+        ];
+
+        $json_arr = ['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => $data];
+        ajaxReturn($json_arr);
+    }
 
     /**
      * 确认订单页面

@@ -5,7 +5,7 @@ use app\common\constant\SystemConstant;
 use app\common\helper\VerificationHelper;
 use think\Db;
 
-class Address extends Base
+class UserAddress extends Base
 {
     use VerificationHelper;
 
@@ -13,6 +13,72 @@ class Address extends Base
     {
         parent::__construct();
     }
+
+    /**
+     * 收货地址列表
+     */
+    public function list(){
+        $map['uid'] = $this->user_id;
+        $field = 'id, uid, real_name, phone, country, province, city, district,detail';
+        $list = model('user_address')->where($map)->field($field)->order('id desc')->select();
+        if($list){
+            $json_arr = ['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => ['list' => $list]];
+            ajaxReturn($json_arr);
+        }else{
+            $return_arr = ['status'=>0, 'msg'=>'操作失败','data'=> []];
+            exit(json_encode($return_arr));
+        }
+    }
+
+    /**
+     * 新增收货地址
+     */
+    public function add(){
+        $map['uid'] =$this->user_id;
+        $data = input();
+        $data['real_name'] = request()->get('real_name', 0);
+        $data['phone'] = request()->get('phone', 0);
+        $data['province'] = request()->get('province', 0);
+        $data['city'] = request()->get('city', 0);
+        $data['district'] = request()->get('district', 0);
+        $data['detail'] = request()->get('detail', 0);
+        if($data['real_name']==''){
+            $return_arr = ['status'=>0, 'msg'=>'姓名不能为空','data'=> []];
+            exit(json_encode($return_arr));
+        }
+        if($data['phone']==''){
+            $return_arr = ['status'=>0, 'msg'=>'手机号码不能为空','data'=> []];
+            exit(json_encode($return_arr));
+        }
+        if($data['province']==''){
+            $return_arr = ['status'=>0, 'msg'=>'请选择省市区','data'=> []];
+            exit(json_encode($return_arr));
+        }
+        if($data['detail']==''){
+            $return_arr = ['status'=>0, 'msg'=>'请填写详细地址','data'=> []];
+            exit(json_encode($return_arr));
+        }
+        $save_content=[
+            'uid'=>$map['uid'],
+            'real_name'=>$data['real_name'],
+            'phone'=>$data['phone'],
+            'country'=>$data['country'],
+            'province'=>$data['province'],
+            'city'=>$data['city'],
+            'district'=>$data['district'],
+            'detail'=>$data['detail'],
+            'create_time'=>time()
+        ];
+        $save = model('user_address')->insertGetId($save_content);
+        if($save){
+            $return_arr = ['status'=>1, 'msg'=>'添加成功','data'=> []];
+            exit(json_encode($return_arr));
+        }else{
+            $return_arr = ['status'=>0, 'msg'=>'添加失败','data'=> []];
+            exit(json_encode($return_arr));
+        }
+    }
+
 
     /**
      * 收货地址列表
@@ -26,28 +92,7 @@ class Address extends Base
 
     }
 
-    /**
-     * 收货地址列表
-     */
-    public function add(){
-        $map['user_id'] = $this->user_id;
-        $data = request()->post('data');
-        $save_content=[
-            'uid'=>$map['user_id'],
-            'real_name'=>$data['real_name'],
-            'phone'=>$data['phone'],
-            'country'=>$data['country'],
-            'province'=>$data['province'],
-            'city'=>$data['city'],
-            'district'=>$data['district'],
-            'detail'=>$data['detail']
-        ];
-        $save = model('user_address')->save($save_content);
-        if($save){ajaxReturn(['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => $data]);
-             } else {
-            ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_OPERATION_FAILURE]);
-            }
-    }
+
     /**
      * 收货地址详情
      */

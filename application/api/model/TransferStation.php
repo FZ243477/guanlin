@@ -6,7 +6,7 @@ namespace app\api\model;
 use think\Model;
 use traits\model\SoftDelete;
 
-class User extends Model
+class TransferStation extends Model
 {
     use SoftDelete;
     protected $deleteTime = 'delete_time';

@@ -53,9 +53,9 @@ class Base extends Controller
             }
         }
 
-        if ($is_post == true && !request()->isPost()) {
-            die('非法访问');
-        }
+//        if ($is_post == true && !request()->isPost()) {
+//            die('非法访问');
+//        }
 
     }
 
