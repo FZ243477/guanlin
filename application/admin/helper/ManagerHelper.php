@@ -16,9 +16,6 @@ trait ManagerHelper
      */
     private function managerLog($manage_id, $content, $before_json, $after_json)
     {
-        if ($manage_id == 1) {
-            return false;
-        }
         $data = [];
         $data['manager_id'] = $manage_id;
         $data['content'] = $content;

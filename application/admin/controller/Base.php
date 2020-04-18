@@ -23,8 +23,8 @@ class Base extends Controller{
                 ajaxReturn(['status' => 0, 'msg' => '您暂未登陆']);
             } else {
                 //判断用户是否已经登录
-                $this->error('请先登录系统!',url('Admin/login'));die;
-//                $this->redirect(getSetting('system.host').url('Admin/login'));die;
+//                $this->error('请先登录系统!',url('Admin/login'));die;
+                $this->redirect(url('Admin/login'));die;
             }
         }
 

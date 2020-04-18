@@ -100,6 +100,9 @@ class HousesCase extends Base
             $m_cate_id = '';
             if (isset($data['m_goods_id'])) {
                 $m_goods_id = $data['m_goods_id'];
+                if ($data['type'] == 1) {
+                    $data['total_price'] = model('goods')->where(['id' => ['in', $m_goods_id]])->sum('goods_price');
+                }
                 $m_cate_id = $data['m_cate_id'];
                 $m_goods_num = $data['m_goods_num'] ? $data['m_goods_num'] : 1;
                 unset($data['m_goods_id']);
@@ -173,7 +176,7 @@ class HousesCase extends Base
         if ($data['type'] == 1 && !$data['vr']) {
             ajaxReturn(['status' => 0, 'msg' => '请填全景图链接']);
         }
-        if (($data['type'] == 2 || $data['type'] == 3) && !$data['background']) {
+        if (($data['type'] == 2 || $data['type'] == 3) && (!isset($data['background']) || !$data['background'])) {
             ajaxReturn(['status' => 0, 'msg' => '请填上传背景图']);
         }
         if (($data['type'] == 2 || $data['type'] == 3) && !$data['content']) {
