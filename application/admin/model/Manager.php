@@ -8,8 +8,6 @@ use traits\model\SoftDelete;
 
 class Manager extends Model
 {
-    // 设置当前模型对应的完整数据表名称
-    protected $table = 'tb_manager';
 
     use SoftDelete;
     protected $deleteTime = 'delete_time';
