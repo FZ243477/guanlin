@@ -17,22 +17,10 @@ class Mailing extends Base
     /**
      * 收货地址列表
      */
-    public function list(){
-        $field = 'id,name,telephone,address,detailaddress';
-        $list = model('transfer_station')->field($field)->select();
-        if($list){
-            $json_arr = ['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => ['list' => $list]];
-            ajaxReturn($json_arr);
-        }else{
-            $return_arr = ['status'=>0, 'msg'=>'操作失败','data'=> []];
-            exit(json_encode($return_arr));
-        }
-    }
 
     //寄件首页
     public function index_list(){
         $uid = $this->user_id;
-        $uid=1;
         $type = Db::name('user_message')
                 ->where('uid',$uid)
                 ->where('state',0)
@@ -49,7 +37,6 @@ class Mailing extends Base
         $map['has_take']=1;
         $paid_num = model('order')->where($map)->count();
         $list['paid_num']=$paid_num;
-        dump($list);exit;
         if($list){
             $json_arr = ['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => ['list' => $list]];
             ajaxReturn($json_arr);

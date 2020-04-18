@@ -11,11 +11,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c4024c1a-a4b1-4de9-8e2c-5b9909aefc36" name="默认" comment="88">
-      <change afterPath="$PROJECT_DIR$/application/api/controller/Customer.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/application/api/controller/Mailing.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/application/api/controller/My.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/database.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/database.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/api/controller/Mailing.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/api/controller/Mailing.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -69,8 +65,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/api/controller/Mailing.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="381">
-              <caret line="51" column="25" lean-forward="true" selection-start-line="51" selection-start-column="25" selection-end-line="51" selection-end-column="25" />
+            <state relative-caret-position="156">
+              <caret line="18" column="7" selection-start-line="18" selection-start-column="7" selection-end-line="18" selection-end-column="7" />
             </state>
           </provider>
         </entry>
@@ -574,7 +570,7 @@
       <workItem from="1587084339256" duration="3380000" />
       <workItem from="1587103595873" duration="18786000" />
       <workItem from="1587128547331" duration="4165000" />
-      <workItem from="1587170679043" duration="9245000" />
+      <workItem from="1587170679043" duration="9536000" />
     </task>
     <task id="LOCAL-00001" summary="默认">
       <created>1585900330977</created>
@@ -783,7 +779,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1213887000" />
+    <option name="totallyTimeSpent" value="1214178000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1337,8 +1333,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/application/api/controller/Mailing.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="381">
-          <caret line="51" column="25" lean-forward="true" selection-start-line="51" selection-start-column="25" selection-end-line="51" selection-end-column="25" />
+        <state relative-caret-position="156">
+          <caret line="18" column="7" selection-start-line="18" selection-start-column="7" selection-end-line="18" selection-end-column="7" />
         </state>
       </provider>
     </entry>
