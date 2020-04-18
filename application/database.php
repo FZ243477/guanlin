@@ -15,7 +15,7 @@ return [
     // 服务器地址
         'hostname'        => '125.124.142.51',
     // 数据库名
-        'database'        => 'zhuanyun',
+        'database'        => 'zyzs',
     // 用户名
         'username'        => 'zyzs',
     // 密码
