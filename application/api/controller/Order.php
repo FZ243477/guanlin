@@ -109,18 +109,16 @@ class Order extends Base
      */
     public function postage_list(){
         $map['uid'] = $this->user_id;
-        $state = 0;
         $list_row = request()->post('list_row', 10); //每页数据
         $page = request()->post('page', 1); //当前页
         $order_data = [];
         $order_data['uid'] = $this->user_id;
 
-        if ($state) {
-            $order_data['state'] = $state;
-        }
+            $order_data['state'] = 0;
+           $order_data['paid'] = 0;
+           $order_data['has_take']=1;
 
         $totalCount = model('order')->where($order_data)->count();
-
         $pageCount = ceil($totalCount / $list_row);
         $field = 'id,order_id,state,urgent_type,fname,fphone,faddress,fdetailaddress,take_name,take_phone,take_address,take_detailaddress';
         $first_row = ($page - 1) * $list_row;
@@ -130,7 +128,40 @@ class Order extends Base
             ->limit($first_row, $list_row)
             ->field($field)
             ->select();
+        $data = [
+            'totalCount' => $totalCount ? $totalCount : 0,
+            'pageCount' => $pageCount ? $pageCount : 0,
+            'list' => $order_list ? $order_list : [],
+        ];
 
+        $json_arr = ['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => $data];
+        ajaxReturn($json_arr);
+    }
+
+    /**
+     * 已完成订单数据
+     */
+    public function history_list(){
+        $map['uid'] = $this->user_id;
+        $list_row = request()->post('list_row', 10); //每页数据
+        $page = request()->post('page', 1); //当前页
+        $order_data = [];
+        $order_data['uid'] = $this->user_id;
+
+        $order_data['state'] = 4;
+        $order_data['paid'] = 1;
+        $order_data['has_take']=1;
+
+        $totalCount = model('order')->where($order_data)->count();
+        $pageCount = ceil($totalCount / $list_row);
+        $field = 'id,order_id,state,urgent_type,fname,fphone,faddress,fdetailaddress,take_name,take_phone,take_address,take_detailaddress';
+        $first_row = ($page - 1) * $list_row;
+        $order_list = model('order')
+            ->where($order_data)
+            ->order('create_time desc')
+            ->limit($first_row, $list_row)
+            ->field($field)
+            ->select();
         $data = [
             'totalCount' => $totalCount ? $totalCount : 0,
             'pageCount' => $pageCount ? $pageCount : 0,
@@ -181,6 +212,7 @@ class Order extends Base
         $json_arr = ['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => $data];
         ajaxReturn($json_arr);
     }
+
 
     /**
      * 确认订单页面

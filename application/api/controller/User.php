@@ -15,7 +15,6 @@ class User extends Base
     //实名登记
     public function edituid(){
         $map['id'] = $this->user_id;
-        //$data = input();
         $data['nickname'] = request()->post('nickname', 0);
         $data['id_type'] = request()->post('id_type', 0);
         $data['id_card'] = request()->post('id_card', 0);
@@ -32,7 +31,7 @@ class User extends Base
             'id_type'=>$data['id_type'],
             'id_card'=>$data['id_card'],
         ];
-        $save = model('user')->where($map)->isUpdate($save_content);
+        $save = model('user')->where($map)->update($save_content);
         if($save){
             $return_arr = ['status'=>1, 'msg'=>'修改成功','data'=> []];
             exit(json_encode($return_arr));
