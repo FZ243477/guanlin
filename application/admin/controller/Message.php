@@ -66,13 +66,14 @@ class Message extends Base
         if (request()->isPost()) {
             $data = request()->post();
             if (!$data['content']) {
-                ajaxReturn(['status' => 0, 'msg' => '提醒消息内容', 'data' => []]);
-            }
-            if (!$data['type_id']) {
-                ajaxReturn(['status' => 0, 'msg' => '提醒消息内容typeID', 'data' => []]);
+                ajaxReturn(['status' => 0, 'msg' => '请输入提醒消息内容', 'data' => []]);
             }
             if(!$data['editid']){
                 $type_count=model('message')->where('type_id',$data['type_id'])->count();
+
+                if (!$data['type_id']) {
+                    ajaxReturn(['status' => 0, 'msg' => '提醒消息内容typeID', 'data' => []]);
+                }
                 if($type_count !=0){
                     ajaxReturn(['status' => 0, 'msg' => 'typeID不能重复', 'data' => []]);
                 }
@@ -91,7 +92,6 @@ class Message extends Base
             if(isset($data['editid'])){
                 $edit_content=[
                     'content'=>$data['content'],
-                    'type_id'=>$data['type_id'],
                     'update_time'=>time()
                 ];
                 $edit=Db::name('message')->where('id',$data['editid'])->update($edit_content);
