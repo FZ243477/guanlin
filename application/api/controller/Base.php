@@ -65,20 +65,19 @@ class Base extends Controller
      */
     public function isUserLogin($user_id)
     {
-       /* $action_arr = [
+        $action_arr = [
             'user' => [],
-            'housescase' => ['searchlist']
         ];
+        $is_login = false;
         $controller_name = strtolower(request()->controller());
-        $action_name = strtolower(request()->action());*/
-        $is_login = true;
-        /*foreach ($action_arr as $k => $v) {
+        $action_name = strtolower(request()->action());
+        foreach ($action_arr as $k => $v) {
             if ($controller_name == $k) {
                 if (empty($v) || in_array($action_name, $v)) {
                     $is_login = true;
                 }
             }
-        }*/
+        }
         if ($is_login == true && $user_id == 0) {
             ajaxReturn(['status' => -1, 'msg' => '无效token']);
         }
