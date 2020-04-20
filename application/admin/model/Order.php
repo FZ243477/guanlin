@@ -21,4 +21,25 @@ class Order extends Model
 
         return $value;
     }
+
+    protected function getStateAttr($value)
+    {
+        if ($value ==0) {
+            $value = "待付款";
+        }
+        if ($value ==1) {
+            $value = "待发货";
+        }
+        if ($value ==2) {
+            $value = "已发货";
+        }
+        if ($value ==3) {
+            $value = "已签收";
+        }
+        if ($value ==4) {
+            $value = "已完成";
+        }
+
+        return $value;
+    }
 }

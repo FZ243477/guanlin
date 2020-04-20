@@ -17,7 +17,7 @@ class TransferStation extends Base
     /**
      * 收货地址列表
      */
-    public function list(){
+    public function index_list(){
         $field = 'id,name,telephone,address,detailaddress';
         $list = model('transfer_station')->field($field)->select();
         if($list){

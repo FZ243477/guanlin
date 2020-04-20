@@ -11,20 +11,17 @@ trait MenuHelper
     {
         $left_menu = [
             'Index' =>['name'=>'主页','icon'=>'fa-index','sub_menu'=>[],'act'=>'main','control'=>'Index'],
-            'Goods' =>['name'=>'商品管理','icon'=>'iconfont icon-shangpinguanli','sub_menu'=>[
-                ['name'=>'商品列表','act'=>'goodsListref','control'=>'Goods'],
-                ['name'=>'商品分类','act'=>'goodsCate','control'=>'Goods'],
+            'Logistics' =>['name'=>'物流公司','icon'=>'iconfont icon-shangpinguanli','sub_menu'=>[
+                ['name'=>'物流公司分类','act'=>'logisticsCate','control'=>'Logistics'],
             ]],
-            'Village' =>['name'=>'户型管理','icon'=>'iconfont icon-shangpinguanli','sub_menu'=>[
-                ['name'=>'小区列表','act'=>'xiaoquList','control'=>'Village'],
-                ['name'=>'户型列表','act'=>'villageList','control'=>'Village'],
+            'Goods' =>['name'=>'物品分类','icon'=>'iconfont icon-shangpinguanli','sub_menu'=>[
+                ['name'=>'物品分类','act'=>'goodsCate','control'=>'Goods'],
             ]],
-            'Designer' =>['name'=>'设计师管理','icon'=>'iconfont icon-shangpinguanli','sub_menu'=>[
-                ['name'=>'设计师列表','act'=>'designerList','control'=>'Designer'],
-                ['name'=>'设计师分类','act'=>'designerCate','control'=>'Designer'],
+            'Transfer' =>['name'=>'中转站收货人信息','icon'=>'iconfont icon-shangpinguanli','sub_menu'=>[
+                ['name'=>'中转站收货信息列表','act'=>'transferList','control'=>'Transfer'],
             ]],
-            'HousesCase' =>['name'=>'方案管理','icon'=>'fa fa-sticky-note','sub_menu'=>[
-                ['name'=>'方案列表','act'=>'housesCaseList','control'=>'HousesCase'],
+            'User_address' =>['name'=>'用户收货人信息','icon'=>'iconfont icon-shangpinguanli','sub_menu'=>[
+                ['name'=>'用户收货信息列表','act'=>'addressList','control'=>'User_address'],
             ]],
             'User' =>['name'=>'用户管理','icon'=>'iconfont icon-yonghu','sub_menu'=>[
                 ['name'=>'用户列表','act'=>'userList','control'=>'User'],
@@ -33,7 +30,7 @@ trait MenuHelper
                 ['name'=>'订单列表','act'=>'orderList','control'=>'Order'],
                 ['name'=>'物流列表','act'=>'expressList','control'=>'Order'],
             ]],
-            'Report' => ['name' => '统计中心', 'icon' => 'fa-user', 'sub_menu' => [
+            'Report' => ['name' => '实名登记', 'icon' => 'fa-user', 'sub_menu' => [
                 ['name' => '新增用户统计', 'act' => 'memReport', 'control' => 'Report'],
                 ['name'=>'活跃用户统计','act'=>'memActive','control'=>'Report'],
             ]],

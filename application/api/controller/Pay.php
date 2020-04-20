@@ -42,14 +42,12 @@ class Pay extends Controller
         // TODO: Implement wxPay() method.
         $out_trade_no    = request()->post('order_id');
         $type    = request()->post('type', 0);
-
         if(!$out_trade_no){
             ajaxReturn(['status' => 0, 'msg' => '支付单号为空', 'data' => []]);
         }
-
         $map = [];
         $map['order_id'] = $out_trade_no;
-        $map['user_id']      = $this->user_id;
+        $map['uid']      = $this->user_id;
         $res = model('order')->where($map)->find();
 
         if(!$res){

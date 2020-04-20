@@ -51,84 +51,64 @@ class Order extends Base
         $this->assign("endtime", $endtime);
         $this->assign("status", $status);
 
-        $this->assign("telephone",$name);
+       // $this->assign("telephone",$name);
 
         if ($starttime && $endtime) {
-            $map['a.order_time'] = ['between', [$starttime, $endtime]];
+            $map['a.create_time'] = ['between', [$starttime, $endtime]];
         } elseif ($starttime) {
-            $map['a.order_time'] = ['egt', $starttime];
+            $map['a.create_time'] = ['egt', $starttime];
         } elseif ($endtime) {
-            $map['a.order_time'] = ['elt', $endtime];
+            $map['a.create_time'] = ['elt', $endtime];
         }
 
         if ($status) {
-            $map['a.order_status'] = $status;
+            $map['a.state'] = $status;
         }
 
         if ($name) {
-            $map['b.nickname|a.telephone|a.consignee|b.telephone'] = ["like", "%$name%"];
+            $map['b.nickname'] = ["like", "%$name%"];
             $this->assign("name", $name);
         }
         if ($order_no) {
-            $map['a.order_no'] = ["like", "%$order_no%"];
+            $map['a.order_id'] = ["like", "%$order_no%"];
             $this->assign("order_no", $order_no);
         }
 
         $order_list = model('order')->alias('a')
-            ->join('tb_user b', 'a.user_id = b.id', 'left')
+            ->join('user b', 'a.uid = b.id', 'left')
             ->field('a.*')
-            ->order('a.order_time desc')
+            ->order('a.create_time desc')
             ->where($map)
             ->paginate(10,false,['query'=>request()->param()]);
-
         foreach ($order_list as $k => $v) {
-            $user = model('user')->where(['id' => $v['user_id']])->field('nickname user_name,telephone')->find();
-            $order_list[$k]['name'] = $user['user_name'];
+            $user = model('user')->where(['id' => $v['uid']])->field('nickname,telephone')->find();
+            $order_list[$k]['name'] = $user['nickname'];
             $order_list[$k]['tel'] = $user['telephone'];
-            $order_list[$k]['order_status_name'] = OrderConstant::order_status_array_value($v['order_status']);
-            $order_list[$k]['pay_way_name'] =  OrderConstant::order_pay_array_value($v['pay_way']);
-            $order_list[$k]['pay_wait_price'] = $v['total_fee'] - $v['pay_price'];
-            $order_goods = model('order_goods')->where(['order_id' => $v['id']])->select();
-            $order_list[$k]['order_goods'] = $order_goods;
-
             $order_list[$k]['is_pay'] = 0;
             $order_list[$k]['is_audit'] = 0;
-
         }
         $this->assign("order_list", $order_list);
 
         $m = model('order');
-        unset($map['a.order_status']);
-        unset($map['a.sure_status']);
+        unset($map['a.state']);
+        unset($map['a.state']);
         $count = $m->alias('a')
-            ->join('tb_user b', 'a.user_id = b.id', 'left')->where($map)->count();
+            ->join('user b', 'a.uid = b.id', 'left')->where($map)->count();
         $count1 = $m->alias('a')
-            ->join('tb_user b', 'a.user_id = b.id', 'left')
-            ->where(["a.order_status" => 1])->where($map)->count();//已下单
+            ->join('user b', 'a.uid = b.id', 'left')
+            ->where(["a.state" => 0,"a.paid"=>0])->where($map)->count();//待付款
         $count2 = $m->alias('a')
-            ->join('tb_user b', 'a.user_id = b.id', 'left')
-            ->where(["a.order_status" => 2])->where($map)->count();//待付尾款
+            ->join('user b', 'a.uid = b.id', 'left')
+            ->where(["a.state" => 1])->where($map)->count();//待发货
         $count3 = $m->alias('a')
-            ->join('tb_user b', 'a.user_id = b.id', 'left')
-            ->where(["a.order_status" => 3])->where($map)->count();//待审核
+            ->join('user b', 'a.uid = b.id', 'left')
+            ->where(["a.state" => 2])->where($map)->count();//已发货
         $count4 = $m->alias('a')
-            ->join('tb_user b', 'a.user_id = b.id', 'left')
-            ->where(["a.order_status" => 4])->where($map)->count();//待发货
+            ->join('user b', 'a.uid = b.id', 'left')
+            ->where(["a.state" => 3])->where($map)->count();//已签收
         $count5 = $m->alias('a')
-            ->join('tb_user b', 'a.user_id = b.id', 'left')
-            ->where(["a.order_status" => 5])->where($map)->count();//待安装
-        $count6 = $m->alias('a')
-            ->join('tb_user b', 'a.user_id = b.id', 'left')
-            ->where(["a.order_status" => 6])->where($map)->count();//已完成
-        $count7 = $m->alias('a')
-            ->join('tb_user b', 'a.user_id = b.id', 'left')
-            ->where(["a.order_status" => 7])->where($map)->count();//已取消
-        $count8 = $m->alias('a')
-            ->join('tb_user b', 'a.user_id = b.id', 'left')
-            ->where(["a.order_status" => 8])->where($map)->count();//已拒绝
-
-        $list = model('express')->select();
-        $this->assign('express', $list);
+            ->join('user b', 'a.uid = b.id', 'left')
+            ->where(["a.state" => 4])->where($map)->count();//已完成
 
         $this->assign("count", $count);
         $this->assign("count1", $count1);
@@ -136,14 +116,49 @@ class Order extends Base
         $this->assign("count3", $count3);
         $this->assign("count4", $count4);
         $this->assign("count5", $count5);
-        $this->assign("count6", $count6);
-        $this->assign("count7", $count7);
-        $this->assign("count8", $count8);
-
         return $this->fetch();
     }
 
+    //补充订单价格及订单重量信息
+    public function  supply_order(){
+        $id = request()->param("order_id");  // 得到order的id
+        $weight= request()->param("weight");  // 得到order的重量
+        $order=model('order')->where('id',$id)->find();
+        if(!$order){
+            ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []]);
+        }
+        if($order['urgent_type']==0){
+            $unit_price=Db::name('unit_price')->where('id',0)->find();
+        }else{
+            $unit_price=Db::name('unit_price')->where('id',1)->find();
+        }
+        $weight_price=$weight*$unit_price['price'];
+        $save_content=[
+            'price'=>$weight_price,
+            'weight'=>$weight,
+            'has_take'=>1
+        ];
+        $save=model('order')->where('id',$id)->update($save_content);
+        if ($save) {
+            ajaxReturn(['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => []]);
+        } else {
+            ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []]);
+        }
+    }
 
+    //发货
+    public function  delivery_end(){
+        $id = request()->post('id');
+        //$data['express_name'] = request()->post('express_name');
+        $data['delivery_end_id'] = request()->post('express_no');
+        $data['delivery_end_time'] = date('Y-m-d H:i:s', time());
+        $res = model('order')->where('id',$id)->update($data);
+        if ($res) {
+            ajaxReturn(["status" => 1, "msg" => "发货成功！"]);
+        } else {
+            ajaxReturn(["status" => 0, "msg" => "网络繁忙，请稍后~~"]);
+        }
+    }
     /*
     *订单详情
     *yb 2017-08-07

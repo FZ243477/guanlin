@@ -6,25 +6,23 @@ namespace app\admin\controller;
 use app\admin\helper\ManagerHelper;
 use app\common\helper\EncryptionHelper;
 use app\common\helper\PHPExcelHelper;
-use app\common\helper\GoodsHelper;
 use app\common\constant\SystemConstant;
 use Think\Db;
 
-class Goods extends Base
+class Logistics extends Base
 {
 
     use ManagerHelper;
     use EncryptionHelper;
     use PHPExcelHelper;
-    use GoodsHelper;
 
     public function __construct()
     {
         parent::__construct();
     }
-    //物品分类列表
-    public function goodsCate(){
-        $logistics_cate=Db::name('goods_cate')
+    //物流公司分类
+    public function logisticsCate(){
+        $logistics_cate=Db::name('logistics')
             ->field('id,name')
             ->order('id desc')
             ->where('delete_time','null')
@@ -33,7 +31,7 @@ class Goods extends Base
         return $this->fetch();
     }
 
-    // 增加物品分类
+    // 增加物流公司分类
     public function addCate()
     {
         if (request()->isPost()) {
@@ -41,13 +39,13 @@ class Goods extends Base
             if (!$data['level_name']) {
                 ajaxReturn(["status" => 0, "msg" => "请填写分类名称！"]);
             }
-            $res=Db::name('goods_cate')->where('name',$data['level_name'])->find();
+            $res=Db::name('logistics')->where('name',$data['level_name'])->find();
             if ($res) {
                 ajaxReturn(["status" => 0, "msg" => "类名已存在！"]);
             }
             if(!$data['id']) {
 
-                $max_id=Db::name('goods_cate')->max('id');
+                $max_id=Db::name('logistics')->max('id');
                 $insert_id=$max_id+1;
                 $data['id']=$insert_id;
                 $save_content = [
@@ -55,9 +53,9 @@ class Goods extends Base
                     'name' => $data['level_name'],
                     'create_time' => time()
                 ];
-                $end = Db::name('goods_cate')->insert($save_content);
+                $end = Db::name('logistics')->insert($save_content);
             }else{
-                $rea=Db::name('goods_cate')->where('id',$data['id'])->find();
+                $rea=Db::name('logistics')->where('id',$data['id'])->find();
                 if (!$rea) {
                     ajaxReturn(["status" => 0, "msg" => "此级别不存在！"]);
                 }else{
@@ -65,7 +63,7 @@ class Goods extends Base
                         'name' => $data['level_name'],
                         'update_time' => time()
                     ];
-                    $end = Db::name('goods_cate')->where('id',$data['id'])->update($update_content);
+                    $end = Db::name('logistics')->where('id',$data['id'])->update($update_content);
                 }
             }
             if ($end) {
@@ -77,7 +75,7 @@ class Goods extends Base
     }
 
     /**
-     * 删除物品分类
+     * 删除物流公司分类
      */
     public function delCate()
     {
@@ -85,11 +83,11 @@ class Goods extends Base
         if (!$id) {
             ajaxReturn(["status" => 0, "msg" => SystemConstant::SYSTEM_NONE_PARAM]);
         }
-        $rea=Db::name('goods_cate')->where('id',$id)->find();
+        $rea=Db::name('logistics')->where('id',$id)->find();
         if (!$rea) {
             ajaxReturn(["status" => 0, "msg" => "分类不存在！"]);
         }
-        $del = model('goods_cate')->destroy($id);
+        $del = model('logistics')->destroy($id);
         if ($del) {
             ajaxReturn(["status" => 1, "msg" => SystemConstant::SYSTEM_OPERATION_SUCCESS]);
         } else {

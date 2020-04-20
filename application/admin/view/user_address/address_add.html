@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{:getSetting('system.title')} </title>
+
+    <link href="home_url/css/bootstrap.min.css" rel="stylesheet">
+    <link href="home_url/css/font-awesome.css-v=4.4.0.css" rel="stylesheet">
+    <link href="home_url/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="home_url/css/style.min.css" rel="stylesheet">
+
+    <!--编辑器 1-->
+    <script type="text/javascript" charset="utf-8" src="home_url/Ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="home_url/Ueditor/ueditor.all.js"></script>
+    <script type="text/javascript" charset="utf-8" src="home_url/Ueditor/lang/zh-cn/zh-cn.js"></script>
+    <!--编辑器 2-->
+    <style>
+        .contact_mobile_div {
+            position: relative;
+        }
+        .contact_mobile_div a {
+            position: relative;top: -34px;left: 33%;
+        }
+    </style>
+</head>
+{include file="base:base" /}
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5> {if condition="$edit_goods.type eq 0"}添加{else/}修改{/if}收货地址</h5>
+                </div>
+                <div class="ibox-content">
+                    <form enctype="multipart/form-data" method="post" id="add_step"  class="form-horizontal">
+                        <div class="form-group" style="display: none;">
+                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>商品ID：</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="editid" name="editid" style="width:60%" value="{$edit_goods.id}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>名称：</label>
+
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="name" name="name" style="width:60%" value="{$edit_goods.real_name}">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>电话：</label>
+
+                            <div class="col-sm-9">
+                                <input type="text" oninput="value=value.replace(/[^\d]/g,'')" class="form-control" id="phone" name="phone" style="width:60%" value="{$edit_goods.phone}">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>国家：</label>
+
+                            <div class="col-sm-9">
+                                <input type="text"  class="form-control" id="country" name="country" style="width:60%" value="{$edit_goods.country}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>省：</label>
+                            <div class="col-sm-9">
+                                <input type="text"  class="form-control" id="province" name="province" style="width:60%" value="{$edit_goods.province}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>市：</label>
+                            <div class="col-sm-9">
+                                <input type="text"  class="form-control" id="city" name="city" style="width:60%" value="{$edit_goods.city}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>区：</label>
+                            <div class="col-sm-9">
+                                <input type="text"  class="form-control" id="district" name="district" style="width:60%" value="{$edit_goods.district}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>详细地址：</label>
+                            <div class="col-sm-9">
+                                <input type="text"  class="form-control" id="detail" name="detail" style="width:60%" value="{$edit_goods.detail}">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+
+                        {empty name="goods_show"}
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <input type="hidden" name="id"  value="">
+                                <a href="javascript:history.back();" class="btn btn-white" type="submit">返回</a>
+                                <a class="btn btn-primary save" onclick="addproduct()" href="javascript:void(0)" >保存</a>
+                            </div>
+                        </div>
+                        {/empty}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="home_url/js/jquery.min.js"></script>
+
+<!--拖拽图片排序-->
+<link rel="stylesheet" href="home_url/upload_img/uploadImg.css"/>
+<link rel="stylesheet" href="home_url/upload_img/jquery.dad.css"/>
+<script src="home_url/upload_img/jquery.dad.min.js"></script>
+<script language="javascript">
+    $('#J_imageView_1').dad({
+        draggable: 'img'//拖拽区域
+    });
+</script>
+<!--拖拽图片排序-->
+<script src="home_url/js/bootstrap.min.js"></script>
+<script src="home_url/js/plugins/peity/jquery.peity.min.js"></script>
+<script src="home_url/js/content.min.js"></script>
+<script src="home_url/js/plugins/iCheck/icheck.min.js"></script>
+<script src="home_url/js/peity-demo.min.js"></script>
+
+<script>
+    function addproduct(){
+
+        //console.log(goods_name,goods_describe,goods_price,goods_oprice,collection_num,cate,);
+        var post = $('#add_step').serializeArray();
+        console.log(post);
+        $.post("{:url('UserAddress/save_address')}",post, function(data){
+
+            if(data.status){
+                dialog.showTips(data.msg,"", "{:url('UserAddress/addressList')}");
+            }else{
+                alert(data.msg);
+            }
+        }, "json");
+        return false;
+    }
+    /*编辑器 1*/
+    var ue = UE.getEditor('goods_detail', {
+        toolbars: [[
+            'fullscreen', 'source', '|', 'undo', 'redo', '|',
+            'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',
+            'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
+            'directionalityltr', 'directionalityrtl', 'indent', '|',
+            'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'touppercase', 'tolowercase', '|',
+            'link', 'unlink', 'anchor', '|', 'imagenone', 'imageleft', 'imageright', 'imagecenter', '|',
+            'simpleupload', 'insertimage', 'insertvideo', 'music', 'attachment', 'map', 'gmap', 'insertframe', 'pagebreak', 'template', 'background', '|',
+            'horizontal', 'spechars', 'snapscreen', 'wordimage', '|',
+            'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
+            'preview', 'searchreplace',
+        ]],
+        elementPathEnabled: false,
+        autoHeightEnabled: false,
+        initialFrameHeight: 300,
+    });
+    /*编辑器 2*/
+</script>
+
+
+
+<script type="text/javascript" src="home_url/js/jquery-form.js"></script>
+
+
+
+<script type="text/javascript">
+
+
+    $(function () {
+
+        /*图片上传*/
+        $(".xuanze").wrap("<form class='myupload' action='{:url('Index/addImage')}' method='post' enctype='multipart/form-data'></form>");
+        $(".xuanze").change(function(){ //选择文件
+
+            var obj = $(this);
+            var type = obj.attr('data-type'); // single 单图 multiple 多图
+            var xuanze_progress = obj.parents('.form-group').find('.xuanze_progress');
+            var xuanze_percent = obj.parents('.form-group').find('.xuanze_percent');
+            var xuanze_showimge = obj.parents('.form-group').find('.xuanze_showimge');
+            var name = obj.attr('data-name');
+            obj.parents('.myupload').ajaxSubmit({
+                dataType:  'json', //数据格式为json
+                beforeSend: function() { //开始上传
+                    xuanze_progress.show(); //显示进度条
+                    var percentVal = '0%';
+                    xuanze_percent.html(percentVal);
+                },
+                uploadProgress: function(event, position, total, percentComplete) {
+                    var percentVal = percentComplete + '%'; //获得进度
+                    xuanze_percent.html(percentVal); //显示上传进度百分比
+                },
+                success: function(g) { //成功
+                    if (type == 'multiple') { //多图
+                        var img = '<div class="goods_imgs">' +
+                            '<img src="'+ g.data.file_name +'" height="80"  class="mgr10 mgt10 ">' +
+                            '<input type="hidden" name="'+ name +'[]" class="'+ name +'"  value="'+ g.data.file_name +'">' +
+                            '<em class="close" style="float: left;" title="移除这张图片" onclick="delImgs(this)">×</em>' +
+                            '</div>';
+
+                        xuanze_showimge.append(img);
+
+                        $('#J_imageView_1').dad({
+                            draggable: 'img'//拖拽区域
+                        });
+                    } else { // 单图
+                        var img = '<img src="'+ g.data.file_name +'" height="80">' +
+                            '<input type="hidden" name="'+ name +'" class="'+name+'" value="'+ g.data.file_name +'">';
+                        xuanze_showimge.html(img);
+                    }
+
+                    xuanze_progress.hide();
+                },
+                error:function(xhr){ //上传失败
+                    console.log(xhr.status)
+                }
+            });
+        });
+
+    });
+
+    function delImgs(obj){
+        $(obj).parents(".goods_imgs").remove();
+        $(obj).remove();
+
+    }
+</script>
+</body>
+
+</html>

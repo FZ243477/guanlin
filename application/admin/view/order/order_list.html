@@ -26,31 +26,19 @@
 						<a href="{:url('Order/orderList')}" class="{eq name="status" value=""}active{/eq} tabs_a fl">所有订单({$count|default='0'})</a>
 						</li>
 						<li class="{eq name="status" value="1"}active{/eq} tabs_a fl">
-						<a href="{:url('Order/orderList', ['status' => 1])}" class="{eq name="status" value="1"}active{/eq} tabs_a fl">待付款({$count1|default='0'})</a>
+						<a href="{:url('Order/orderList', ['status' => 0])}" class="{eq name="status" value="0"}active{/eq} tabs_a fl">待付款({$count1|default='0'})</a>
 						</li>
-<!--						<li class="{eq name="status" value="6"}active{/eq} tabs_a fl">-->
-<!--						<a href="{:url('Order/orderList', ['status' => 6])}" class="{eq name="status" value="1"}active{/eq} tabs_a fl">线下付款({$count6|default='0'})</a>-->
-<!--						</li>-->
-						<li class="{eq name="status" value="2"}active{/eq} tabs_a fl">
-						<a href="{:url('Order/orderList', ['status' => 2])}" class="{eq name="status" value="2"}active{/eq} tabs_a fl">待付尾款({$count2|default='0'})</a>
+						<li class="{eq name="status" value="1"}active{/eq} tabs_a fl">
+						<a href="{:url('Order/orderList', ['status' => 1])}" class="{eq name="status" value="1"}active{/eq} tabs_a fl">待发货({$count2|default='0'})</a>
 						</li>
-						<li class="{eq name="status" value="3"}active{/eq} tabs_a fl">
-						<a href="{:url('Order/orderList',['status' => 3])}" class="{eq name="status" value="3"}active{/eq} tabs_a fl">待审核({$count3|default='0'})</a>
+						<li class="{eq name="status" value="1"}active{/eq} tabs_a fl">
+						<a href="{:url('Order/orderList', ['status' => 2])}" class="{eq name="status" value="2"}active{/eq} tabs_a fl">已发货({$count3|default='0'})</a>
 						</li>
-						<li class="{eq name="status" value="4"}active{/eq} tabs_a fl">
-						<a href="{:url('Order/orderList',['status' => 4])}" class="{eq name="status" value="4"}active{/eq} tabs_a fl">待发货({$count4|default='0'})</a>
+						<li class="{eq name="status" value="1"}active{/eq} tabs_a fl">
+						<a href="{:url('Order/orderList', ['status' => 3])}" class="{eq name="status" value="3"}active{/eq} tabs_a fl">已签收({$count4|default='0'})</a>
 						</li>
-						<li class="{eq name="status" value="5"}active{/eq} tabs_a fl">
-						<a href="{:url('Order/orderList',['status' => 5])}" class="{eq name="status" value="5"}active{/eq} tabs_a fl">待安装({$count5|default='0'})</a>
-						</li>
-						<li class="{eq name="status" value="6"}active{/eq} tabs_a fl">
-						<a href="{:url('Order/orderList',['status' => 6])}" class="{eq name="status" value="6"}active{/eq} tabs_a fl">订单完成({$count6|default='0'})</a>
-						</li>
-						<li class="{eq name="status" value="7"}active{/eq} tabs_a fl">
-						<a href="{:url('Order/orderList',['status' => 7])}" class="{eq name="status" value="7"}active{/eq} tabs_a fl">已取消({$count7|default='0'})</a>
-						</li>
-						<li class="{eq name="status" value="8"}active{/eq} tabs_a fl">
-						<a href="{:url('Order/orderList',['status' => 8])}" class="{eq name="status" value="8"}active{/eq} tabs_a fl">驳回({$count8|default='0'})</a>
+						<li class="{eq name="status" value="1"}active{/eq} tabs_a fl">
+						<a href="{:url('Order/orderList', ['status' => 4])}" class="{eq name="status" value="4"}active{/eq} tabs_a fl">已完成({$count5|default='0'})</a>
 						</li>
 					</ul>
 					<div class="tab-content">
@@ -85,30 +73,30 @@
 														<th>下单人姓名</th>
 														<th>下单人手机号</th>
 														<th>订单状态</th>
-														<th>支付类型</th>
 														<th>订单金额</th>
-														<th>已付款金额</th>
 														<th>操作</th>
 													</tr>
 													</thead>
 													<tbody>
 													{foreach name="order_list" item="vo"}
 													<tr>
-														<td >{$vo.order_no}</td>
-														<td >{$vo.order_time}</td>
+														<td >{$vo.order_id}</td>
+														<td >{$vo.create_time}</td>
 														<td >{$vo.name}</td>
 														<td >{$vo.tel}</td>
-														<td >{$vo.order_status_name}</td>
-														<td >{$vo.pay_way_name}</td>
-														<td >{$vo.total_fee}</td>
-														<td >{$vo.pay_price}</td>
+														<td >{$vo.state}</td>
+														<td >{$vo.price}</td>
 														<td>
 															<a  href="{:url('Order/detail',array('order_id'=>$vo['id']))}" class="btn btn-primary btn-sm" title="查看详情">详情</a>
-															{eq name="vo.order_status" value="3"}
-															<!--<a href="javascript:void(0);" class="btn btn-primary btn-sm j-editClass" data-id="{$vo.id}" title="审核订单" >审核</a>-->
+															{eq name="vo.state" value="待付款"}
+															{eq name="vo.paid" value="0"}
+															<a href="javascript:void(0);" class="btn btn-primary btn-sm j-editClass" data-id="{$vo.id}" title="填写价格和重量" >称重</a>
 															{/eq}
-															{eq name="vo.order_status" value="4"}
+															{/eq}
+															{eq name="vo.state" value="待发货"}
+															{eq name="vo.paid" value="1"}
 															<a href="javascript:void(0);" class="btn btn-primary btn-sm j-editClass1" data-id="{$vo.id}">发货</a>
+															{/eq}
 															{/eq}
 														</td>
 													</tr>
@@ -158,9 +146,6 @@
 												<div class="col-sm-6">
 													<select id="wuliu_name" class="form-control m-b" name="wuliu_name">
 														<option value='0'>请选择物流...</option>
-														{foreach name="express" item="vo"}
-														<option value="{$vo.express_ma}">{$vo.express_company}</option>
-														{/foreach}
 													</select>
 												</div>
 											</div>
@@ -193,7 +178,7 @@
 				<div class="modal-header" style="padding: 10px 15px;">
 					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
 					</button>
-					<h5 class="model_tit">订单审核</h5>
+					<h5 class="model_tit">填写重量</h5>
 				</div>
 
 				<div class="modal-body modal-prodot-body">
@@ -203,21 +188,20 @@
 
 							<form class="form-horizontal">
 								<div class="form-group clearfix">
-									<label class="col-sm-2 control-label">备注</label>
+									<label class="col-sm-2 control-label">重量</label>
 
 									<div class="col-sm-6">
-										<textarea type="text" class="form-control"  id="action_note1" cols="100" rows="4" style="text-align: left;resize:none;margin-bottom: 10px" ></textarea>
+										<input type="text" class="form-control"  id="action_note1" cols="100" rows="4" style="text-align: left;resize:none;margin-bottom: 10px" >
 									</div>
 								</div>
 
-								<div class="form-group clearfix">
-									<label class="col-sm-2 control-label">发货方式</label>
-									<div class="col-sm-6">
-										<label><input type="radio" class="form-control" name="sure_status" style="width: 14px" checked value="1">发货给仓库</label>
-										<label><input type="radio" class="form-control" name="sure_status" style="width: 14px" value="0">发货给用户</label>
-										<label><input type="radio" class="form-control" name="sure_status" style="width: 14px" value="2">取消订单</label>
-									</div>
-								</div>
+								<!--<div class="form-group clearfix">-->
+									<!--<label class="col-sm-2 control-label">价格</label>-->
+
+									<!--<div class="col-sm-6">-->
+										<!--<input type="text" class="form-control"  id="action_price" cols="100" rows="4" style="text-align: left;resize:none;margin-bottom: 10px" >-->
+									<!--</div>-->
+								<!--</div>-->
 							</form>
 						</div>
 					</div>
@@ -503,17 +487,18 @@
 	function orderAction1() {
 		var action_note = $('#action_note1').val();
 		if (!action_note) {
-			alert('请填写备注');
+			alert('请填写重量');
 			return false;
 		}
+		console.log(action_note);
+		var action_price = $('#action_price').val();
 		var order_id = id;
 		var sure_status = $('input[name="sure_status"]:checked').val();
 		$.ajax({
 			type: "POST",
-			url: "{:url('Order/sureStatus')}",
+			url: "{:url('Order/supply_order')}",
 			data: {
-				sure_status:sure_status,
-				action_note:action_note,
+				weight:action_note,
 				order_id:order_id,
 			},
 			dataType: "json",
@@ -539,10 +524,10 @@
 		var wuliu_name = $('#wuliu_name').val();
 		var wuliu_nums = $('#wuliu_nums').val();
 
-		if(wuliu_name == 0){
-			alert('请选择物流!');
-			return false;
-		}
+		// if(wuliu_name == 0){
+		// 	alert('请选择物流!');
+		// 	return false;
+		// }
 
 		if(wuliu_nums == ''){
 			alert('物流单号为空!');
@@ -551,7 +536,7 @@
 
 		$.ajax({
 			type: "POST",
-			url: "{:url('Order/fahuo')}",
+			url: "{:url('Order/delivery_end')}",
 			data: {
 				express_name:wuliu_name,
 				express_no:wuliu_nums,

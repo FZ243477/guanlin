@@ -113,7 +113,6 @@ class Order extends Base
         $page = request()->post('page', 1); //当前页
         $order_data = [];
         $order_data['uid'] = $this->user_id;
-
             $order_data['state'] = 0;
            $order_data['paid'] = 0;
            $order_data['has_take']=1;
@@ -213,6 +212,35 @@ class Order extends Base
         ajaxReturn($json_arr);
     }
 
+    /**
+     * 确认收货
+     */
+    public function confirm_order(){
+        $map['uid'] = $this->user_id;
+        $out_trade_no    = request()->post('order_id');
+        if(!$out_trade_no){
+            ajaxReturn(['status' => 0, 'msg' => '支付单号为空', 'data' => []]);
+        }
+        $map = [];
+        $map['order_id'] = $out_trade_no;
+        $map['uid']      = $this->user_id;
+        $res = model('order')->where($map)->find();
+        if(!$res){
+            ajaxReturn(['status' => 0, 'msg' => '此订单不存在了', 'data' => []]);
+        }
+            $save_content=[
+                'state'=>4,
+                'end_time'=>time()
+            ];
+            $save=model('order')->update($save_content);
+            if($save){
+                $json_arr = ['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => ['list' => $list]];
+                ajaxReturn($json_arr);
+            }else{
+                $return_arr = ['status'=>0, 'msg'=>'操作失败','data'=> []];
+                exit(json_encode($return_arr));
+            }
+    }
 
     /**
      * 确认订单页面
