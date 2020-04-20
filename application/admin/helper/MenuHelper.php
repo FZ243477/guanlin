@@ -28,11 +28,11 @@ trait MenuHelper
             ]],
             'Order' =>['name'=>'订单管理','icon'=>'iconfont icon-tuanduicankaoxian-','sub_menu'=>[
                 ['name'=>'订单列表','act'=>'orderList','control'=>'Order'],
-                ['name'=>'物流列表','act'=>'expressList','control'=>'Order'],
+                //['name'=>'物流列表','act'=>'expressList','control'=>'Order'],
             ]],
             'Report' => ['name' => '实名登记', 'icon' => 'fa-user', 'sub_menu' => [
                 ['name' => '新增用户统计', 'act' => 'memReport', 'control' => 'Report'],
-                ['name'=>'活跃用户统计','act'=>'memActive','control'=>'Report'],
+                //['name'=>'活跃用户统计','act'=>'memActive','control'=>'Report'],
             ]],
             'Bill' =>['name'=>'账单管理','icon'=>'iconfont icon-zhangdan','sub_menu'=>[
                 ['name'=>'财务统计','act'=>'finance','control'=>'Finance'],

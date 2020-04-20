@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>悦品荟商城 - 订单详情</title>
-    <meta content="悦品荟商城" name="keywords">
-    <meta content="悦品荟商城" name="description">
+    <title>转运助手 - 订单详情</title>
+    <meta content="转运助手" name="keywords">
+    <meta content="转运助手" name="description">
 
     <link href="home_url/css/bootstrap.min.css" rel="stylesheet">
     <link href="home_url/css/font-awesome.css-v=4.4.0.css" rel="stylesheet">
@@ -90,7 +90,7 @@
                                         </tr>
                                         <tr>
                                             <th>订单编号</th>
-                                            <td>{$info.order_no}</td>
+                                            <td>{$info.order_id}</td>
                                         </tr>
                                         <tr>
                                             <th>下单时间</th>
@@ -99,30 +99,10 @@
                                         <tr>
                                             <th>物流信息</th>
                                             <td>
-                                                物流名称：{$info.express_name}</br>
-                                                物流单号：{$info.express_no}</br>
-                                                物流费用：{$info.express_fee}
+                                                物流名称：{$info.logi_name}</br>
+                                                物流单号：{$info.delivery_id}</br>
+                                                <!--物流费用：-->
                                             </td>
-                                        </tr>
-                                        <tr>
-                                            <th>订单来源</th>
-                                            <td>
-                                                {$info.source_name}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>订单类型</th>
-                                            <td>
-                                                {$info.order_type_name}
-                                            </td>
-                                        <tr>
-                                            <th>支付方式</th>
-                                            <td>{$info.pay_way_name}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>订单金额</th>
-                                            <td>{$info.total_fee}</td>
-                                        </tr>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -142,37 +122,44 @@
                                         <tbody>
                                         <tr>
                                             <th>收货人</th>
-                                            <td>{$info.consignee}</td>
+                                            <td>{$info.take_name}</td>
                                         </tr>
                                         <tr>
                                             <th>手机号</th>
-                                            <td>{$info.telephone}</td>
+                                            <td>{$info.take_phone}</td>
                                         </tr>
                                         <tr>
                                             <th>收货地址</th>
                                             <td>
-                                                {$info.province} {$info.city} {$info.district} {$info.place}
-                                                {eq name="info.address_num" value="0"}
-                                                {eq name="info.is_shipping" value="0"}
-                                                <span style="color: red;">(注：地址信息只可以修改一次)</span>
+                                                {$info.take_province} {$info.take_city} {$info.take_district} {$info.take_detailaddress}
+                                                <!--<span style="color: red;">(注：地址信息只可以修改一次)</span>-->
                                                 <a href="javascript:void(0)" class="btn btn-primary edit_address">修改地址</a>
-                                                {/eq}
-                                                {/eq}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>买家</th>
-                                            <td>{$info.realname}</td>
+                                            <th>物流信息</th>
+                                            <td>
+                                                物流单号：{$info.delivery_end_id}</br>
+                                                <!--物流费用：-->
+                                            </td>
+                                        <tr>
+                                        <tr>
+                                            <th>发货人</th>
+                                            <td>{$info.fname}</td>
                                         </tr>
                                         <tr>
-                                            <th>买家电话</th>
+                                            <th>发货人电话</th>
                                             <td>
-                                                {$info.m_telephone}
+                                                {$info.fphone}
                                             </td>
                                         </tr>
                                         <tr>
                                             <th>订单金额</th>
-                                            <td>{$info.total_fee}</td>
+                                            <td>{$info.price}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>支付状态</th>
+                                            <td>{$info.paid_state}</td>
                                         </tr>
                                         </tbody>
 
@@ -185,238 +172,31 @@
                 </div>
             </div>
             <br>
+
             <div class="ibox float-e-margins">
-                <div class="ibox-title goods_list" >
-                    <h5><span class="ibox_span">-</span>商品清单
-                    </h5>
+                <div class="ibox-content print_none">
+                    <div class="tab-content form-horizontal" style="">
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">修改订单金额：</label>
+                            <div class="col-sm-5">
+                                <input class="form-control" id="paid_money" style="text-align: left;resize:none;margin-bottom: 10px" type="text" value="">
 
-                </div>
-                <div class="ibox-content goods_content">
-                    <table class="table table-bordered">
-                        <colgroup>
-                            <col width="12%">
-                            <col width="12%">
-                            <col width="12%">
-                            <col width="10%">
-                            <col width="7%">
-                            <col width="13%">
-                            <col width="13%">
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th>商品图片</th>
-                            <!--<th>商品编码</th>-->
-                            <th>商品名称</th>
-                            <th>单价（元）</th>
-                            <th>数量</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {volist name="info.goods" id="vo"}
-                        <tr>
-                            <td>
-                                <div class="proImg"><img src="{$vo.goods_logo?$vo.goods_logo:'home_url/images/zwtp.jpg'}"></div>
-                            </td>
-                            <td><h5>{$vo.goods_name}</h5></td>
-                            <td>{$vo.goods_price}</td>
-                            <td>{$vo.goods_num}{$vo.goods_unit}</td>
-                        </tr>
-                        {/volist}
-                        </tbody>
-                    </table>
-                </div>
-                <br/>
-                <div class="ibox-title" >
-                    <h5><span class="ibox_span">-</span>金额信息
-                    </h5>
-                </div>
-                <div class="ibox-content">
-                    <table class="table table-bordered">
-                        <colgroup>
-                            <col width="10%">
-                            <col width="10%">
-                            <col width="10%">
-                            <col width="10%">
-                            <col width="10%">
-                            <col width="10%">
-                            <col width="10%">
-                            <col width="10%">
-                            <col width="10%">
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th>总计金额</th>
-                            <th>已支付金额</th>
-                            <th>待支付金额</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>{$info.total_fee}</td>
-                            <td>{$info.pay_price}</td>
-                            <td>{$info.total_fee - $info.pay_price}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <!--<table class="table table-bordered">
-                        <colgroup>
-                            <col width="10%">
-                            <col width="7%">
-                            <col width="10%">
-                            <col width="10%">
-                            <col width="10%">
-                            <col width="10%">
-                            <col width="10%">
-                            <col width="10%">
-                            <col width="10%">
-                            <col width="10%">
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th>总计金额</th>
-                            <th>支付金额</th>
-                            <th>累计已支付金额</th>
-                            <th>审核时间</th>
-                            <th>审核人</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        {foreach name="order_money" item="v" key="k"}
-                        <tr>
-                            <td>{$info.total_fee}</td>
-                            <td>{$v.money}</td>
-                            <td>{$info.total_fee}</td>
-                        </tr>
-                        {/foreach}
-                        </tbody>
-                    </table>-->
-                </div>
-                <br/>
-                <div class="ibox float-e-margins">
-                    {notempty name='certificate'}
-                    <div class="ibox-title" id="p_z_j">
-                        <h5><span class="ibox_span">-</span>凭证列表
-                        </h5>
-                    </div>
-                    <div class="ibox-content">
-                        <table class="table table-bordered">
-                            <colgroup>
-                                <col width="5%">
-                                <col width="12%">
-                                <col width="10%">
-                                <col width="10%">
-                                <col width="10%">
-                                <col width="10%">
-                                <col width="10%">
-                                <col width="10%">
-                                <!--                                <col width="10%">-->
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th></th>
-                                <th>收款户名</th>
-                                <th>收款账号</th>
-                                <th>收款账号开户银行</th>
-                                <th>凭证</th>
-                                <th>状态</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {volist name="certificate" id="vo"}
-                            <tr>
-                                <td>
-                                    {eq name="vo.status" value="0"}
-                                    <input class="i-checks checkbox"  data-money="{$vo.money}" name="input" type="checkbox" value="{$vo.id}">
-                                    {/eq}
-                                </td>
-                                <td>{$vo.re_username}</td>
-                                <td>{$vo.re_account}</td>
-                                <td>{$vo.re_bank}</td>
-                                <td>
-                                    <div class="proImg"><a href="{$vo.certificate}" target="_blank"><img src="{$vo.certificate}"></a></div>
-                                </td>
-                                 <td>
-                                     {switch name="vo.status"}
-                                     {case value="0"}待审核{/case}
-                                     {case value="1"}通过{/case}
-                                     {case value="2"}拒绝{/case}
-                                     {/switch}
-                                 </td>
-                            </tr>
-                            {/volist}
-                            </tbody>
-                        </table>
-
-                    </div>
-                    <br/>
-                    {/notempty}
-                    {eq name='info.order_status' value="3"}
-                    <div class="ibox-title print_none">
-                        <h5><span class="ibox_span">-</span>审核订单</h5>
-                    </div>
-                    <div class="ibox-content print_none">
-                        <div class="tab-content form-horizontal" style="">
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label">支付金额：</label>
-                                <div class="col-sm-5">
-                                    <input class="form-control" id="pay_price" style="text-align: left;resize:none;margin-bottom: 10px" type="text" value="">
-                                </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label">备注：</label>
-                                <div class="col-sm-5">
-                                    <textarea class="form-control" cols="100"  id="action_note1" rows="4" style="text-align: left;resize:none;margin-bottom: 10px" type="text" ></textarea>
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">备注：</label>
+                            <div class="col-sm-5">
+                                <textarea class="form-control" cols="100"  id="action_note" rows="4" style="text-align: left;resize:none;margin-bottom: 10px" type="text" ></textarea>
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label"></label>
-                                <div class="col-sm-5">
-                                    <a class="btn btn-primary" href="javascript:void(0);" onclick ="return orderAction(1)" style="margin-right:20px">同意</a>
-                                    <a class="btn btn-primary" href="javascript:void(0);" onclick ="return orderAction(0)" style="">拒绝</a>
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label"></label>
+                            <div class="col-sm-5">
+                                <a class="btn btn-primary" href="javascript:void(0);" onclick ="return orderAction(1)" style="margin-right:20px">同意</a>
+                                <a class="btn btn-primary" href="javascript:void(0);" onclick ="return orderAction(0)" style="">拒绝</a>
                             </div>
                         </div>
                     </div>
-                    <br/>
-                    {/eq}
-                    <div class="ibox float-e-margins margin-bottom-400" >
-                        <div class="ibox-title">
-                            <h5><span class="ibox_span">-</span>后台操作记录</h5>
-                        </div>
-                        <div class="ibox-content">
-                            <table class="table table-bordered">
-                                <colgroup>
-                                    <col width="20%">
-                                    <col width="20%">
-                                    <col width="20%">
-                                    <col width="20%">
-                                    <col width="20%">
-                                </colgroup>
-                                <thead>
-                                <tr>
-                                    <td class="text-center">操作者</td>
-                                    <td class="text-center">操作时间</td>
-                                    <td class="text-center">描述</td>
-                                    <td class="text-center">备注</td>
-                                    <td class="text-center">凭证</td>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {volist name="order_action" id="log"}
-                                <tr>
-                                    <td class="text-center">{$log.action_user}</td>
-                                    <td class="text-center">{$log.log_time|date='Y-m-d H:i:s',###}</td>
-                                    <td class="text-center">{$log.status_desc}</td>
-                                    <td class="text-center">{$log.action_note}</td>
-                                    <td class="text-center"  height="80"><a href="{$log.img}" target="_blank"><img height="80" src="{$log.img}"></a></td>
-                                </tr>
-                                {/volist}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>
@@ -440,7 +220,6 @@
 
                     <div class="model_body">
                         <div class="model_address">
-
                             <form class="form-horizontal">
                                 <div class="form-group clearfix">
                                     <label class="col-sm-2 control-label">联系地址</label>
@@ -464,7 +243,7 @@
                                     <label class="col-sm-2 control-label">街道地址</label>
 
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="address" value="{$info.place}">
+                                        <input type="text" class="form-control" id="address" value="{$info.take_detailaddress}">
 
                                     </div>
                                 </div>
@@ -473,7 +252,7 @@
                                     <label class="col-sm-2 control-label">收件人</label>
 
                                     <div class="col-sm-9">
-                                        <input type="text" id="consignee" class="form-control" value="{$info.consignee}">
+                                        <input type="text" id="consignee" class="form-control" value="{$info.take_name}">
 
                                     </div>
                                 </div>
@@ -481,14 +260,11 @@
                                     <label class="col-sm-2 control-label">手机号</label>
 
                                     <div class="col-sm-9">
-                                        <input type="number" id="telephone" class="form-control" maxlength='11' value="{$info.telephone}">
+                                        <input type="number" id="telephone" class="form-control" maxlength='11' value="{$info.take_phone}">
 
                                     </div>
                                 </div>
                             </form>
-
-
-
                         </div>
                     </div>
 
@@ -509,7 +285,7 @@
     <script type="text/javascript">
         _init_area();
         $('#s_province').change();
-        var province = "{$info.province}";
+        var province = "{$info.take_province}";
         if (province) {
             $('#s_province option').each(function () {
                 $(this).removeAttr('selected');
@@ -520,7 +296,7 @@
             });
         }
 
-        var city = "{$info.city}"
+        var city = "{$info.take_city}"
 
         if (city) {
             $('#s_city option').each(function () {
@@ -532,7 +308,7 @@
             });
 
         }
-        var county = "{$info.district}"
+        var county = "{$info.take_district}"
 
         if (county) {
             $('#s_county option').each(function () {
@@ -605,6 +381,7 @@
             });
         }
         function orderAction1() {
+            alert(1231);
             var action_note = $('#action_note1').val();
             var sure_status = $('input[name="sure_status"]:checked').val();
             ajaxR(action_note, sure_status)
@@ -655,7 +432,7 @@
             $('#pay_price').val(money);
         });
         function orderAction (type) {
-            var pay_price = $('#pay_price').val();
+            var pay_price = $('#paid_money').val();
 
             var action_note = $('#action_note').val();
             // if (!action_note) {
@@ -669,16 +446,39 @@
                     return false;
                 }
                 dialog.showTips('确定同意吗？','firm', function () {
-                    order_action_ajax (type, action_note, order_id, pay_price)
+                    edit_price (type,action_note, order_id, pay_price)
                 })
             } else {
                 dialog.showTips('确定拒绝吗？','firm', function () {
-                    order_action_ajax (type, action_note, order_id, pay_price)
+                    window.location.reload();
                 })
             }
             return false;
         }
-
+        function edit_price(type,action_note, order_id, pay_price){
+            $.ajax({
+                type: "POST",
+                url: "{:url('Order/editPrice')}",
+                data: {
+                    type:type,
+                    action_note:action_note,
+                    pay_price:pay_price,
+                    order_id:order_id,
+                },
+                dataType: "json",
+                success: function(g){
+                    if(g.status==1){
+                        dialog.showTips(g.msg, '', 1);
+                        // alert(g.msg);
+                        // setTimeout(function(){
+                        //     window.location.href = g.url;
+                        // },500);
+                    }else{
+                        alert(g.msg);
+                    }
+                }
+            });
+        }
         function order_action_ajax (type, action_note, order_id, pay_price) {
             $.ajax({
                 type: "POST",

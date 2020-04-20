@@ -48,8 +48,8 @@ class Finance extends Base
         for ($i = strtotime($start_time); $i <= strtotime($end_time); $i+=86400) {
             $between_time = $this->todayTimestamp($i);
             $where = [];
-            $where['order_time'] = ['between', $between_time];
-            $money = model('order')->where($where)->sum('pay_price');
+            $where['paid_time'] = ['between', $between_time];
+            $money = model('order')->where($where)->sum('price');
             $json_data['x_data'][] = date('Y-m-d', $i);
             $json_data['y_data'][] = $money;
         }
@@ -162,15 +162,15 @@ class Finance extends Base
 
         $date_time = $this->todayTimestamp();
         $we_map = [];
-        $we_map['order_time'] = ['between', $date_time];
-        $total_income = $order_model->where($we_map)->sum('pay_price');
-        $we_map['order_time'] = ['between', [$start_time, $end_time]];
-        $today_total_income = $order_model->where($we_map)->sum('pay_price');
+        $we_map['paid'] =1;
+        $we_map['paid_time'] = ['between', $date_time];
+        $total_income = $order_model->where($we_map)->sum('price');
+        $we_map['paid_time'] = ['between', [$start_time, $end_time]];
+        $today_total_income = $order_model->where($we_map)->sum('price');
 
         $assign = [
             'total_income' => $this->numberToUnit($total_income),
             'today_total_income' => $this->numberToUnit($today_total_income),
-
         ];
         return $assign;
     }

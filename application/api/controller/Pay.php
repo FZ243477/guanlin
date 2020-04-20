@@ -53,7 +53,6 @@ class Pay extends Controller
         if(!$res){
             ajaxReturn(['status' => 0, 'msg' => '此订单不存在了', 'data' => []]);
         }
-
         if ($res['paid'] == OrderConstant::PAY_STATUS_DOING ) {
             ajaxReturn(['status' => 0, 'msg' => '此订单已支付', 'data' => []]);
         }

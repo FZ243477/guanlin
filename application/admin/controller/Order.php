@@ -44,15 +44,15 @@ class Order extends Base
         $starttime = request()->param("starttime");
         $endtime = request()->param("endtime");
         $status = request()->param("status");
-
+        //dump($name);exit;
         $this->assign("name", $name);
         $this->assign("order_no", $order_no);
         $this->assign("starttime", $starttime);
         $this->assign("endtime", $endtime);
         $this->assign("status", $status);
 
-       // $this->assign("telephone",$name);
-
+        $starttime=strtotime($starttime);
+        $endtime=strtotime($endtime);
         if ($starttime && $endtime) {
             $map['a.create_time'] = ['between', [$starttime, $endtime]];
         } elseif ($starttime) {
@@ -66,7 +66,8 @@ class Order extends Base
         }
 
         if ($name) {
-            $map['b.nickname'] = ["like", "%$name%"];
+            $map['b.nickname|a.take_phone|a.fphone|a.take_name'] = ["like", "%$name%"];
+            //$map['b.nickname|a.telephone|a.consignee|b.realname|b.telephone'] = ["like", "%$name%"];
             $this->assign("name", $name);
         }
         if ($order_no) {
@@ -152,6 +153,9 @@ class Order extends Base
         //$data['express_name'] = request()->post('express_name');
         $data['delivery_end_id'] = request()->post('express_no');
         $data['delivery_end_time'] = date('Y-m-d H:i:s', time());
+        if(!$data['delivery_end_id']){
+            ajaxReturn(["status" => 0, "msg" => "订单号不能为空"]);
+        }
         $res = model('order')->where('id',$id)->update($data);
         if ($res) {
             ajaxReturn(["status" => 1, "msg" => "发货成功！"]);
@@ -169,35 +173,103 @@ class Order extends Base
         $user_id = input("user_id");  // 得到order的user_id
         $store_id = input("store_id");  // 得到order的store_id
         $order = model('order')->alias('a')->where('id=' . $id)->find();
-
+       // dump($user_id);exit;
         if (!$order) {
             $this->error('没有此订单！');
         }
         $map['order_id'] = $order['id'];
-        $order_goods = model('order_goods')->where($map)->select();
-        $user = model('user')->where(['id' => $order['user_id']])->find();
+        $user = model('user')->where(['id' => $order['uid']])->find();
         $order['realname'] = $user['nickname'];
-        $order['m_telephone'] = $user['telephone'];
-        $order['goods'] = $order_goods;
-        $order['order_status_name'] = OrderConstant::order_status_array_value($order['order_status']);
-        $order['pay_way_name'] = OrderConstant::order_pay_array_value($order['pay_way']);
-        $order['order_type_name'] = CartConstant::cart_type_array_value($order['order_type']);
-        $order['source_name'] = OrderConstant::order_source_value($order['source']);
-        $certificate = model('order_certificate')->where(['order_no' => $order['order_no']])->order('create_time asc')->select();
+        $order['fphone'] = $user['telephone'];
+        $logistic=model('logistics')->where('id',$order['logi_id'])->find();
+        $order['logi_name']=$logistic['name'];
+        if($order['paid']==1){$order['paid_state']="已支付";}else{$order['paid_state']="未支付";}
+        $order['order_status_name'] = OrderConstant::order_status_array_value($order['state']);
+        $order['pay_way_name'] = "微信支付";
 
-        $order_money = model('order_action')->where(['pay_type' => 1, 'order_id' => $id])->select();
-        $this->assign('certificate', $certificate);
         $this->assign('info', $order);
-        $this->assign('order_money', $order_money);
-
-        $list = model('express')->select();
-        $this->assign('express', $list);
-
-        $order_action = model('order_action')->where(['order_id' => $id])->order('log_time desc')->select();
-        $this->assign('order_action', $order_action);
         return $this->fetch();
     }
 
+    //修改收货地址
+    public function updateAddress()
+    {
+        $order_id = request()->post('orderid');
+        if (!$order_id) {
+            ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_NONE_PARAM]);
+        }
+        $order = model('order')->where(['id'=>$order_id])->find();
+        if (!$order) {
+            ajaxReturn(['status' => 0, 'msg' => '订单不存在']);
+        }
+        $province = request()->post('province');
+        $city = request()->post('city');
+        $district = request()->post('district');
+        $place = request()->post('address');
+        $consignee = request()->post('consignee');
+        $telephone = request()->post('telephone');
+        if (!$province) {
+            ajaxReturn(['status' => 0, 'msg' => '请填写省']);
+        }
+        if (!$city) {
+            ajaxReturn(['status' => 0, 'msg' => '请填写市']);
+        }
+        if (!$district) {
+            ajaxReturn(['status' => 0, 'msg' => '请填写区']);
+        }
+        if (!$place) {
+            ajaxReturn(['status' => 0, 'msg' => '请填写详细地址']);
+        }
+        if (!$consignee) {
+            ajaxReturn(['status' => 0, 'msg' => '请填写收货人']);
+        }
+        if (!$telephone) {
+            ajaxReturn(['status' => 0, 'msg' => '请填写手机号']);
+        }
+        if (!$this->VerifyTelephone($telephone)) {
+            ajaxReturn(['status' => 0, 'msg' => '手机号格式不正确']);
+        }
+        $province = request()->post('province');
+        $city = request()->post('city');
+        $district = request()->post('district');
+        $place = request()->post('address');
+        $consignee = request()->post('consignee');
+        $telephone = request()->post('telephone');
+        model('order')->save([
+            'take_province' => $province,
+            'take_city' => $city,
+            'take_district' => $district,
+            'take_detailaddress' => $place,
+            'take_name' => $consignee,
+            'take_phone' => $telephone,
+            'take_address'=>$province.$city.$district.$place
+        ],['id'=>$order_id]);
+        ajaxReturn(["status" => 1, "msg" => SystemConstant::SYSTEM_OPERATION_SUCCESS]);
+    }
+    //修改订单金额
+    public function editPrice(){
+        $id = request()->post('order_id');
+        $type = request()->post('type');
+        $action_note = request()->post('action_note');
+        $pay_price = request()->post('pay_price');
+        $order = model('order')->where(['id'=>$id])->find();
+        if (!$order) {
+            ajaxReturn(['status' => 0, 'msg' => '订单不存在']);
+        }
+        if($order['paid']==1){
+            ajaxReturn(['status' => 0, 'msg' => '此订单已被支付不能修改金额']);
+        }
+        $save_content=[
+            'price'=>$pay_price,
+            'note'=>$action_note
+        ];
+        $res = model('order')->where('id',$id)->update($save_content);
+        if ($res) {
+            ajaxReturn(["status" => 1, "msg" => "修改成功！"]);
+        } else {
+            ajaxReturn(["status" => 0, "msg" => "网络繁忙，请稍后~~"]);
+        }
+    }
     public function orderAction ()
     {
         $type = request()->post('type');
@@ -298,63 +370,6 @@ class Order extends Base
         }
     }
 
-    public function updateAddress()
-    {
-        $order_id = request()->post('orderid');
-        if (!$order_id) {
-            ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_NONE_PARAM]);
-        }
-        $order = model('order')->where(['id'=>$order_id])->find();
-        if (!$order) {
-            ajaxReturn(['status' => 0, 'msg' => '订单不存在']);
-        }
-        if ($order['address_num'] > 0) {
-            ajaxReturn(['status' => 0, 'msg' => '只可以修改一次']);
-        }
-        $province = request()->post('province');
-        $city = request()->post('city');
-        $district = request()->post('district');
-        $place = request()->post('address');
-        $consignee = request()->post('consignee');
-        $telephone = request()->post('telephone');
-        if (!$province) {
-            ajaxReturn(['status' => 0, 'msg' => '请填写省']);
-        }
-        if (!$city) {
-            ajaxReturn(['status' => 0, 'msg' => '请填写市']);
-        }
-        if (!$district) {
-            ajaxReturn(['status' => 0, 'msg' => '请填写区']);
-        }
-        if (!$place) {
-            ajaxReturn(['status' => 0, 'msg' => '请填写详细地址']);
-        }
-        if (!$consignee) {
-            ajaxReturn(['status' => 0, 'msg' => '请填写收货人']);
-        }
-        if (!$telephone) {
-            ajaxReturn(['status' => 0, 'msg' => '请填写手机号']);
-        }
-        if (!$this->VerifyTelephone($telephone)) {
-            ajaxReturn(['status' => 0, 'msg' => '手机号格式不正确']);
-        }
-        $province = request()->post('province');
-        $city = request()->post('city');
-        $district = request()->post('district');
-        $place = request()->post('address');
-        $consignee = request()->post('consignee');
-        $telephone = request()->post('telephone');
-        model('order')->save([
-            'province' => $province,
-            'city' => $city,
-            'district' => $district,
-            'place' => $place,
-            'consignee' => $consignee,
-            'telephone' => $telephone,
-            'address_num' => $order['address_num'] + 1,
-        ],['id'=>$order_id]);
-        ajaxReturn(["status" => 1, "msg" => SystemConstant::SYSTEM_OPERATION_SUCCESS]);
-    }
 
     /**
      * 导出订单
