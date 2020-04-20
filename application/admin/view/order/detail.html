@@ -173,6 +173,7 @@
             </div>
             <br>
 
+            {eq name="info.state" value="待付款"}
             <div class="ibox float-e-margins">
                 <div class="ibox-content print_none">
                     <div class="tab-content form-horizontal" style="">
@@ -180,7 +181,6 @@
                             <label class="col-sm-1 control-label">修改订单金额：</label>
                             <div class="col-sm-5">
                                 <input class="form-control" id="paid_money" style="text-align: left;resize:none;margin-bottom: 10px" type="text" value="">
-
                             </div>
                         </div>
                         <div class="form-group">
@@ -199,6 +199,8 @@
                     </div>
                 </div>
             </div>
+            {/eq}
+
         </div>
     </div>
     <div class="orderDot_back">

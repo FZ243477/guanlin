@@ -23,10 +23,10 @@ class Mailing extends Base
         $uid = $this->user_id;
         $type = Db::name('user_message')
                 ->where('uid',$uid)
-                ->where('state',0)
+                ->where('state',1)
                 ->find();
-        $field = 'id, content,type';
-        $list = model('message')->field($field)->where('type',$type['message_type'])->find();
+        $field = 'id, content,type_id';
+        $list = model('message')->field($field)->where('type_id',$type['message_type'])->find();
         if(!$list){
             $list['message_content']="";
         }else{

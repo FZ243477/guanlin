@@ -228,14 +228,15 @@ class Order extends Base
         if(!$res){
             ajaxReturn(['status' => 0, 'msg' => '此订单不存在了', 'data' => []]);
         }
+        if($res['state']==1){ ajaxReturn(['status' => 0, 'msg' => '此订单未发货', 'data' => []]);}
             $save_content=[
                 'state'=>4,
                 'end_time'=>time()
             ];
-            $save=model('order')->update($save_content);
+            $save=model('order')->where('id',$res['id'])->update($save_content);
             if($save){
-                $json_arr = ['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => ['list' => $list]];
-                ajaxReturn($json_arr);
+                $return_arr = ['status'=>1, 'msg'=>'操作成功','data'=> []];
+                exit(json_encode($return_arr));
             }else{
                 $return_arr = ['status'=>0, 'msg'=>'操作失败','data'=> []];
                 exit(json_encode($return_arr));

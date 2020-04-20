@@ -43,77 +43,47 @@
 
                                     <div class="row">
                                         <form method="get" action="" class="form-inline">
-                                            <div class="input-group">
-                                                <select class=" form-control" name="cate_id" >
-                                                    <option value="" style="width:70%;">-请选择分类-</option>
-                                                    {volist name="designer_cate" id="cate"}
-                                                    <option value="{$cate.id}" {eq name="cate_id" value="$cate.id"}selected{/eq} style="width:100%;" >
-                                                    {$cate.level_name}
-                                                    </option>
-                                                    {/volist}
-                                                </select>
-                                            </div>
-
-                                            <div class="input-group">
-                                                <input type="text" name="keyword" placeholder="名称" class=" form-control" value="{$keyword}" style="width:130px">
-                                                <span class="input-group-btn">
-												<button type="submit" class="btn btn-sm btn-primary"> 搜索</button> </span>
-                                            </div>
-                                            <a href="{:url('designer/designer_add')}" class="btn btn-sm btn-primary">添加</a>
+                                            <a href="{:url('Message/message_add')}" class="btn btn-sm btn-primary">添加</a>
                                         </form>
-
                                     </div>
 
                                     <div class="table-responsive">
                                         <table class="table table-hover products_table" >
                                             <colgroup>
-                                                <col width="7%">
-                                                <col width="7%">
-                                                <col width="7%">
-                                                <col width="7%">
-                                                <col width="7%">
-                                                <col width="7%">
-                                                <col width="7%">
-                                                <col width="7%">
-                                                <col width="7%">
+                                                <col width="8%">
+                                                <col width="8%">
+                                                <col width="8%">
+                                                <col width="8%">
+                                                <col width="8%">
+                                                <col width="8%">
+                                                <col width="8%">
+                                                <col width="8%">
                                             </colgroup>
                                             <thead>
                                             <tr>
                                                 <th></th>
-                                                <th>ID</th>
-                                                <th>名称</th>
-                                                <th>收藏数量</th>
-                                                <th>手机号码</th>
-                                                <th>地址</th>
-                                                <th>设计师级别</th>
-                                                <th>经验</th>
-                                                <th>设计师logo</th>
+                                                <th>id</th>
+                                                <th>type/类型ID</th>
+                                                <th>提醒内容</th>
                                                 <th>操作</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            {foreach name="designer_list" item="vo"}
+                                            {foreach name="transfer_list" item="vo"}
                                             <tr >
                                                 <td>
                                                     <input type="checkbox" class="i-checks checkbox" name="input" value="{$vo.id}">
                                                 </td>
                                                 <td>{$vo.id}</td>
-                                                <td>{$vo.designer_name}</td>
-                                                <td>{$vo.collection_num}</td>
-                                                <td>{$vo.telephone}</td>
-                                                <td>{$vo.city}</td>
-                                                <td>{$vo.level_name}</td>
-                                                <td>{$vo.exp}</td>
-                                                <td><a href="{$vo.designer_logo}" target="_blank"><img src="{$vo.designer_logo}" width="100"/></a></td>
-
+                                                <td>{$vo.type_id}</td>
+                                                <td>{$vo.content}</td>
                                                 <td>
                                                     <a href="javaScript:;" data-banner_id="" class="btn  btn-primary " onclick=goodsshow("{$vo.id}") data-num="-1" title="上移">详情</a>
                                                     <a href="javaScript:;" onclick=goodsedit("{$vo.id}") class="btn btn-primary"><i class="fa fa-plus"></i>编辑</a>
-                                                    <a href="javascript:;" onclick=goodsdel("{$vo.id}")  class="btn btn-default btn-sm " data-banner_id="">删除</a>
                                                 </td>
                                             </tr>
                                             {/foreach}
-                                            {empty name="designer_list"}
+                                            {empty name="transfer_list"}
                                             <tr><td style='text-align:center' colspan='10'>暂无数据</td></tr>
                                             {/empty}
                                             <tr>
@@ -129,7 +99,7 @@
 
                                         <div class="text-center">
                                             <div class="page">
-                                                {$designer_list->render()}
+                                                {$transfer_list->render()}
                                             </div>
                                         </div>
 
@@ -157,10 +127,10 @@
 <script type="text/javascript">
 
     function goodsshow(e){
-        location.href='designer_add/id/'+e+'/type/show';
+        location.href='message_add/id/'+e+'/type/show';
     }
     function goodsedit(e){
-        location.href='designer_add/id/'+e+'';
+        location.href='message_add/id/'+e+'';
     }
     function goodsdel(e){
         var id = e;
@@ -178,7 +148,7 @@
         }
         dialog.showTips('确定要删除吗？', "firm", function(){
             $.ajax({
-                url: "{:url('Designer/del_designer')}",
+                url: "{:url('Message/del_message')}",
                 type: "post",
                 dataType: "json",
                 data: {
@@ -252,7 +222,7 @@
         dialog.showTips('确定要删除吗？', "firm", function(){
 
             $.ajax({
-                url: "{:url('Designer/del_designer')}",
+                url: "{:url('Message/del_message')}",
                 type: "post",
                 dataType: "json",
                 data: {
@@ -296,13 +266,13 @@
         })
     });
 
-    function status(banner_id, item, obj){
+    function status(id, item, obj){
         var $_this = $(obj);
         $.ajax({
-            url: "{:url('Banner/bannerStatus')}",
+            url: "{:url('Village/status')}",
             type: "post",
             dataType: "json",
-            data: {banner_id:banner_id,item:item},
+            data: {id:id,item:item},
         }).done(function (data) {
             if (data.data[item] == 1) {
                 $_this.css('color', '#0C0');

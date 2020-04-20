@@ -44,7 +44,7 @@ class Order extends Base
         $starttime = request()->param("starttime");
         $endtime = request()->param("endtime");
         $status = request()->param("status");
-        //dump($name);exit;
+        //dump($status);exit;
         $this->assign("name", $name);
         $this->assign("order_no", $order_no);
         $this->assign("starttime", $starttime);
@@ -61,7 +61,7 @@ class Order extends Base
             $map['a.create_time'] = ['elt', $endtime];
         }
 
-        if ($status) {
+        if (isset($status)) {
             $map['a.state'] = $status;
         }
 
@@ -91,7 +91,6 @@ class Order extends Base
         $this->assign("order_list", $order_list);
 
         $m = model('order');
-        unset($map['a.state']);
         unset($map['a.state']);
         $count = $m->alias('a')
             ->join('user b', 'a.uid = b.id', 'left')->where($map)->count();
@@ -156,6 +155,14 @@ class Order extends Base
         if(!$data['delivery_end_id']){
             ajaxReturn(["status" => 0, "msg" => "订单号不能为空"]);
         }
+        $order=model('order')->where('id',$id)->find();
+        if(!$order){
+            ajaxReturn(["status"=>0,"msg"=>"此订单不存在，请检查."]);
+        }
+        if($order['state']!=1){
+            ajaxReturn(["status"=>0,"msg"=>"订单状态错误."]);
+        }
+        $data['state']=2;
         $res = model('order')->where('id',$id)->update($data);
         if ($res) {
             ajaxReturn(["status" => 1, "msg" => "发货成功！"]);
@@ -172,7 +179,7 @@ class Order extends Base
         $id = request()->param("order_id");  // 得到order的id
         $user_id = input("user_id");  // 得到order的user_id
         $store_id = input("store_id");  // 得到order的store_id
-        $order = model('order')->alias('a')->where('id=' . $id)->find();
+        $order = model('order')->where('id=' . $id)->find();
        // dump($user_id);exit;
         if (!$order) {
             $this->error('没有此订单！');

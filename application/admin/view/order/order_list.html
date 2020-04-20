@@ -25,19 +25,19 @@
 						<li class="{eq name="status" value=""}active{/eq} tabs_a fl">
 						<a href="{:url('Order/orderList')}" class="{eq name="status" value=""}active{/eq} tabs_a fl">所有订单({$count|default='0'})</a>
 						</li>
-						<li class="{eq name="status" value="1"}active{/eq} tabs_a fl">
+						<li class="{eq name="status" value="0"}active{/eq} tabs_a fl">
 						<a href="{:url('Order/orderList', ['status' => 0])}" class="{eq name="status" value="0"}active{/eq} tabs_a fl">待付款({$count1|default='0'})</a>
 						</li>
 						<li class="{eq name="status" value="1"}active{/eq} tabs_a fl">
 						<a href="{:url('Order/orderList', ['status' => 1])}" class="{eq name="status" value="1"}active{/eq} tabs_a fl">待发货({$count2|default='0'})</a>
 						</li>
-						<li class="{eq name="status" value="1"}active{/eq} tabs_a fl">
+						<li class="{eq name="status" value="2"}active{/eq} tabs_a fl">
 						<a href="{:url('Order/orderList', ['status' => 2])}" class="{eq name="status" value="2"}active{/eq} tabs_a fl">已发货({$count3|default='0'})</a>
 						</li>
-						<li class="{eq name="status" value="1"}active{/eq} tabs_a fl">
+						<li class="{eq name="status" value="3"}active{/eq} tabs_a fl">
 						<a href="{:url('Order/orderList', ['status' => 3])}" class="{eq name="status" value="3"}active{/eq} tabs_a fl">已签收({$count4|default='0'})</a>
 						</li>
-						<li class="{eq name="status" value="1"}active{/eq} tabs_a fl">
+						<li class="{eq name="status" value="4"}active{/eq} tabs_a fl">
 						<a href="{:url('Order/orderList', ['status' => 4])}" class="{eq name="status" value="4"}active{/eq} tabs_a fl">已完成({$count5|default='0'})</a>
 						</li>
 					</ul>
@@ -90,7 +90,9 @@
 															<a  href="{:url('Order/detail',array('order_id'=>$vo['id']))}" class="btn btn-primary btn-sm" title="查看详情">详情</a>
 															{eq name="vo.state" value="待付款"}
 															{eq name="vo.paid" value="0"}
-															<a href="javascript:void(0);" class="btn btn-primary btn-sm j-editClass" data-id="{$vo.id}" title="填写价格和重量" >称重</a>
+															{eq name="vo.weight" value=""}
+															<a href="javascript:void(0);" class="btn btn-primary btn-sm j-editClass" data-id="{$vo.id}" title="填写价格和重量" >审核</a>
+															{/eq}
 															{/eq}
 															{/eq}
 															{eq name="vo.state" value="待发货"}
@@ -138,19 +140,19 @@
 							<form class="form-horizontal">
 
 								<div class="is_check_sure" style="display: block">
-									<div class="form-group clearfix">
-										<label class="col-sm-2 control-label">选择物流</label>
+									<!--<div class="form-group clearfix">-->
+										<!--<label class="col-sm-2 control-label">选择物流</label>-->
 
-										<div class="col-sm-9">
-											<div class="row">
-												<div class="col-sm-6">
-													<select id="wuliu_name" class="form-control m-b" name="wuliu_name">
-														<option value='0'>请选择物流...</option>
-													</select>
-												</div>
-											</div>
-										</div>
-									</div>
+										<!--<div class="col-sm-9">-->
+											<!--<div class="row">-->
+												<!--<div class="col-sm-6">-->
+													<!--<select id="wuliu_name" class="form-control m-b" name="wuliu_name">-->
+														<!--<option value='0'>请选择物流...</option>-->
+													<!--</select>-->
+												<!--</div>-->
+											<!--</div>-->
+										<!--</div>-->
+									<!--</div>-->
 
 									<div class="form-group clearfix">
 										<label class="col-sm-2 control-label">物流单号</label>

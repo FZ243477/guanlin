@@ -35,70 +35,32 @@
         <div class="col-sm-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5> {if condition="$edit_goods.type eq 0"}添加{else/}修改{/if}楼盘</h5>
+                    <h5> {if condition="$edit_goods.type eq 0"}添加{else/}修改{/if}中转站收货人</h5>
                 </div>
                 <div class="ibox-content">
                     <form enctype="multipart/form-data" method="post" id="add_step"  class="form-horizontal">
                         <div class="form-group" style="display: none;">
-                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>商品ID：</label>
+                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>ID：</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" id="editid" name="editid" style="width:60%" value="{$edit_goods.id}">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>楼盘名称：</label>
+                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>消息内容：</label>
 
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="houses_name" name="houses_name" style="width:60%" value="{$edit_goods.houses_name}">
+                                <input type="text" class="form-control" id="content" name="content" style="width:60%" value="{$edit_goods.content}">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>楼盘地址：</label>
+                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>提醒类型ID：</label>
 
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="houses_city" name="houses_city" style="width:60%" value="{$edit_goods.houses_city}">
+                                <input type="text" class="form-control" onKeyUp="this.value=this.value.replace(/\D/g,'')" {eq name='edit_goods.type' value='1'}disabled="disabled"  {/eq} id="type_id" name="type_id" style="width:60%" value="{$edit_goods.type_id}">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>排序：</label>
-                            <div class="col-sm-9">
-                                <input type="text" oninput="value=value.replace(/[^\d]/g,'')" class="form-control" id="sort" name="sort" style="width:60%" value="{$edit_goods.sort}">
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>是否热门：</label>
-                            <div class="col-sm-9">
-                                <select name='brand' class="input-sm form-control {notempty name="goods_show"}stopevents{else/}{/notempty}"  id="exampleInputEmail2" style='padding: 5px;width: 60%;'>
-                                    <option value='{$edit_goods.is_hot}' >
-                                        {if condition="empty($goods_show) neq true"}
-                                        {$edit_goods.hot_name}
-                                        {elseif condition="$edit_goods.type eq 1"}
-                                        {$edit_goods.hot_name}
-                                        {else/}
-                                        是否热门
-                                        {/if}
-                                    </option>
-                                    <option  value="1" style="width:100%;" >是</option>
-                                    <option  value="0" style="width:100%;" >否</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group  {if condition="$edit_goods.is_hot eq 0"}show{else/}{$edit_goods.houses_name}{/if}" id="hot_sort_show" >
-                            <label class="col-sm-2 control-label"><b style="color:red;">*</b>热门排序：</label>
-                            <div class="col-sm-9">
-                                <input type="text" oninput="value=value.replace(/[^\d]/g,'')" class="form-control" id="hot_sort" name="hot_sort" style="width:60%" value="{$edit_goods.hot_sort}">
-                            </div>
-                        </div>
-
-                        <div class="hr-line-dashed"></div>
-
-
                         {empty name="goods_show"}
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
@@ -149,10 +111,10 @@
     function addproduct(){
         var post = $('#add_step').serializeArray();
         console.log(post);
-        $.post("{:url('Village/save_xiaoqu')}",post, function(data){
+        $.post("{:url('Message/save_message')}",post, function(data){
 
             if(data.status){
-                dialog.showTips(data.msg,"", "{:url('Village/xiaoquList')}");
+                dialog.showTips(data.msg,"", "{:url('Message/messageList')}");
             }else{
                 alert(data.msg);
             }
