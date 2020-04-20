@@ -401,50 +401,46 @@ class Order extends Base
         $this->assign("telephone",$name);
 
         if ($starttime && $endtime) {
-            $map['a.order_time'] = ['between', [$starttime, $endtime]];
+            $map['a.create_time'] = ['between', [$starttime, $endtime]];
         } elseif ($starttime) {
-            $map['a.order_time'] = ['egt', $starttime];
+            $map['a.create_time'] = ['egt', $starttime];
         } elseif ($endtime) {
-            $map['a.order_time'] = ['elt', $endtime];
+            $map['a.create_time'] = ['elt', $endtime];
         }
         $arr_array = [];
 
         if ($status) {
-            $map['a.order_status'] = $status;
+            $map['a.state'] = $status;
         }
         if ($name) {
-            $map['b.nickname|a.telephone|a.consignee|b.telephone'] = ["like", "%$name%"];
+            $map['b.nickname|a.take_phone|a.fphone|a.take_name'] = ["like", "%$name%"];
             $this->assign("name", $name);
         }
         if ($order_no) {
-            $map['a.order_no'] = ["like", "%$order_no%"];
+            $map['a.order_id'] = ["like", "%$order_no%"];
             $this->assign("order_no", $order_no);
         }
 
         $refund = model('order')->alias('a')
-            ->join('tb_user b', 'a.user_id = b.id', 'left')
+            ->join('user b', 'a.uid = b.id', 'left')
             ->field('a.*')
-            ->order('a.order_time desc')
+            ->order('a.create_time desc')
             ->where($map)
             ->select();
 
         $data_info = [];
         foreach ($refund as $k => $v) {
-            $data_info[$k]['order_no'] = $v['order_no'];
-            $user = model('user')->where(['id' => $v['user_id']])->field('nickname user_name,telephone')->find();
-            $data_info[$k]['order_time'] = $v['order_time'];
-            $data_info[$k]['name'] = $user['user_name'];
-            $data_info[$k]['tel'] = $user['telephone'];
-            $data_info[$k]['order_status'] = OrderConstant::order_status_array_value($v['order_status']);
-//            $data_info[$k]['pay_way'] = OrderConstant::order_pay_array_value($v['pay_way']);
-            $data_info[$k]['total_fee'] = $v['total_fee'];
-            $data_info[$k]['pay_price'] = $v['pay_price'];
-            $data_info[$k]['pay_wait_price'] = $v['total_fee'] - $v['pay_price'];
-            $data_info[$k]['consignee'] = $v['consignee'];
-            $data_info[$k]['telephone'] = $v['telephone'];
-            $data_info[$k]['address'] = $v['province'].$v['city'].$v['district'].$v['place'];
+            $data_info[$k]['order_id'] = $v['order_id'];
+            $data_info[$k]['create_time'] = $v['create_time'];
+            $data_info[$k]['name'] = $v['fname'];
+            $data_info[$k]['tel'] = $v['fphone'];
+            $data_info[$k]['state'] =$v['state'];
+            $data_info[$k]['price'] = $v['price'];
+            $data_info[$k]['take_name'] = $v['take_name'];
+            $data_info[$k]['take_phone'] = $v['take_phone'];
+            $data_info[$k]['address'] = $v['take_province'].$v['take_city'].$v['take_district'].$v['take_detailaddress'];
         }
-        $headArr = ['订单编号','下单时间','下单人姓名','下单人手机号','订单状态','订单金额','已付金额','待付金额','收货人姓名','收货人手机号','收货地址'];
+        $headArr = ['订单编号','下单时间','下单人姓名','下单人手机号','订单状态','订单金额','收货人姓名','收货人手机号','收货地址'];
 
         $before_json = [];
         $after_json = [];

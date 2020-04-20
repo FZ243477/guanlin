@@ -69,7 +69,7 @@
 													<th>用户昵称/手机</th>
 													<!--<th>状态</th>-->
 													<th>注册时间</th>
-													<th>上次登录时间</th>
+													<th>身份证ID</th>
 													<th>操作</th>
 												</tr>
 												</thead>
@@ -88,7 +88,7 @@
 														{{vo.status == 1 ? '正常': '冻结'}}
 													</td>-->
 													<td class='center'>{{vo.create_time}}</td>
-													<td class='center'>{{vo.last_login_time}}</td>
+													<td class='center'>{{vo.id_card}}</td>
 													<td class='center'>
 														<a :href="'home_host/User/userDetail/id/'+vo.id" class="btn btn-primary"><i class="fa fa-plus"></i>编辑</a>
 														<a href="javascript:void(0)" class="btn btn-default btn-sm del_user" @click="deluser(vo.id)">删除</a>

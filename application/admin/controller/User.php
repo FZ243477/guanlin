@@ -58,7 +58,7 @@ class User extends Base
             $totalCount = $user_model->where($map)->count();
             $first_row = ($page-1)*$list_row;
             $field = [
-                'id','telephone','head_img','status', 'nickname','create_time', 'last_login_time',
+                'id','telephone','head_img','status', 'nickname','create_time', 'id_card',
             ];
             $lists = $user_model->where($map)->field($field)->limit($first_row, $list_row)->order('id desc')->select();
             $pageCount = ceil($totalCount/$list_row);
@@ -180,7 +180,7 @@ class User extends Base
             }
             $field = [
                 'id','head_img','telephone',
-                'nickname','sex',
+                'nickname','sex','id_card',
                 'status','create_time',
                 'last_login_time','login_num',
             ];
@@ -207,7 +207,6 @@ class User extends Base
             }
             $map = [];
             $map['id'] = $id;
-            $map['is_del'] = 0;
             $info = $user->where($map)->find();
             if(!$info){
                 ajaxReturn(['status' => 0, 'msg' => '此用户不存在或已删除', 'data' => []]);
@@ -218,7 +217,8 @@ class User extends Base
             $field = array_keys($data);
             $field[] = 'id';
             $before_json = $user->field($field)->where(['id' =>  $id])->find();
-            $result = $user->save($data, ['id' => $id]);
+           // dump($data);exit;
+            $result = $user->where('id',$id)->update($data);//$user->save($data, ['id' => $id]);
             $data['id'] = $id;
             $after_json = $data;
             if ($result) {
