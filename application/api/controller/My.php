@@ -19,22 +19,17 @@ class My extends Base
     //寄件首页
     public function index_list(){
         $uid = $this->user_id;
-        $type = Db::name('user_message')
-                ->where('uid',$uid)
-                ->where('state',0)
-                ->find();
-        $field = 'id, content,type_id';
-        $list = model('message')->field($field)->where('type_id',$type)->find();
-        if(!$list){
-            $list['message_content']="";
-        }else{
-            $list['message_content']=$list['content'];
+        $user_content=model('user')->where('id',$uid)->find();
+        if(!$user_content){
+            $return_arr = ['status'=>0, 'msg'=>'操作失败','data'=> []];
+            exit(json_encode($return_arr));
         }
-        $map['uid'] = $this->user_id;
-        $map['paid']=0;
-        $map['has_take']=1;
-        $paid_num = model('order')->where($map)->count();
-        $list['paid_num']=$paid_num;
+        $list=[
+            'id'=>$user_content['id'],
+            'nickname'=>$user_content['nickname'],
+            'headimgurl'=>$user_content['head_img'],
+            'telephone'=>$user_content['telephone'],
+        ];
         if($list){
             $json_arr = ['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => ['list' => $list]];
             ajaxReturn($json_arr);
