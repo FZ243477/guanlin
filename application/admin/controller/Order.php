@@ -138,8 +138,12 @@ class Order extends Base
             'weight'=>$weight,
             'has_take'=>1
         ];
+        $content = "审核订单";
+        $before_json = model('order')->where('id',$id)->find();
         $save=model('order')->where('id',$id)->update($save_content);
+        $after_json = $save;
         if ($save) {
+            $this->managerLog($this->manager_id, $content, $before_json, $after_json);
             ajaxReturn(['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => []]);
         } else {
             ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []]);
@@ -163,8 +167,12 @@ class Order extends Base
             ajaxReturn(["status"=>0,"msg"=>"订单状态错误."]);
         }
         $data['state']=2;
+        $before_json = model('order')->where('id',$id)->find();
         $res = model('order')->where('id',$id)->update($data);
+        $after_json = $res;
+        $content = "订单发货";
         if ($res) {
+            $this->managerLog($this->manager_id, $content, $before_json, $after_json);
             ajaxReturn(["status" => 1, "msg" => "发货成功！"]);
         } else {
             ajaxReturn(["status" => 0, "msg" => "网络繁忙，请稍后~~"]);
@@ -236,13 +244,8 @@ class Order extends Base
         if (!$this->VerifyTelephone($telephone)) {
             ajaxReturn(['status' => 0, 'msg' => '手机号格式不正确']);
         }
-        $province = request()->post('province');
-        $city = request()->post('city');
-        $district = request()->post('district');
-        $place = request()->post('address');
-        $consignee = request()->post('consignee');
-        $telephone = request()->post('telephone');
-        model('order')->save([
+        $before_json = $order;
+        $res=model('order')->save([
             'take_province' => $province,
             'take_city' => $city,
             'take_district' => $district,
@@ -251,7 +254,14 @@ class Order extends Base
             'take_phone' => $telephone,
             'take_address'=>$province.$city.$district.$place
         ],['id'=>$order_id]);
-        ajaxReturn(["status" => 1, "msg" => SystemConstant::SYSTEM_OPERATION_SUCCESS]);
+        $after_json = $res;
+        $content="修改订单收货人地址";
+        if($res){
+            $this->managerLog($this->manager_id, $content, $before_json, $after_json);
+            ajaxReturn(["status" => 1, "msg" => SystemConstant::SYSTEM_OPERATION_SUCCESS]);
+        }else{
+            ajaxReturn(["status" => 0, "msg" => SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []]);
+        }
     }
     //修改订单金额
     public function editPrice(){
@@ -270,8 +280,12 @@ class Order extends Base
             'price'=>$pay_price,
             'note'=>$action_note
         ];
+        $before_json = $order;
         $res = model('order')->where('id',$id)->update($save_content);
+        $after_json = $res;
+        $content="上传订单价格";
         if ($res) {
+            $this->managerLog($this->manager_id, $content, $before_json, $after_json);
             ajaxReturn(["status" => 1, "msg" => "修改成功！"]);
         } else {
             ajaxReturn(["status" => 0, "msg" => "网络繁忙，请稍后~~"]);
@@ -367,6 +381,7 @@ class Order extends Base
         $data_info['shipping_status'] = $order['is_shipping'];
         $data_info['log_time'] = time();
         model('order_action')->save($data_info);//订单操作记录
+        $content = "订单发货";
         if ($res) {
           /*  $msg = getSetting('sms.shipping_template');
             $msg = str_replace('{order_no}', $order['order_no'], $msg);

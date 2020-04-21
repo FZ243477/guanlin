@@ -41,12 +41,13 @@ class Goods extends Base
             if (!$data['level_name']) {
                 ajaxReturn(["status" => 0, "msg" => "请填写分类名称！"]);
             }
-            $res=Db::name('goods_cate')->where('name',$data['level_name'])->find();
+            $res=Db::name('goods_cate')->where('name',$data['level_name'])
+                ->where('delete_time','null')
+                ->find();
             if ($res) {
                 ajaxReturn(["status" => 0, "msg" => "类名已存在！"]);
             }
             if(!$data['id']) {
-
                 $max_id=Db::name('goods_cate')->max('id');
                 $insert_id=$max_id+1;
                 $data['id']=$insert_id;
@@ -56,6 +57,9 @@ class Goods extends Base
                     'create_time' => time()
                 ];
                 $end = Db::name('goods_cate')->insert($save_content);
+                $content="添加物品分类";
+                $before_json=$res;
+                $after_json=$end;
             }else{
                 $rea=Db::name('goods_cate')->where('id',$data['id'])->find();
                 if (!$rea) {
@@ -66,9 +70,13 @@ class Goods extends Base
                         'update_time' => time()
                     ];
                     $end = Db::name('goods_cate')->where('id',$data['id'])->update($update_content);
+                    $content="修改物品分类";
+                    $before_json=$res;
+                    $after_json=$end;
                 }
             }
             if ($end) {
+                $this->managerLog($this->manager_id, $content, $before_json, $after_json);
                 ajaxReturn(["status" => 1, "msg" => SystemConstant::SYSTEM_OPERATION_SUCCESS]);
             } else {
                 ajaxReturn(["status" => 0, "msg" => SystemConstant::SYSTEM_OPERATION_FAILURE]);
@@ -90,7 +98,11 @@ class Goods extends Base
             ajaxReturn(["status" => 0, "msg" => "分类不存在！"]);
         }
         $del = model('goods_cate')->destroy($id);
+        $content="删除物品分类";
+        $before_json=$rea;
+        $after_json=$del;
         if ($del) {
+            $this->managerLog($this->manager_id, $content, $before_json, $after_json);
             ajaxReturn(["status" => 1, "msg" => SystemConstant::SYSTEM_OPERATION_SUCCESS]);
         } else {
             ajaxReturn(["status" => 0, "msg" => SystemConstant::SYSTEM_OPERATION_FAILURE]);

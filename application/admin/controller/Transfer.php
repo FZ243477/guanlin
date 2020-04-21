@@ -130,8 +130,12 @@ class Transfer extends Base
                     'detailaddress'=>$data['detailaddress'],
                     'update_time'=>time()
                 ];
+                $before_json=Db::name('transfer_station')->where('id',$data['editid'])->find();
                 $edit=Db::name('transfer_station')->where('id',$data['editid'])->update($edit_content);
+                $content="修改中转站收货人信息";
+                $after_json=$edit;
                 if ($edit) {
+                    $this->managerLog($this->manager_id, $content, $before_json, $after_json);
                     ajaxReturn(['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => []]);
                 } else {
                     ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []]);

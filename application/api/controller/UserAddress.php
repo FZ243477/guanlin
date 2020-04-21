@@ -21,7 +21,9 @@ class UserAddress extends Base
         $map['uid'] = $this->user_id;
         $field = 'id, uid, real_name, phone, country, province, city, district,detail';
         $list = model('user_address')->where('delete_time','null')->where($map)->field($field)->order('id desc')->select();
-        if($list){
+        $list_count = model('user_address')->where('delete_time','null')->where($map)->field($field)->order('id desc')->count();
+
+        if($list || $list_count == 0){
             $json_arr = ['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => ['list' => $list]];
             ajaxReturn($json_arr);
         }else{

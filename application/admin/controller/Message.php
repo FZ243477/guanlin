@@ -83,7 +83,11 @@ class Message extends Base
                     'create_time'=>time()
                 ];
                 $save=Db::name('message')->insertGetId($save_content);
+                $content="新增用户消息提示";
+                $before_json=[];
+                $after_json=$save;
                 if ($save) {
+                    $this->managerLog($this->manager_id, $content, $before_json, $after_json);
                     ajaxReturn(['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => []]);
                 } else {
                     ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []]);
@@ -94,8 +98,13 @@ class Message extends Base
                     'content'=>$data['content'],
                     'update_time'=>time()
                 ];
+
+                $before_json=Db::name('message')->where('id',$data['editid'])->find();
                 $edit=Db::name('message')->where('id',$data['editid'])->update($edit_content);
+                $content="修改用户消息提示";
+                $after_json=$edit;
                 if ($edit) {
+                    $this->managerLog($this->manager_id, $content, $before_json, $after_json);
                     ajaxReturn(['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => []]);
                 } else {
                     ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []]);
@@ -109,10 +118,16 @@ class Message extends Base
         if (request()->isPost()) {
             $data=input();
             $del_id=explode('-',$data['id']);
+            $data=[];
             foreach ($del_id as $k=>$v){
+                $data[$k] = model('User')->where(['id' => $v])->find();
                 $del = model('message')->destroy($v);
             }
             if ($del) {
+                $before_json = $data;
+                $after_json = [];
+                $content = '删除用户消息提示';
+                $this->managerLog($this->manager_id, $content, $before_json, $after_json);
                 ajaxReturn(["status" => 1, "msg" => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => []]);
             } else {
                 ajaxReturn(["status" => 0, "msg" => SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []]);

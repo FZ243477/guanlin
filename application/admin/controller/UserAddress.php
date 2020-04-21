@@ -80,7 +80,7 @@ class UserAddress extends Base
         return $this->fetch();
     }
 
-    //新增中转站收货人信息操作 添加 修改
+    //用户收货人信息操作 添加 修改
     public function save_address(){
         if (request()->isPost()) {
             $data = request()->post();
@@ -117,8 +117,11 @@ class UserAddress extends Base
                     'create_time'=>time()
                 ];
                 $save=Db::name('user_address')->insertGetId($save_content);
-                $houses_id = Db::name('user_address')->getLastInsID();
+                $content="添加用户收货信息";
+                $before_json=[];
+                $after_json=$save;
                 if ($save) {
+                    $this->managerLog($this->manager_id, $content, $before_json, $after_json);
                     ajaxReturn(['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => []]);
                 } else {
                     ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []]);
@@ -135,8 +138,12 @@ class UserAddress extends Base
                     'detail'=>$data['detail'],
                     'update_time'=>time()
                 ];
+                $before_json=Db::name('user_address')->where('id',$data['editid'])->find();
                 $edit=Db::name('user_address')->where('id',$data['editid'])->update($edit_content);
+                $content="修改用户收货地址信息";
+                $after_json=$edit;
                 if ($edit) {
+                    $this->managerLog($this->manager_id, $content, $before_json, $after_json);
                     ajaxReturn(['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => []]);
                 } else {
                     ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []]);
@@ -150,10 +157,16 @@ class UserAddress extends Base
         if (request()->isPost()) {
             $data=input();
             $del_id=explode('-',$data['id']);
+            $date=[];
             foreach ($del_id as $k=>$v){
+                $date['$k'] = model('user_address')->where(['id' => $v])->find();
                 $del = model('user_address')->destroy($v);
             }
+            $content="删除用户收货地址信息";
+            $before_json=$date;
+            $after_json=[];
             if ($del) {
+                $this->managerLog($this->manager_id, $content, $before_json, $after_json);
                 ajaxReturn(["status" => 1, "msg" => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => []]);
             } else {
                 ajaxReturn(["status" => 0, "msg" => SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []]);
