@@ -18,12 +18,12 @@ class User extends Base
         $data['nickname'] = request()->post('nickname', 0);
         $data['id_type'] = request()->post('id_type', 0);
         $data['id_card'] = request()->post('id_card', 0);
-        if($data['nickname']==''){
+        if ($data['nickname']=='') {
             $return_arr = ['status'=>0, 'msg'=>'请填写姓名','data'=> []];
             exit(json_encode($return_arr));
         }
-        if($data['id_card']==''){
-            $return_arr = ['status'=>0, 'msg'=>'请填写身份证号码','data'=> []];
+        if ($data['id_card'] == '') {
+            $return_arr = ['status'=>0, 'msg' => '请填写身份证号码','data'=> []];
             exit(json_encode($return_arr));
         }
         $save_content=[
@@ -32,7 +32,7 @@ class User extends Base
             'id_card'=>$data['id_card'],
         ];
         $save = model('user')->where($map)->update($save_content);
-        if($save){
+        if ($save) {
             $return_arr = ['status'=>1, 'msg'=>'修改成功','data'=> []];
             exit(json_encode($return_arr));
         }else{

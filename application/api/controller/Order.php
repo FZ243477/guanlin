@@ -175,6 +175,7 @@ class Order extends Base
      * 请求订单列表数据
      */
     public function state_list(){
+        dump(123);exit;
         $map['uid'] = $this->user_id;
         $state = request()->post('state', 0);
         $list_row = request()->post('list_row', 10); //每页数据
