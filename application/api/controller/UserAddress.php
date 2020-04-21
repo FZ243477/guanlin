@@ -32,66 +32,14 @@ class UserAddress extends Base
         }
     }
 
-    /**
-     * 新增收货地址
-     */
-    public function add(){
-        $map['uid'] =$this->user_id;
-        $data = input();
-        $data['real_name'] = request()->post('real_name', 0);
-        $data['phone'] = request()->post('phone', 0);
-        $data['country'] = request()->post('country', 0);
-        $data['province'] = request()->post('province', 0);
-        $data['city'] = request()->post('city', 0);
-        $data['district'] = request()->post('district', 0);
-        $data['detail'] = request()->post('detail', 0);
-        if($data['real_name']==''){
-            $return_arr = ['status'=>0, 'msg'=>'姓名不能为空','data'=> []];
-            exit(json_encode($return_arr));
-        }
-        if($data['phone']==''){
-            $return_arr = ['status'=>0, 'msg'=>'手机号码不能为空','data'=> []];
-            exit(json_encode($return_arr));
-        }
-        if($data['province']==''){
-            $return_arr = ['status'=>0, 'msg'=>'请选择省市区','data'=> []];
-            exit(json_encode($return_arr));
-        }
-        if($data['detail']==''){
-            $return_arr = ['status'=>0, 'msg'=>'请填写详细地址','data'=> []];
-            exit(json_encode($return_arr));
-        }
-        if(!isset($data['country']) || $data['country']==0){
-            $data['country']='China';
-        }
-        $save_content=[
-            'uid'=>$map['uid'],
-            'real_name'=>$data['real_name'],
-            'phone'=>$data['phone'],
-            'country'=>$data['country'],
-            'province'=>$data['province'],
-            'city'=>$data['city'],
-            'district'=>$data['district'],
-            'detail'=>$data['detail'],
-            'create_time'=>time()
-        ];
-        $save = model('user_address')->insertGetId($save_content);
-        if($save){
-            $return_arr = ['status'=>1, 'msg'=>'添加成功','data'=> []];
-            exit(json_encode($return_arr));
-        }else{
-            $return_arr = ['status'=>0, 'msg'=>'添加失败','data'=> []];
-            exit(json_encode($return_arr));
-        }
-    }
-
 
     /**
-     * 新增收货地址
+     * 新增 修改收货地址
      */
     public function edit(){
         $map['uid'] =$this->user_id;
         $data['address_id'] = request()->post('address_id', 0);
+        $data['edit_type'] = request()->post('edit_type', 0);
         $data['real_name'] = request()->post('real_name', 0);
         $data['phone'] = request()->post('phone', 0);
         $data['country'] = request()->post('country', 0);
@@ -99,10 +47,6 @@ class UserAddress extends Base
         $data['city'] = request()->post('city', 0);
         $data['district'] = request()->post('district', 0);
         $data['detail'] = request()->post('detail', 0);
-        if($data['address_id']==''){
-            $return_arr = ['status'=>0, 'msg'=>'操作失败','data'=> []];
-            exit(json_encode($return_arr));
-        }
         if($data['real_name']==''){
             $return_arr = ['status'=>0, 'msg'=>'姓名不能为空','data'=> []];
             exit(json_encode($return_arr));
@@ -122,24 +66,52 @@ class UserAddress extends Base
         if(!isset($data['country']) || $data['country']==0){
             $data['country']='China';
         }
-        $save_content=[
-            'real_name'=>$data['real_name'],
-            'phone'=>$data['phone'],
-            'country'=>$data['country'],
-            'province'=>$data['province'],
-            'city'=>$data['city'],
-            'district'=>$data['district'],
-            'detail'=>$data['detail'],
-            'create_time'=>time()
-        ];
-        $save = model('user_address')->where('id',$data['address_id'])->update($save_content);
-        if($save){
-            $return_arr = ['status'=>1, 'msg'=>'修改成功','data'=> []];
-            exit(json_encode($return_arr));
-        }else{
-            $return_arr = ['status'=>0, 'msg'=>'修改失败','data'=> []];
-            exit(json_encode($return_arr));
+            if(!isset($data['edit_type']) || $data['edit_type'] == 1){
+            $save_content=[
+                'real_name'=>$data['real_name'],
+                'phone'=>$data['phone'],
+                'country'=>$data['country'],
+                'province'=>$data['province'],
+                'city'=>$data['city'],
+                'district'=>$data['district'],
+                'detail'=>$data['detail'],
+                'create_time'=>time()
+            ];
+            $save = model('user_address')->insertGetId($save_content);
+            if($save){
+                $return_arr = ['status'=>1, 'msg'=>'添加成功','data'=> []];
+                exit(json_encode($return_arr));
+            }else{
+                $return_arr = ['status'=>0, 'msg'=>'添加失败','data'=> []];
+                exit(json_encode($return_arr));
+            }
         }
+            if($data['edit_type'] == 2){
+            $save_content=[
+                'uid'=>$map['uid'],
+                'real_name'=>$data['real_name'],
+                'phone'=>$data['phone'],
+                'country'=>$data['country'],
+                'province'=>$data['province'],
+                'city'=>$data['city'],
+                'district'=>$data['district'],
+                'detail'=>$data['detail'],
+                'update_time'=>time()
+            ];
+            if($data['address_id']==''){
+                $return_arr = ['status'=>0, 'msg'=>'操作失败','data'=> []];
+                exit(json_encode($return_arr));
+            }
+            $save = model('user_address')->where('id',$data['address_id'])->update($save_content);
+            if($save){
+                $return_arr = ['status'=>1, 'msg'=>'修改成功','data'=> []];
+                exit(json_encode($return_arr));
+            }else{
+                $return_arr = ['status'=>0, 'msg'=>'修改失败','data'=> []];
+                exit(json_encode($return_arr));
+            }
+        }
+
     }
 
     /**
