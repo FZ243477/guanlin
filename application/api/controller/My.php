@@ -23,8 +23,8 @@ class My extends Base
                 ->where('uid',$uid)
                 ->where('state',0)
                 ->find();
-        $field = 'id, content,type';
-        $list = model('message')->field($field)->where('type',$type)->find();
+        $field = 'id, content,type_id';
+        $list = model('message')->field($field)->where('type_id',$type)->find();
         if(!$list){
             $list['message_content']="";
         }else{
