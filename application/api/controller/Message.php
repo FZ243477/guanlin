@@ -16,9 +16,9 @@ class Message extends Base
     }
 
     /**
-     * 收货地址列表
+     * 消息提醒内容列表
      */
-    public function list(){
+    public function index_list(){
         $type = request()->get('type', 0);
         $field = 'id, content,type';
         $list = model('message')->field($field)->where('type',$type)->find();
