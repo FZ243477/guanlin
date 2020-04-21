@@ -176,6 +176,7 @@ class Order extends Base
      */
     public function state_list(){
         $map['uid'] = $this->user_id;
+        dump($this->user_id);exit;
         $state = request()->post('state', 0);
         $list_row = request()->post('list_row', 10); //每页数据
         $page = request()->post('page', 1); //当前页

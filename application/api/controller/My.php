@@ -19,7 +19,6 @@ class My extends Base
     //寄件首页
     public function index_list(){
         $uid = $this->user_id;
-        dump($uid);exit;
         $type = Db::name('user_message')
                 ->where('uid',$uid)
                 ->where('state',0)
