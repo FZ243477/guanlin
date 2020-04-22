@@ -34,6 +34,29 @@ class UserAddress extends Base
 
 
     /**
+     * 地址详情
+     */
+    public function detail(){
+        $map['uid'] = $this->user_id;
+        $data['address_id'] = request()->post('address_id', 0);
+        $map['id'] = $data['address_id'];
+        $field = 'id, uid, real_name, phone, country, province, city, district,detail';
+        if($data['address_id']==''){
+            $return_arr = ['status'=>0, 'msg'=>'操作失败','data'=> []];
+            exit(json_encode($return_arr));
+        }
+        $list=model('user_address')->where('delete_time','null')
+                ->where($map)->field($field)->find();
+        if($list){
+            $json_arr = ['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => ['list' => $list]];
+            ajaxReturn($json_arr);
+        }else{
+            $return_arr = ['status'=>0, 'msg'=>'操作失败','data'=> []];
+            exit(json_encode($return_arr));
+        }
+
+    }
+    /**
      * 新增 修改收货地址
      */
     public function edit(){
