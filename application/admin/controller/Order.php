@@ -150,6 +150,29 @@ class Order extends Base
         }
     }
 
+    //确认签收
+    public function  sure_order(){
+       $data=input();
+       $order=model('order')->where('id',$data['id'])->find();
+       if(!$order){
+           ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []]);
+       }
+        $save_content = [
+            'state'=>3,
+            'update_time'=>time()
+        ];
+        $before_json = $order;
+        $save=model('order')->where('id',$order['id'])->update($save_content);
+        $after_json = $save;
+        $content = "确认签收";
+        if ($save) {
+            $this->managerLog($this->manager_id, $content, $before_json, $after_json);
+            ajaxReturn(['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => []]);
+        } else {
+            ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []]);
+        }
+    }
+
     //发货
     public function  delivery_end(){
         $id = request()->post('id');

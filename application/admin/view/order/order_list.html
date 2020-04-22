@@ -95,6 +95,9 @@
 															{/eq}
 															{/eq}
 															{/eq}
+															{eq name="vo.state" value="已发货"}
+															<a href="javascript:void(0);" class="btn btn-primary btn-sm j-editClass2" data-id="{$vo.id}" onclick="J_sure_order(this)" title="确认签收" >确认签收</a>
+															{/eq}
 															{eq name="vo.state" value="待发货"}
 															{eq name="vo.paid" value="1"}
 															<a href="javascript:void(0);" class="btn btn-primary btn-sm j-editClass1" data-id="{$vo.id}">发货</a>
@@ -587,14 +590,27 @@
 	/*提交拒绝退款 1*/
 	function J_refuse_refund_submit(obj) {
 		var post = {};
+		id = $(this).attr("data-id");
+		console.log(obj);
+		post.id = id;
 		post.order_no = $('#rtk_order_no').text();        //订单号
-		post.refuse_refund_reason = $("textarea[name=refuse_refund_reason]").val();        //订单号
-		if (!post.refuse_refund_reason) {
-			dialog.showTips('请填写拒绝退款理由', "warn");
-			return false;
-		}
-		dialog.showTips("确认拒绝退款吗?", "firm", function () {
-			$.post("{:url('Order/refuse_refund')}", post, function (result) {
+		post.refuse_refund_reason = $("textarea[name=refuse_refund_reason]").val();
+		dialog.showTips("确认已签收吗?", "firm", function () {
+			$.post("{:url('Order/sure_order')}", post, function (result) {
+				dialog.showTips(result.msg, "", '1');
+				return false;
+			}, "json")
+		})
+	}
+	/*确认签收 2*/
+	function J_sure_order(obj) {
+		var post = {};
+		var f2 = $(obj).attr('data-id');
+		console.log(f2);
+		post.id = f2;        //订单号
+		post.refuse_refund_reason = $("textarea[name=refuse_refund_reason]").val();
+		dialog.showTips("确认已签收吗?", "firm", function () {
+			$.post("{:url('Order/sure_order')}", post, function (result) {
 				dialog.showTips(result.msg, "", '1');
 				return false;
 			}, "json")

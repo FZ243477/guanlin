@@ -143,4 +143,103 @@ class Transfer extends Base
             }
         }
     }
+
+    //中转站收货人列表
+    public function customerList(){
+        $name = request()->param('keyword');
+        $where = [];
+        if ($name) {
+            $where['title'] = ['like', "%{$name}%"];
+        }
+        $this->assign('keyword', $name);
+        $transfer_list=Db::name('customer')
+            ->where($where)
+            ->where('delete_time','null')
+            ->paginate(10,false,['query'=>request()->param()]);
+        $this->assign('transfer_list',$transfer_list);
+        return $this->fetch();
+    }
+
+    //新增中转站收货人
+    public function customer_add(){
+        $data=input();
+        if(isset($data['id'])){
+            $edit_goods=Db::name('customer')
+                ->where('delete_time','null')
+                ->where('id',$data['id'])
+                ->find();
+            $edit_goods['type']=1;
+            $this->assign("edit_goods", $edit_goods);
+        }else{
+            $edit_goods=[
+                'title'=>'',
+                'back_logo'=>'',
+                'qrcode'=>'',
+                'qrname'=>'',
+                'qrphone'=>'',
+                'type'=>0,
+                'id'=>'',
+            ];
+            $this->assign("edit_goods", $edit_goods);
+        }
+        if(isset($data['type'])){
+            $goods_show=$data['type'];
+            $this->assign('goods_show',$goods_show);
+        }
+        return $this->fetch();
+    }
+
+    //新增中转站收货人信息操作 添加 修改
+    public function save_customer(){
+        if (request()->isPost()) {
+            $data = request()->post();
+
+            if (!$data['qrname']) {
+                ajaxReturn(['status' => 0, 'msg' => '请填写微信号', 'data' => []]);
+            }
+            if (!$data['qrphone']) {
+                ajaxReturn(['status' => 0, 'msg' => '请填写客服电话', 'data' => []]);
+            }
+            if (!$data['title']) {
+                ajaxReturn(['status' => 0, 'msg' => '请填写标题', 'data' => []]);
+            }
+            if (!$data['express_logo']) {
+                ajaxReturn(['status' => 0, 'msg' => '请上传二维码', 'data' => []]);
+            }
+            if(!$data['editid']){
+                $save_content=[
+                    'title'=>$data['title'],
+                    'qrcode'=>$data['express_logo'],
+                    'qrphone'=>$data['qrphone'],
+                    'qrname'=>$data['qrname'],
+                    'create_time'=>time()
+                ];
+                $save=Db::name('customer')->insertGetId($save_content);
+                if ($save) {
+                    ajaxReturn(['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => []]);
+                } else {
+                    ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []]);
+                }
+            }
+            if(isset($data['editid'])){
+                $edit_content=[
+                    'title'=>$data['title'],
+                    'qrcode'=>$data['express_logo'],
+                    'qrphone'=>$data['qrphone'],
+                    'qrname'=>$data['qrname'],
+                    'update_time'=>time()
+                ];
+                $before_json=Db::name('customer')->where('id',$data['editid'])->find();
+                $edit=Db::name('customer')->where('id',$data['editid'])->update($edit_content);
+                $content="修改客服中心信息";
+                $after_json=$edit;
+                if ($edit) {
+                    $this->managerLog($this->manager_id, $content, $before_json, $after_json);
+                    ajaxReturn(['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => []]);
+                } else {
+                    ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_OPERATION_FAILURE, 'data' => []]);
+                }
+            }
+        }
+    }
 }

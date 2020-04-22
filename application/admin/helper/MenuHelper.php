@@ -17,8 +17,9 @@ trait MenuHelper
             'Goods' =>['name'=>'物品分类','icon'=>'iconfont icon-shangpinguanli','sub_menu'=>[
                 ['name'=>'物品分类','act'=>'goodsCate','control'=>'Goods'],
             ]],
-            'Transfer' =>['name'=>'中转站收货人信息','icon'=>'fa-book','sub_menu'=>[
+            'Transfer' =>['name'=>'信息','icon'=>'fa-book','sub_menu'=>[
                 ['name'=>'中转站收货信息列表','act'=>'transferList','control'=>'Transfer'],
+                ['name'=>'客服中心信息','act'=>'customerList','control'=>'Transfer'],
             ]],
             'Message' =>['name'=>'用户消息提醒列表','icon'=>'fa-list','sub_menu'=>[
                 ['name'=>'用户消息提醒列表','act'=>'messageList','control'=>'Message'],
