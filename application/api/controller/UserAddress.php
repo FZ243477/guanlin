@@ -102,6 +102,7 @@ class UserAddress extends Base
         }
             if(!isset($data['edit_type']) || $data['edit_type'] == 1){
             $save_content=[
+                'uid'=>$map['uid'],
                 'real_name'=>$data['real_name'],
                 'phone'=>$data['phone'],
                 'country'=>$data['country'],
