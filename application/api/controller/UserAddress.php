@@ -70,6 +70,7 @@ class UserAddress extends Base
         $data['city'] = request()->post('city', 0);
         $data['district'] = request()->post('district', 0);
         $data['detail'] = request()->post('detail', 0);
+        $data['is_default'] = request()->post('is_default', 0);
         if($data['real_name']==''){
             $return_arr = ['status'=>0, 'msg'=>'姓名不能为空','data'=> []];
             exit(json_encode($return_arr));
@@ -89,6 +90,16 @@ class UserAddress extends Base
         if(!isset($data['country']) || $data['country']==0){
             $data['country']='China';
         }
+
+        if($data['is_default'] == 1){
+               $address_list=model('user_address')->where('delete_time','null')
+                   ->where('uid',$map['uid'])->select();
+               foreach($address_list as $k =>$v){
+                   $resulta[$k] = model('user_address')
+                       ->where('id', $v['id'])
+                       ->update(['is_default' => 2]);
+               }
+        }
             if(!isset($data['edit_type']) || $data['edit_type'] == 1){
             $save_content=[
                 'real_name'=>$data['real_name'],
@@ -98,6 +109,7 @@ class UserAddress extends Base
                 'city'=>$data['city'],
                 'district'=>$data['district'],
                 'detail'=>$data['detail'],
+                'is_default'=>$data['is_default'],
                 'create_time'=>time()
             ];
             $save = model('user_address')->insertGetId($save_content);
@@ -119,6 +131,7 @@ class UserAddress extends Base
                 'city'=>$data['city'],
                 'district'=>$data['district'],
                 'detail'=>$data['detail'],
+                'is_default'=>$data['is_default'],
                 'update_time'=>time()
             ];
             if($data['address_id']==''){
