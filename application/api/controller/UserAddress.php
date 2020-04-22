@@ -19,7 +19,7 @@ class UserAddress extends Base
      */
     public function index_list(){
         $map['uid'] = $this->user_id;
-        $field = 'id, uid, real_name, phone, country, province, city, district,detail';
+        $field = 'id, uid, real_name, phone, country, province, city, district,detail,is_default';
         $list = model('user_address')->where('delete_time','null')->where($map)->field($field)->order('id desc')->select();
         $list_count = model('user_address')->where('delete_time','null')->where($map)->field($field)->order('id desc')->count();
 
@@ -40,7 +40,7 @@ class UserAddress extends Base
         $map['uid'] = $this->user_id;
         $data['address_id'] = request()->post('address_id', 0);
         $map['id'] = $data['address_id'];
-        $field = 'id, uid, real_name, phone, country, province, city, district,detail';
+        $field = 'id, uid, real_name, phone, country, province, city, district,detail,is_default';
         if($data['address_id']==''){
             $return_arr = ['status'=>0, 'msg'=>'操作失败','data'=> []];
             exit(json_encode($return_arr));
