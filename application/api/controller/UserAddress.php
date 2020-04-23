@@ -115,7 +115,7 @@ class UserAddress extends Base
             ];
             $save = model('user_address')->insertGetId($save_content);
             if($save){
-                $return_arr = ['status'=>1, 'msg'=>'添加成功','data'=> []];
+                $return_arr = ['status'=>1, 'msg'=>'添加成功','data'=> [$save]];
                 exit(json_encode($return_arr));
             }else{
                 $return_arr = ['status'=>0, 'msg'=>'添加失败','data'=> []];
