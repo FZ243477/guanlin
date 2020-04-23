@@ -88,7 +88,7 @@ class UserAddress extends Base
             exit(json_encode($return_arr));
         }
         if(!isset($data['country']) || $data['country']==0){
-            $data['country']='China';
+            $data['country']='1';
         }
 
         if($data['is_default'] == 1){
