@@ -177,6 +177,8 @@ class Transfer extends Base
                 'qrcode'=>'',
                 'qrname'=>'',
                 'qrphone'=>'',
+                'delivery_days'=>'',
+                'enddelivery_days'=>'',
                 'type'=>0,
                 'id'=>'',
             ];
@@ -206,12 +208,20 @@ class Transfer extends Base
             if (!$data['express_logo']) {
                 ajaxReturn(['status' => 0, 'msg' => '请上传二维码', 'data' => []]);
             }
+            if (!$data['delivery_days']) {
+                ajaxReturn(['status' => 0, 'msg' => '请填写预计发货天数', 'data' => []]);
+            }
+            if (!$data['enddelivery_days']) {
+                ajaxReturn(['status' => 0, 'msg' => '请填写预计收货天数', 'data' => []]);
+            }
             if(!$data['editid']){
                 $save_content=[
                     'title'=>$data['title'],
                     'qrcode'=>$data['express_logo'],
                     'qrphone'=>$data['qrphone'],
                     'qrname'=>$data['qrname'],
+                    'delivery_days'=>$data['delivery_days'],
+                    'enddelivery_days'=>$data['enddelivery_days'],
                     'create_time'=>time()
                 ];
                 $save=Db::name('customer')->insertGetId($save_content);
@@ -227,6 +237,8 @@ class Transfer extends Base
                     'qrcode'=>$data['express_logo'],
                     'qrphone'=>$data['qrphone'],
                     'qrname'=>$data['qrname'],
+                    'delivery_days'=>$data['delivery_days'],
+                    'enddelivery_days'=>$data['enddelivery_days'],
                     'update_time'=>time()
                 ];
                 $before_json=Db::name('customer')->where('id',$data['editid'])->find();

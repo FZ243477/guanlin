@@ -19,7 +19,7 @@ trait MenuHelper
             ]],
             'Transfer' =>['name'=>'信息','icon'=>'fa-book','sub_menu'=>[
                 ['name'=>'中转站收货信息列表','act'=>'transferList','control'=>'Transfer'],
-                ['name'=>'客服中心信息','act'=>'customerList','control'=>'Transfer'],
+                ['name'=>'客服中心与发货天数','act'=>'customerList','control'=>'Transfer'],
             ]],
             'Message' =>['name'=>'用户消息提醒列表','icon'=>'fa-list','sub_menu'=>[
                 ['name'=>'用户消息提醒列表','act'=>'messageList','control'=>'Message'],

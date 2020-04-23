@@ -56,6 +56,8 @@
                                                 <col width="8%">
                                                 <col width="8%">
                                                 <col width="8%">
+                                                <col width="8%">
+                                                <col width="8%">
                                             </colgroup>
                                             <thead>
                                             <tr>
@@ -64,6 +66,8 @@
                                                 <th>微信号</th>
                                                 <th>客服电话</th>
                                                 <th>客服二维码</th>
+                                                <th>预计发货天数</th>
+                                                <th>预计送达天数</th>
                                                 <th>操作</th>
                                             </tr>
                                             </thead>
@@ -77,6 +81,8 @@
                                                 <td>{$vo.qrname}</td>
                                                 <td>{$vo.qrphone}</td>
                                                 <td><a href="{$vo.qrcode}" target="_blank"><img src="{$vo.qrcode}" width="100"/></a></td>
+                                                <td>{$vo.delivery_days}</td>
+                                                <td>{$vo.enddelivery_days}</td>
                                                 <td>
                                                     <a href="javaScript:;" data-banner_id="" class="btn  btn-primary " onclick=goodsshow("{$vo.id}") data-num="-1" title="上移">详情</a>
                                                     <a href="javaScript:;" onclick=goodsedit("{$vo.id}") class="btn btn-primary"><i class="fa fa-plus"></i>编辑</a>

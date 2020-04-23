@@ -130,6 +130,19 @@ class Order extends Base
         foreach($order_list as $k=>$v){
             $unit_price=Db::name('unit_price')->where('id',$v['urgent_type'])->field('price')->find();
             $order_list[$k]['unit_price']=$unit_price;
+            $rest_time=Db::name('customer')->where('id',2)->find();
+            $now_day= floor(time()/(3600*24));
+            $create_day = intval(strtotime($v['create_time'])/(3600*24));
+            $delivery_time=$rest_time['delivery_days']-($now_day-$create_day);
+            $enddelivery_time=$rest_time['enddelivery_days']-($now_day-$create_day);
+            if($delivery_time<=0){$delivery_time =$rest_time['delivery_days'];}
+            if($enddelivery_time<=0){$delivery_time =$rest_time['enddelivery_days'];}
+            if($v['state']==1){
+                $order_list[$k]['delivery_time']=$delivery_time;
+            }
+            if($v['state']==2){
+                $order_list[$k]['enddelivery_time']=$enddelivery_time;
+            }
         }
         $data = [
             'totalCount' => $totalCount ? $totalCount : 0,
@@ -168,6 +181,19 @@ class Order extends Base
         foreach($order_list as $k=>$v){
             $unit_price=Db::name('unit_price')->where('id',$v['urgent_type'])->field('price')->find();
             $order_list[$k]['unit_price']=$unit_price;
+            $rest_time=Db::name('customer')->where('id',2)->find();
+            $now_day= floor(time()/(3600*24));
+            $create_day = intval(strtotime($v['create_time'])/(3600*24));
+            $delivery_time=$rest_time['delivery_days']-($now_day-$create_day);
+            $enddelivery_time=$rest_time['enddelivery_days']-($now_day-$create_day);
+            if($delivery_time<=0){$delivery_time =$rest_time['delivery_days'];}
+            if($enddelivery_time<=0){$delivery_time =$rest_time['enddelivery_days'];}
+            if($v['state']==1){
+                $order_list[$k]['delivery_time']=$delivery_time;
+            }
+            if($v['state']==2){
+                $order_list[$k]['enddelivery_time']=$enddelivery_time;
+            }
         }
         $data = [
             'totalCount' => $totalCount ? $totalCount : 0,
@@ -201,7 +227,7 @@ class Order extends Base
         $totalCount = model('order')->where($order_data)->count();
 
         $pageCount = ceil($totalCount / $list_row);
-        $field = 'id,order_id,state,urgent_type,fname,fphone,faddress,fdetailaddress,take_name,take_phone,take_address,take_detailaddress';
+        $field = 'id,create_time,order_id,state,urgent_type,fname,fphone,faddress,fdetailaddress,take_name,take_phone,take_address,take_detailaddress';
         $first_row = ($page - 1) * $list_row;
         $order_list = model('order')
             ->where($order_data)
@@ -212,6 +238,19 @@ class Order extends Base
             foreach($order_list as $k=>$v){
                 $unit_price=Db::name('unit_price')->where('id',$v['urgent_type'])->field('price')->find();
                 $order_list[$k]['unit_price']=$unit_price;
+                $rest_time=Db::name('customer')->where('id',2)->find();
+                $now_day= floor(time()/(3600*24));
+                $create_day = intval(strtotime($v['create_time'])/(3600*24));
+                $delivery_time=$rest_time['delivery_days']-($now_day-$create_day);
+                $enddelivery_time=$rest_time['enddelivery_days']-($now_day-$create_day);
+                if($delivery_time<=0){$delivery_time =$rest_time['delivery_days'];}
+                if($enddelivery_time<=0){$delivery_time =$rest_time['enddelivery_days'];}
+                if($v['state']==1){
+                    $order_list[$k]['delivery_time']=$delivery_time;
+                }
+                if($v['state']==2){
+                    $order_list[$k]['enddelivery_time']=$enddelivery_time;
+                }
             }
         $data = [
             'totalCount' => $totalCount ? $totalCount : 0,
