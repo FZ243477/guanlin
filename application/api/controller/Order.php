@@ -138,10 +138,10 @@ class Order extends Base
             if($delivery_time<=0){$delivery_time =$rest_time['delivery_days'];}
             if($enddelivery_time<=0){$delivery_time =$rest_time['enddelivery_days'];}
             if($v['state']==1){
-                $order_list[$k]['delivery_time']=$delivery_time;
+                $order_list[$k]['delivery_to_time']=$delivery_time;
             }
             if($v['state']==2){
-                $order_list[$k]['enddelivery_time']=$enddelivery_time;
+                $order_list[$k]['end_delivery_time']=$enddelivery_time;
             }
         }
         $data = [
@@ -189,10 +189,10 @@ class Order extends Base
             if($delivery_time<=0){$delivery_time =$rest_time['delivery_days'];}
             if($enddelivery_time<=0){$delivery_time =$rest_time['enddelivery_days'];}
             if($v['state']==1){
-                $order_list[$k]['delivery_time']=$delivery_time;
+                $order_list[$k]['delivery_to_time']=$delivery_time;
             }
             if($v['state']==2){
-                $order_list[$k]['enddelivery_time']=$enddelivery_time;
+                $order_list[$k]['end_delivery_time']=$enddelivery_time;
             }
         }
         $data = [
@@ -246,10 +246,10 @@ class Order extends Base
                 if($delivery_time<=0){$delivery_time =$rest_time['delivery_days'];}
                 if($enddelivery_time<=0){$delivery_time =$rest_time['enddelivery_days'];}
                 if($v['state']==1){
-                    $order_list[$k]['delivery_time']=$delivery_time;
+                    $order_list[$k]['delivery_to_time']=$delivery_time;
                 }
                 if($v['state']==2){
-                    $order_list[$k]['enddelivery_time']=$enddelivery_time;
+                    $order_list[$k]['end_delivery_time']=$enddelivery_time;
                 }
             }
         $data = [
