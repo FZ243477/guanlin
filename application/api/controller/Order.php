@@ -127,6 +127,10 @@ class Order extends Base
             ->limit($first_row, $list_row)
             ->field($field)
             ->select();
+        foreach($order_list as $k=>$v){
+            $unit_price=Db::name('unit_price')->where('id',$v['urgent_type'])->field('price')->find();
+            $order_list[$k]['unit_price']=$unit_price;
+        }
         $data = [
             'totalCount' => $totalCount ? $totalCount : 0,
             'pageCount' => $pageCount ? $pageCount : 0,
@@ -161,6 +165,10 @@ class Order extends Base
             ->limit($first_row, $list_row)
             ->field($field)
             ->select();
+        foreach($order_list as $k=>$v){
+            $unit_price=Db::name('unit_price')->where('id',$v['urgent_type'])->field('price')->find();
+            $order_list[$k]['unit_price']=$unit_price;
+        }
         $data = [
             'totalCount' => $totalCount ? $totalCount : 0,
             'pageCount' => $pageCount ? $pageCount : 0,
@@ -201,7 +209,10 @@ class Order extends Base
             ->limit($first_row, $list_row)
             ->field($field)
             ->select();
-
+            foreach($order_list as $k=>$v){
+                $unit_price=Db::name('unit_price')->where('id',$v['urgent_type'])->field('price')->find();
+                $order_list[$k]['unit_price']=$unit_price;
+            }
         $data = [
             'totalCount' => $totalCount ? $totalCount : 0,
             'pageCount' => $pageCount ? $pageCount : 0,
@@ -584,7 +595,10 @@ class Order extends Base
             ->limit($first_row, $list_row)
             ->field($field)
             ->select();
-
+        foreach($order_list as $k=>$v){
+            $unit_price=Db::name('unit_price')->where('id',$v['urgent_type'])->field('price')->find();
+            $order_list[$k]['unit_price']=$unit_price;
+        }
         if ($order_list) {
             foreach ($order_list as $k => $v) {
                 $order_list[$k]['order_status_desc'] = OrderConstant::order_status_array_value($v['order_status']);

@@ -16,6 +16,8 @@ use app\common\constant\SystemConstant;
 use app\common\constant\OrderConstant;
 use app\common\helper\VerificationHelper;
 use think\Db;
+use think\Request;
+use PHPExcel_IOFactory;
 
 class Order extends Base
 {
@@ -430,12 +432,6 @@ class Order extends Base
         $endtime = request()->param("endtime");
         $status = request()->param("status");
 
-        $this->assign("name", $name);
-        $this->assign("order_no", $order_no);
-        $this->assign("starttime", $starttime);
-        $this->assign("endtime", $endtime);
-        $this->assign("status", $status);
-
         $this->assign("telephone",$name);
 
         if ($starttime && $endtime) {
@@ -468,6 +464,7 @@ class Order extends Base
 
         $data_info = [];
         foreach ($refund as $k => $v) {
+            $data_info[$k]['id'] = $v['id'];
             $data_info[$k]['order_id'] = $v['order_id'];
             $data_info[$k]['create_time'] = $v['create_time'];
             $data_info[$k]['name'] = $v['fname'];
@@ -478,7 +475,7 @@ class Order extends Base
             $data_info[$k]['take_phone'] = $v['take_phone'];
             $data_info[$k]['address'] = $v['take_province'].$v['take_city'].$v['take_district'].$v['take_detailaddress'];
         }
-        $headArr = ['订单编号','下单时间','下单人姓名','下单人手机号','订单状态','订单金额','收货人姓名','收货人手机号','收货地址'];
+        $headArr = ['id','订单编号','下单时间','下单人姓名','下单人手机号','订单状态','订单金额','收货人姓名','收货人手机号','收货地址'];
 
         $before_json = [];
         $after_json = [];
@@ -490,6 +487,116 @@ class Order extends Base
 
     }
 
+
+
+    /**
+     * 导入订单
+     */
+    public function importexcel(){
+        set_time_limit(0);
+        $file = request()->file('file');
+        // 移动到框架应用根目录/public/uploads/ 目录下
+        if ($file) {
+            $info = $file->move(ROOT_PATH . 'public' . DS . 'uploads' . DS . 'task_data');
+            if ($info) {
+                // 成功上传后 获取上传信息
+                // 输出 jpg
+                $type=$info->getExtension();
+                if($type!="xls"){
+                    return $this->error('只能上传xls格式！');
+                }
+                // 输出 20160820/42a79759f284b767dfcb2a0197904287.jpg
+                $route=$info->getSaveName();
+                $data=$this->excelToArray('uploads' . DS . 'task_data' . DS .$route);
+                dump($data);exit;
+                $err_num=0;
+                $succ_num=0;
+                $update = [];
+                $arr = [];
+                foreach ($data as $key =>$v){
+                    $info=db('order')->where(['id'=>trim($v['0']),'state'=>2])->find();
+                    if(!$info){
+                        $err_num=$err_num+1;
+                        continue;
+                    }
+                    if($v['6']=='' ||$v['7']==''){
+                        $err_num=$err_num+1;
+                        continue;
+                    }
+                    $update['id']=trim($v['0']); //订单id
+                    $update['end_time']=time();//签收时间
+                    $arr[] = $update;
+                    $succ_num++;
+                }
+                $i=0;
+                $update_list = [];
+                $num=0;
+                $key=0;
+                for($i;$i < count($arr);$i++){
+                    $update_list[$key][] = $arr[$i];
+                    $num++;
+                    if($num == 500){
+                        $num = 0;
+                        $key++;
+                    }
+                }
+                $userTaskModel = new UserTask();
+                foreach ($update_list as $item){
+                    try{
+                        Db::startTrans();
+                        $userTaskModel->saveAll($item);
+                        Db::commit();
+                    }catch (Exception $e){
+                        Db::rollback();
+                    }
+                }
+                $res1=admin_log("单号批量导入", "管理员{$this->admin_info['user_name']}操作:单号批量导入");
+                if(!$res1){
+                    return $this->error('操作日志写入失败！');
+                }
+                $this->success("成功{$succ_num},失败{$err_num}");
+            } else {
+                // 上传失败获取错误信息
+                return $this->error($file->getError());
+            }
+        }
+    }
+
+    function excelToArray($filename){
+        /** Include PHPExcel_IOFactory */
+        vendor("PHPExcel.PHPExcel");
+        vendor("PHPExcel.PHPExcel.IOFactory");
+        // $obj = new \PHPExcel();
+
+        if (!file_exists($filename)) {
+            exit("文件".$filename."不存在");
+        }
+        $objPHPExcel = PHPExcel_IOFactory::load($filename);
+        //开始读取上传到服务器中的Excel文件，返回一个二维数组
+        $dataArray = $objPHPExcel->getSheet(0)->toArray();
+        $sheet_count = $objPHPExcel->getSheetCount();
+        for ($s = 0; $s < $sheet_count; $s++)
+        {
+            $currentSheet = $objPHPExcel->getSheet($s);// 当前页
+            $row_num = $currentSheet->getHighestRow();// 当前页行数
+            $col_max = $currentSheet->getHighestColumn(); // 当前页最大列号
+
+            // 循环从第二行开始，第一行往往是表头
+            for($i = 3; $i <= $row_num; $i++)
+            {
+                $cell_values = array();
+                for($j = 'A'; $j <= $col_max; $j++)
+                {
+                    $address = $j . $i; // 单元格坐标
+                    $cell_values[] = $currentSheet->getCell($address)->getFormattedValue();
+                }
+                $import_data[]=$cell_values;
+
+            }
+            // 看看数据
+            return $import_data;
+        }
+    }
     /**
      * 送货明细单
      */
