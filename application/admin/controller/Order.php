@@ -42,6 +42,7 @@ class Order extends Base
     public function orderList(){
         $map = [];
         $name = request()->param("name");
+        $urgent_type = request()->param("urgent_type");
         $order_no = request()->param("order_no");
         $starttime = request()->param("starttime");
         $endtime = request()->param("endtime");
@@ -62,7 +63,10 @@ class Order extends Base
         } elseif ($endtime) {
             $map['a.create_time'] = ['elt', $endtime];
         }
-
+        if (isset($urgent_type)) {
+            if($urgent_type !=2){
+            $map['a.urgent_type'] = $urgent_type;}
+        }
         if (isset($status)) {
             $map['a.state'] = $status;
         }
