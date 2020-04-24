@@ -103,7 +103,7 @@ class UserAddress extends Base
                 ajaxReturn(['status' => 0, 'msg' => '请填写详细地址', 'data' => []]);
             }
             if(!$data['country']){
-                $data['country']="China";
+                $data['country']="1";
             }
             if(!$data['editid']){
                 $save_content=[
