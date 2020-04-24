@@ -40,6 +40,7 @@ class UserAddress extends Base
         $map['uid'] = $this->user_id;
         $data['address_id'] = request()->post('address_id', 0);
         $map['id'] = $data['address_id'];
+        $map['keep'] = 1;
         $field = 'id, uid, real_name, phone, country, province, city, district,detail,is_default';
         if($data['address_id']==''){
             $return_arr = ['status'=>0, 'msg'=>'操作失败','data'=> []];
@@ -71,6 +72,7 @@ class UserAddress extends Base
         $data['district'] = request()->post('district', 0);
         $data['detail'] = request()->post('detail', 0);
         $data['is_default'] = request()->post('is_default', 0);
+        $data['keep'] = request()->post('keep', 0);
         if($data['real_name']==''){
             $return_arr = ['status'=>0, 'msg'=>'姓名不能为空','data'=> []];
             exit(json_encode($return_arr));
@@ -79,7 +81,7 @@ class UserAddress extends Base
             $return_arr = ['status'=>0, 'msg'=>'手机号码不能为空','data'=> []];
             exit(json_encode($return_arr));
         }
-        if($data['province']==''){
+        if($data['province']=='' && $data['country'] == 1){
             $return_arr = ['status'=>0, 'msg'=>'请选择省市区','data'=> []];
             exit(json_encode($return_arr));
         }
@@ -90,7 +92,12 @@ class UserAddress extends Base
         if(!isset($data['country']) || $data['country']==0){
             $data['country']='1';
         }
-
+        if(!isset($data['keep']) || $data['keep']==0){
+            $data['keep']='1';
+        }
+        if(!isset($data['is_default']) || $data['is_default']==0){
+            $data['is_default']='2';
+        }
         if($data['is_default'] == 1){
                $address_list=model('user_address')->where('delete_time','null')
                    ->where('uid',$map['uid'])->select();
@@ -111,6 +118,7 @@ class UserAddress extends Base
                 'district'=>$data['district'],
                 'detail'=>$data['detail'],
                 'is_default'=>$data['is_default'],
+                'keep'=>$data['keep'],
                 'create_time'=>time()
             ];
             $save = model('user_address')->insertGetId($save_content);
@@ -133,6 +141,7 @@ class UserAddress extends Base
                 'district'=>$data['district'],
                 'detail'=>$data['detail'],
                 'is_default'=>$data['is_default'],
+                'keep'=>$data['keep'],
                 'update_time'=>time()
             ];
             if($data['address_id']==''){
