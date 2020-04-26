@@ -55,8 +55,8 @@
 								<div class="form-group">
 									<select class="form-control" id="select" name="urgent_type">
 										<option value="2" >--全部--</option>
-										<option value="0" >--普通订单--</option>
-										<option value="1" >--加急订单--</option>
+										<option value="0" {eq name="0" value="$urgent_type"}selected{/eq}>--普通订单--</option>
+										<option value="1" {eq name="1" value="$urgent_type"}selected{/eq}>--加急订单--</option>
 									</select>
 								</div>
 								<div class="form-group">

@@ -119,7 +119,7 @@ class Order extends Base
 
         $totalCount = model('order')->where($order_data)->count();
         $pageCount = ceil($totalCount / $list_row);
-        $field = 'id,order_id,state,urgent_type,fname,fphone,fprovince,fcity,fdistrict,faddress,fdetailaddress,weight,take_name,price,take_phone,take_address,take_detailaddress';
+        $field = 'id,order_id,state,urgent_type,fname,fphone,fprovince,fcity,fdistrict,faddress,fdetailaddress,weight,take_name,price,take_phone,take_address,take_detailaddress,create_time';
         $first_row = ($page - 1) * $list_row;
         $order_list = model('order')
             ->where($order_data)

@@ -64,8 +64,11 @@ class Order extends Base
             $map['a.create_time'] = ['elt', $endtime];
         }
         if (isset($urgent_type)) {
+            //dump($urgent_type);exit;
             if($urgent_type !=2){
-            $map['a.urgent_type'] = $urgent_type;}
+            $map['a.urgent_type'] = $urgent_type;
+        }
+            $this->assign("urgent_type", $urgent_type);
         }
         if (isset($status)) {
             $map['a.state'] = $status;
