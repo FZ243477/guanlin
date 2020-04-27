@@ -21,17 +21,22 @@ class Mailing extends Base
     //寄件首页
     public function index_list(){
         $uid = $this->user_id;
+        $uid=47;
         $type = Db::name('user_message')
                 ->where('uid',$uid)
-                ->where('state',1)
-                ->find();
+                ->where('state',0)
+                ->select();
         $field = 'id, content,type_id';
-        $list = model('message')->field($field)->where('type_id',$type['message_type'])->find();
-        if(!$list){
-            $list['message_content']="";
-        }else{
-            $list['message_content']=$list['content'];
+        $list=[];
+        foreach ($type as $k=>$v){
+            $message = model('message')->field($field)->where('type_id',$v['message_type'])->find();
+            $list[$k]['message_content'] = $message['content'].$v['order_id'];
         }
+
+        if(empty($list)){
+            $list['message_content']="暂无提示";
+        }
+
         $map['uid'] = $uid;
         $map['paid']=0;
         $map['has_take']=1;

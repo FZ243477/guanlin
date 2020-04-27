@@ -150,8 +150,22 @@ class Order extends Base
         ];
         $content = "审核订单";
         $before_json = model('order')->where('id',$id)->find();
+        Db::startTrans();
+        try{
         $save=model('order')->where('id',$id)->update($save_content);
         $after_json = $save;
+            $add_content=[
+                "uid" => $before_json['uid'],
+                "order_id" => $before_json['order_id'],
+                "state" =>0,
+                "message_type" =>1,
+            ];
+            $add_message=Db::name('user_message')->insert($add_content);
+            Db::commit();
+        } catch (\Exception $e) {
+
+            Db::rollback();
+        }
         if ($save) {
             $this->managerLog($this->manager_id, $content, $before_json, $after_json);
             ajaxReturn(['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => []]);
@@ -172,9 +186,29 @@ class Order extends Base
             'update_time'=>time()
         ];
         $before_json = $order;
+        Db::startTrans();
+        try{
         $save=model('order')->where('id',$order['id'])->update($save_content);
         $after_json = $save;
         $content = "确认签收";
+            $add_content=[
+                "uid" => $before_json['uid'],
+                "order_id" => $before_json['order_id'],
+                "state"=>0,
+                "message_type" =>3,
+            ];
+            $add_message=Db::name('user_message')->insert($add_content);
+            if($add_message){
+                $del_content=[
+                    'state' =>1
+                ];
+                $del_message = Db::name('user_message')->where('order_id',$before_json['order_id'])
+                    ->where('message_type',2)->update($del_content);
+            }
+            Db::commit();
+        } catch (\Exception $e) {
+            Db::rollback();
+        }
         if ($save) {
             $this->managerLog($this->manager_id, $content, $before_json, $after_json);
             ajaxReturn(['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => []]);
@@ -200,10 +234,30 @@ class Order extends Base
             ajaxReturn(["status"=>0,"msg"=>"订单状态错误."]);
         }
         $data['state']=2;
+        Db::startTrans();
+        try{
         $before_json = model('order')->where('id',$id)->find();
         $res = model('order')->where('id',$id)->update($data);
         $after_json = $res;
         $content = "订单发货";
+            $add_content=[
+                "uid" => $before_json['uid'],
+                "order_id" => $before_json['order_id'],
+                "state" =>0,
+                "message_type" =>2,
+            ];
+            $add_message=Db::name('user_message')->insert($add_content);
+            if($add_message){
+                $del_content=[
+                    'state' =>1
+                ];
+                $del_message = Db::name('user_message')->where('order_id',$before_json['order_id'])
+                    ->where('message_type',1)->update($del_content);
+            }
+            Db::commit();
+        } catch (\Exception $e) {
+            Db::rollback();
+        }
         if ($res) {
             $this->managerLog($this->manager_id, $content, $before_json, $after_json);
             ajaxReturn(["status" => 1, "msg" => "发货成功！"]);
