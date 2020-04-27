@@ -32,8 +32,6 @@ class Mailing extends Base
             $message = model('message')->field($field)->where('type_id',$v['message_type'])->find();
             $list[$k]['message_content'] = $message['content'].$v['order_id'];
         }
-
-
         $map['paid']=0;
         $map['state']=0;
         $map['has_take']=1;

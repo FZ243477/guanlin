@@ -221,6 +221,10 @@ class Order extends Base
         if (!empty($state) && isset($state)) {
             $order_data['state'] = $state;
         }
+        if($state >0 ){
+            $order_data['paid'] =1;
+            $order_data['has_take'] =1;
+        }
         $totalCount = model('order')->where($order_data)->count();
         $pageCount = ceil($totalCount / $list_row);
         $field = 'id,create_time,order_id,state,has_take,urgent_type,fname,fphone,fprovince,fcity,fdistrict,faddress,fdetailaddress,price,take_name,weight,take_phone,take_address,take_detailaddress';
