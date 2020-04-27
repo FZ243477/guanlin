@@ -108,6 +108,7 @@ class Login extends Base
                 }
                 $token = $this->setTokenByUserInfo($user_id, UserConstant::REG_SOURCE_CGI);
                 $data = ['token' => $token, 'is_binding' => $is_binging];
+                dump($data);exit;
                 ajaxReturn(['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => $data]);
             } else {
                 ajaxReturn(['status' => 0, 'msg' => SystemConstant::SYSTEM_OPERATION_FAILURE]);
