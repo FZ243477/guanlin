@@ -210,7 +210,8 @@ class Order extends Base
      */
     public function state_list(){
         $map['uid'] = $this->user_id;
-        $state = request()->post('state', 0);
+        $this->user_id=48;
+        $state = request()->post('state');
         $list_row = request()->post('list_row', 10); //每页数据
         $page = request()->post('page', 1); //当前页
         if (!in_array($state, [0, 1, 2, 3, 4])) {
@@ -220,10 +221,9 @@ class Order extends Base
         $order_data = [];
         $order_data['uid'] = $this->user_id;
 
-        if (in_array($state, [0, 1, 2, 3, 4])) {
+        if (isset($state)) {
             $order_data['state'] = $state;
         }
-
         $totalCount = model('order')->where($order_data)->count();
         $pageCount = ceil($totalCount / $list_row);
         $field = 'id,create_time,order_id,state,has_take,urgent_type,fname,fphone,fprovince,fcity,fdistrict,faddress,fdetailaddress,price,take_name,weight,take_phone,take_address,take_detailaddress';
