@@ -220,8 +220,12 @@ class Order extends Base
         $order_data = [];
         $order_data['uid'] = $this->user_id;
 
-        if (!empty($state)) {
+        if (!empty($state) && isset($state)) {
             $order_data['state'] = $state;
+        }
+        if($state ==0 ){
+            $order_data['has_take'] =1;
+            $order_data['paid'] =1;
         }
         $totalCount = model('order')->where($order_data)->count();
         $pageCount = ceil($totalCount / $list_row);
