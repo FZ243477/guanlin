@@ -220,9 +220,10 @@ class Order extends Base
         $order_data = [];
         $order_data['uid'] = $this->user_id;
 
-        if (isset($state)) {
+        if (!empty($state)) {
             $order_data['state'] = $state;
         }
+        dump($order_data);exit;
         $totalCount = model('order')->where($order_data)->count();
         $pageCount = ceil($totalCount / $list_row);
         $field = 'id,create_time,order_id,state,has_take,urgent_type,fname,fphone,fprovince,fcity,fdistrict,faddress,fdetailaddress,price,take_name,weight,take_phone,take_address,take_detailaddress';
