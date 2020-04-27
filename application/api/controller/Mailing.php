@@ -38,6 +38,7 @@ class Mailing extends Base
 
         $map['uid'] = $uid;
         $map['paid']=0;
+        $map['state']=0;
         $map['has_take']=1;
         $paid_num = model('order')->where($map)->count();
        // $list['paid_num']=$paid_num;
