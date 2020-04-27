@@ -33,16 +33,20 @@ class Mailing extends Base
         }
 
         if(empty($list)){
-            $list['message_content']="暂无提示";
+            $list="";
         }
 
         $map['uid'] = $uid;
         $map['paid']=0;
         $map['has_take']=1;
         $paid_num = model('order')->where($map)->count();
-        $list['paid_num']=$paid_num;
+       // $list['paid_num']=$paid_num;
+        $content=[
+            'paid_num'=>$paid_num,
+            'list'=>$list
+        ];
         if($list){
-            $json_arr = ['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => ['list' => $list]];
+            $json_arr = ['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => [$content]];
             ajaxReturn($json_arr);
         }else{
             $return_arr = ['status'=>0, 'msg'=>'操作失败','data'=> []];
