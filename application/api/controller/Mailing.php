@@ -43,7 +43,7 @@ class Mailing extends Base
             'paid_num'=>$paid_num,
             'list'=>$list
         ];
-            $json_arr = ['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => [$content]];
+            $json_arr = ['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => $content];
             ajaxReturn($json_arr);
     }
 }
