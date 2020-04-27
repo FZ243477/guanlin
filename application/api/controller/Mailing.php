@@ -32,11 +32,7 @@ class Mailing extends Base
             $list[$k]['message_content'] = $message['content'].$v['order_id'];
         }
 
-        if(empty($list)){
-            $list="";
-        }
 
-        $map['uid'] = $uid;
         $map['paid']=0;
         $map['state']=0;
         $map['has_take']=1;
@@ -46,12 +42,7 @@ class Mailing extends Base
             'paid_num'=>$paid_num,
             'list'=>$list
         ];
-        if($list){
             $json_arr = ['status' => 1, 'msg' => SystemConstant::SYSTEM_OPERATION_SUCCESS, 'data' => [$content]];
             ajaxReturn($json_arr);
-        }else{
-            $return_arr = ['status'=>0, 'msg'=>'操作失败','data'=> []];
-            exit(json_encode($return_arr));
-        }
     }
 }
