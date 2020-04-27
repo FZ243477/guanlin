@@ -68,8 +68,9 @@ class Order extends Base
             if($urgent_type !=2){
             $map['a.urgent_type'] = $urgent_type;
         }
-            $this->assign("urgent_type", $urgent_type);
+
         }
+        $this->assign("urgent_type", $urgent_type);
         if (isset($status)) {
             $map['a.state'] = $status;
         }
