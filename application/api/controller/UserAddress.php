@@ -73,6 +73,7 @@ class UserAddress extends Base
         $data['detail'] = request()->post('detail', 0);
         $data['is_default'] = request()->post('is_default', 0);
         $data['keep'] = request()->post('keep', 0);
+
         if($data['real_name']==''){
             $return_arr = ['status'=>0, 'msg'=>'姓名不能为空','data'=> []];
             exit(json_encode($return_arr));
@@ -107,6 +108,10 @@ class UserAddress extends Base
                        ->update(['is_default' => 2]);
                }
         }
+        if(isset($data['city'])){
+            $data['city'] = str_replace("市","",$data['city']);
+        }
+
             if(!isset($data['edit_type']) || $data['edit_type'] == 1){
             $save_content=[
                 'uid'=>$map['uid'],
