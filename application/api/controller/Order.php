@@ -220,11 +220,13 @@ class Order extends Base
         if($state > 0 && $state<5){
             $order_data['paid'] =1;
             $order_data['has_take'] =1;
-        }else{
+        }
+        if($state == 0){
             $order_data['paid'] =0;
         }
      if($state ==5){
          unset($order_data['paid']);
+         unset($order_data['has_take']);
      }else{
          $order_data['state']=$state;
      }
