@@ -289,12 +289,8 @@ class Order extends Base
                 'state'=>4,
                 'end_time'=>time()
             ];
-            $before_json = model('order')->where('id',$res['id'])->find();
             $save = model('order')->where('id',$res['id'])->update($save_content);
-            $after_json = $save;
-            $content = "用户确认收货";
             if($save){
-                $this->managerLog($this->manager_id, $content, $before_json, $after_json);
                 $return_arr = ['status'=>1, 'msg'=>'操作成功','data'=> []];
                 exit(json_encode($return_arr));
             }else{
