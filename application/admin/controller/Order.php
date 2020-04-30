@@ -230,7 +230,7 @@ class Order extends Base
         if(!$order){
             ajaxReturn(["status"=>0,"msg"=>"此订单不存在，请检查."]);
         }
-        if($order['state']!=1){
+        if($order['state']!="待发货"){
             ajaxReturn(["status"=>0,"msg"=>"订单状态错误."]);
         }
         $data['state']=2;
@@ -452,7 +452,11 @@ class Order extends Base
     public function fahuo()
     {
         $id = request()->post('id');
-        $data['order_status'] = OrderConstant::ORDER_STATUS_WAIT_RECEIVE;
+        $data['order_status'] = 1;
+        $order=model('order')->where('id',$id)->find();
+        if($data['order_status'] != 1){
+            ajaxReturn(["status" => 0, "msg" => "订单状态错误~~"]);
+        }
         $data['is_shipping'] = 1;
         $data['express_name'] = request()->post('express_name');
         $data['express_no'] = request()->post('express_no');
