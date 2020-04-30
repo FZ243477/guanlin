@@ -195,7 +195,6 @@ class Transfer extends Base
     public function save_customer(){
         if (request()->isPost()) {
             $data = request()->post();
-        dump($data);exit;
             if (!$data['qrname']) {
                 ajaxReturn(['status' => 0, 'msg' => '请填写微信号', 'data' => []]);
             }
