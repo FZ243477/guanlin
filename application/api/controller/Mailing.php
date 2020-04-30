@@ -21,7 +21,6 @@ class Mailing extends Base
     //寄件首页
     public function index_list(){
         $uid = $this->user_id;
-        $uid=48;
         $type = Db::name('user_message')
                 ->where('uid',$uid)
                 ->where('state',0)
@@ -35,6 +34,7 @@ class Mailing extends Base
         $map['paid']=0;
         $map['state']=0;
         $map['has_take']=1;
+        $map['uid']=$uid;
         $paid_num = model('order')->where($map)->count();
        // $list['paid_num']=$paid_num;
         $content=[

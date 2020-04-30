@@ -527,7 +527,7 @@ class Order extends Base
         $data_info = [];
         foreach ($refund as $k => $v) {
             $data_info[$k]['id'] = $v['id'];
-            $data_info[$k]['order_id'] = $v['order_id'];
+            $data_info[$k]['order_id'] ='||'.$v['order_id'].'||';
             $data_info[$k]['create_time'] = $v['create_time'];
             $data_info[$k]['name'] = $v['fname'];
             $data_info[$k]['tel'] = $v['fphone'];
@@ -570,56 +570,37 @@ class Order extends Base
                 // 输出 20160820/42a79759f284b767dfcb2a0197904287.jpg
                 $route=$info->getSaveName();
                 $data=$this->excelToArray('uploads' . DS . 'task_data' . DS .$route);
-                dump($data);exit;
-                $err_num=0;
-                $succ_num=0;
-                $update = [];
-                $arr = [];
-                foreach ($data as $key =>$v){
-                    $info=db('order')->where(['id'=>trim($v['0']),'state'=>2])->find();
-                    if(!$info){
-                        $err_num=$err_num+1;
-                        continue;
-                    }
-                    if($v['6']=='' ||$v['7']==''){
-                        $err_num=$err_num+1;
-                        continue;
-                    }
-                    $update['id']=trim($v['0']); //订单id
-                    $update['end_time']=time();//签收时间
-                    $arr[] = $update;
-                    $succ_num++;
+                $order=[];
+                foreach ($data as $k =>$v){
+                    $order_id=str_replace('||','',$v[1]);
+                    $order[$k] =model('order')->field('id,order_id,state')->where('order_id',$order_id)->find();
                 }
-                $i=0;
-                $update_list = [];
-                $num=0;
-                $key=0;
-                for($i;$i < count($arr);$i++){
-                    $update_list[$key][] = $arr[$i];
-                    $num++;
-                    if($num == 500){
-                        $num = 0;
-                        $key++;
-                    }
-                }
-                $userTaskModel = new UserTask();
-                foreach ($update_list as $item){
+                $change_state=[
+                    'state' =>3
+                ];
+                $before_json = $order;
+                $after=[];
+                foreach ($order as $k =>$v){
                     try{
                         Db::startTrans();
-                        $userTaskModel->saveAll($item);
+                        if($v['state']=="已发货"){
+                            $after[$k] = model('order')->where('id',$v['id'])->update($change_state);
+                        }
                         Db::commit();
                     }catch (Exception $e){
+                        ajaxReturn(["status" => 0, "msg" => "网络繁忙，请稍后~~"]);
                         Db::rollback();
                     }
                 }
-                $res1=admin_log("单号批量导入", "管理员{$this->admin_info['user_name']}操作:单号批量导入");
-                if(!$res1){
-                    return $this->error('操作日志写入失败！');
-                }
-                $this->success("成功{$succ_num},失败{$err_num}");
+                $after_json=$after;
+                $content="批量修改订单状态";
+
+                $this->managerLog($this->manager_id, $content, $before_json, $after_json);
+                ajaxReturn(["status" => 1, "msg" => "修改成功！"]);
+
             } else {
                 // 上传失败获取错误信息
-                return $this->error($file->getError());
+                ajaxReturn(["status" => 0, "msg" => "网络繁忙，请稍后~~"]);
             }
         }
     }

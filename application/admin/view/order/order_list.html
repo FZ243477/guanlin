@@ -13,6 +13,21 @@
 	<link href="home_url/css/plugins/iCheck/custom.css" rel="stylesheet">
 	<link href="home_url/css/style.min.css" rel="stylesheet">
 	{include file="base:base" /}
+	<style>
+		#btn{
+			background-color: #EAC06C;
+			width: 20%;
+			height: 30px;
+			text-align: center;
+			line-height: 30px;
+			font-size: 14px;
+			float: left;
+			margin-right: 10px;
+			border-color: #EAC06C;
+			color: #fff;
+			border-radius: 3px;
+		}
+	</style>
 </head>
 
 <body class="gray-bg">
@@ -67,8 +82,12 @@
 								<button class="btn btn-primary" type="submit">筛选</button>
 								<a href="javascript:void(0);" onclick="exportOrder()" class="btn  btn-primary" >导出</a>
 								<!--<a href="javascript:void(0);" onclick="importOrder()" class="btn  btn-primary" >导入</a>-->
-								<!--<input id="file" type="file">-->
-								<!--<button id="btn">上传</button>-->
+								<div style="clear: both;"></div>
+								<div style="width:30%;float: left;margin-left: 30px;">
+									<input id="file" type="file">
+									<button style="" id="btn">导入</button>
+								</div>
+								<div style="clear: both;"></div>
 								<script>
 									$('#btn').click(function() {
 										var formdata = new FormData();
@@ -93,9 +112,9 @@
 										});
 									});
 								</script>
-							<div id="tab-1" class="tab-pane">
-								<div class="panel-body">
-									<div class="ibox-content-del">
+								<div id="tab-1" class="tab-pane">
+									<div class="panel-body">
+										<div class="ibox-content-del">
 											<div class="table-responsive">
 												<table class="table table-hover products_table" >
 													<thead>
@@ -145,12 +164,12 @@
 												</table>
 											</div>
 
-										<div class="page">
-											{$order_list->render()}
+											<div class="page">
+												{$order_list->render()}
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
 						</div>
 					</div>
 				</div>
@@ -176,17 +195,17 @@
 
 								<div class="is_check_sure" style="display: block">
 									<!--<div class="form-group clearfix">-->
-										<!--<label class="col-sm-2 control-label">选择物流</label>-->
+									<!--<label class="col-sm-2 control-label">选择物流</label>-->
 
-										<!--<div class="col-sm-9">-->
-											<!--<div class="row">-->
-												<!--<div class="col-sm-6">-->
-													<!--<select id="wuliu_name" class="form-control m-b" name="wuliu_name">-->
-														<!--<option value='0'>请选择物流...</option>-->
-													<!--</select>-->
-												<!--</div>-->
-											<!--</div>-->
-										<!--</div>-->
+									<!--<div class="col-sm-9">-->
+									<!--<div class="row">-->
+									<!--<div class="col-sm-6">-->
+									<!--<select id="wuliu_name" class="form-control m-b" name="wuliu_name">-->
+									<!--<option value='0'>请选择物流...</option>-->
+									<!--</select>-->
+									<!--</div>-->
+									<!--</div>-->
+									<!--</div>-->
 									<!--</div>-->
 
 									<div class="form-group clearfix">
