@@ -195,7 +195,7 @@ class Transfer extends Base
     public function save_customer(){
         if (request()->isPost()) {
             $data = request()->post();
-
+        dump($data);exit;
             if (!$data['qrname']) {
                 ajaxReturn(['status' => 0, 'msg' => '请填写微信号', 'data' => []]);
             }
@@ -205,7 +205,7 @@ class Transfer extends Base
             if (!$data['title']) {
                 ajaxReturn(['status' => 0, 'msg' => '请填写标题', 'data' => []]);
             }
-            if (!$data['express_logo']) {
+            if (!$data['qrcode']) {
                 ajaxReturn(['status' => 0, 'msg' => '请上传二维码', 'data' => []]);
             }
             if (!$data['delivery_days']) {
@@ -217,7 +217,7 @@ class Transfer extends Base
             if(!$data['editid']){
                 $save_content=[
                     'title'=>$data['title'],
-                    'qrcode'=>$data['express_logo'],
+                    'qrcode'=>$data['qrcode'],
                     'qrphone'=>$data['qrphone'],
                     'qrname'=>$data['qrname'],
                     'delivery_days'=>$data['delivery_days'],
@@ -234,7 +234,7 @@ class Transfer extends Base
             if(isset($data['editid'])){
                 $edit_content=[
                     'title'=>$data['title'],
-                    'qrcode'=>$data['express_logo'],
+                    'qrcode'=>$data['qrcode'],
                     'qrphone'=>$data['qrphone'],
                     'qrname'=>$data['qrname'],
                     'delivery_days'=>$data['delivery_days'],
