@@ -109,12 +109,13 @@ class Order extends Base
      */
     public function postage_list(){
         $map['uid'] = $this->user_id;
+        $this->user_id = 48;
         $list_row = request()->post('list_row', 10); //每页数据
         $page = request()->post('page', 1); //当前页
         $order_data = [];
         $order_data['uid'] = $this->user_id;
             $order_data['state'] = 0;
-
+        $order_data['has_take'] =1;
         $totalCount = model('order')->where($order_data)->count();
         $pageCount = ceil($totalCount / $list_row);
         $field = 'id,order_id,state,urgent_type,fname,fphone,fprovince,fcity,fdistrict,faddress,fdetailaddress,weight,take_name,price,take_phone,take_address,take_detailaddress,create_time';
@@ -208,6 +209,7 @@ class Order extends Base
      */
     public function state_list(){
         $map['uid'] = $this->user_id;
+        $this->user_id =48;
         $state = request()->post('state');
         $list_row = request()->post('list_row', 10); //每页数据
         $page = request()->post('page', 1); //当前页
