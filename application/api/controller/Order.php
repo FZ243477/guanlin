@@ -109,7 +109,6 @@ class Order extends Base
      */
     public function postage_list(){
         $map['uid'] = $this->user_id;
-        $this->user_id = 48;
         $list_row = request()->post('list_row', 10); //每页数据
         $page = request()->post('page', 1); //当前页
         $order_data = [];
@@ -209,7 +208,6 @@ class Order extends Base
      */
     public function state_list(){
         $map['uid'] = $this->user_id;
-        $this->user_id =48;
         $state = request()->post('state');
         $list_row = request()->post('list_row', 10); //每页数据
         $page = request()->post('page', 1); //当前页
@@ -224,7 +222,6 @@ class Order extends Base
             $order_data['has_take'] =1;
         }else{
             $order_data['paid'] =0;
-            $order_data['has_take'] =1;
         }
      if($state ==5){
      }else{
