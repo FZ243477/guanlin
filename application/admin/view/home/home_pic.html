@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{:getSetting('system.title')} </title>
+
+    <link href="home_url/css/bootstrap.min.css" rel="stylesheet">
+    <link href="home_url/css/font-awesome.css-v=4.4.0.css" rel="stylesheet">
+    <link href="home_url/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="home_url/css/style.min.css" rel="stylesheet">
+
+    <style>
+        .banner_myupload  {
+            opacity: 0;
+            display:none;
+        }
+        td {
+            height: 80px;
+        }
+        .table.tbody > tr >td {
+            width: 120px !important;
+            max-width: 120px !important;
+        }
+
+
+    </style>
+</head>
+
+{include file="Base:base" /}
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="tabs-container">
+
+                    <div class="tab-content">
+                        <div id="tab-1" class="tab-pane active">
+                            <div class="panel-body">
+
+                                <div class="ibox-content-del">
+
+                                    <div class="row" style="margin-left: 20px;margin-bottom: 20px;">
+                                        <a href="{:url('Home/home_add')}" class="btn btn-sm btn-primary">添加</a>
+                                    </div>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-hover products_table" >
+                                            <colgroup>
+                                                <col width="8%">
+                                                <col width="8%">
+                                                <col width="8%">
+                                                <col width="8%">
+                                                <col width="8%">
+                                                <col width="8%">
+                                            </colgroup>
+                                            <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>标题</th>
+                                                <th>标题1</th>
+                                                <th>标题2</th>
+                                                <th>内容</th>
+                                                <th>操作</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {foreach name="home" item="vo"}
+                                            <tr >
+                                                <td>
+                                                    <input type="checkbox" class="i-checks checkbox" name="input" value="{$vo.id}">
+                                                </td>
+                                                <td>{$vo.title}</td>
+                                                <td>{$vo.title1}</td>
+                                                <td>{$vo.title2}</td>
+                                                <td>{$vo.content}</td>
+                                                <td>
+                                                    <a href="javaScript:;" data-banner_id="" class="btn  btn-primary " onclick=goodsshow("{$vo.id}") data-num="-1" title="上移">详情</a>
+                                                    <a href="javaScript:;" onclick=goodsedit("{$vo.id}") class="btn btn-primary"><i class="fa fa-plus"></i>编辑</a>
+                                                </td>
+                                            </tr>
+                                            {/foreach}
+                                            {empty name="home"}
+                                            <tr><td style='text-align:center' colspan='10'>暂无数据</td></tr>
+                                            {/empty}
+                                            <tr>
+                                                <td colspan="12" class="pro_lasttd">
+                                                    <label ><input type="checkbox" class="i-checks all"  name="inputs"><span>全选</span></label>
+                                                    <div class="pro_table_contro">
+                                                        <a href="javascript:void(0);" class="btn btn-default btn-sm btn_del" data-banner_id="">删除</a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <div class="text-center">
+                                            <div class="page">
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="home_url/js/jquery.min.js"></script>
+<script src="home_url/js/bootstrap.min.js"></script>
+<script src="home_url/js/plugins/peity/jquery.peity.min.js"></script>
+<script src="home_url/js/content.min.js"></script>
+<script src="home_url/js/plugins/iCheck/icheck.min.js"></script>
+<script src="home_url/js/peity-demo.min.js"></script>
+<script src="home_url/js/plugins/layer/laydate/laydate.js"></script>
+<script type="text/javascript">
+
+    function goodsshow(e){
+        location.href='home_add/id/'+e+'/type/show';
+    }
+    function goodsedit(e){
+        location.href='home_add/id/'+e+'';
+    }
+    function goodsdel(e){
+        var id = e;
+        console.log(id);
+        if(!id){
+            $(".checkbox").each(function(){
+                if(true == $(this).is(':checked')){
+                    id += id?"-"+$(this).val():$(this).val();
+                }
+            });
+            if(!id){
+                alert('请选择要删除的数据1');
+                return false;
+            }
+        }
+        dialog.showTips('确定要删除吗？', "firm", function(){
+            $.ajax({
+                url: "{:url('Message/del_message')}",
+                type: "post",
+                dataType: "json",
+                data: {
+                    id: id,
+                }
+            }).done(function (res) {
+                if (res.status == 1) {
+                    dialog.showTips(res.msg,"", 1);
+                } else {
+                    alert(res.msg);
+                }
+            })
+        })
+    }
+    $('td.pro_lasttd input').on('ifChecked', function(event){
+        $('input').iCheck('check');
+    });
+    $('td.pro_lasttd input').on('ifUnchecked', function(event){
+        $('input').iCheck('uncheck');
+    });
+    $('.btn_change').click(function () {
+        var banner_id = $(this).attr('data-banner_id');
+        if(!banner_id){
+            $(".checkbox").each(function(){
+                console.log($(this).val());
+                if(true == $(this).is(':checked')){
+                    banner_id += banner_id?"-"+$(this).val():$(this).val();
+                }
+            });
+
+            if(!banner_id){
+                alert('请选择数据');
+                return false;
+            }
+        }
+        var banner_cate_id = $('#banner_cate_id').val();
+        dialog.showTips('确定转移吗？', "firm", function(){
+
+            $.ajax({
+                url: "{:url('Banner/bannerChange')}",
+                type: "post",
+                dataType: "json",
+                data: {
+                    banner_id: banner_id,
+                    banner_cate_id: banner_cate_id,
+                }
+            }).done(function (res) {
+                if (res.status == 1) {
+                    dialog.showTips(res.msg,"", 1);
+                } else {
+                    alert(res.msg);
+                }
+
+            })
+        })
+    });
+    $('.btn_del').click(function () {
+        var banner_id = $(this).attr('data-banner_id');
+        if(!banner_id){
+            $(".checkbox").each(function(){
+                if(true == $(this).is(':checked')){
+                    banner_id += banner_id?"-"+$(this).val():$(this).val();
+                }
+            });
+            console.log(banner_id);
+            if(!banner_id){
+                alert('请选择要删除的数据');
+                return false;
+            }
+        }
+        dialog.showTips('确定要删除吗？', "firm", function(){
+
+            $.ajax({
+                url: "{:url('Message/del_message')}",
+                type: "post",
+                dataType: "json",
+                data: {
+                    id: banner_id,
+                }
+            }).done(function (res) {
+                if (res.status == 1) {
+                    dialog.showTips(res.msg,"", 1);
+                } else {
+                    alert(res.msg);
+                }
+
+            })
+        })
+    });
+
+
+    //上下移
+    $(".updown").click(function() {
+        var banner_id = $(this).attr("data-banner_id");
+        var post = {banner_id: banner_id};
+        var keyword = $.trim($('input[name="keyword"]').val());
+        post.num = $(this).attr("data-num");
+        post.search = {};
+        if (keyword != '') {
+            post.search['keyword'] = keyword;
+        }
+
+        $.ajax({
+            url: "home_host/Banner/upDown",
+            type: "post",
+            dataType: "json",
+            data: post,
+        }).done(function (res) {
+            if (res.status == 1) {
+                window.location.reload();
+                // dialog.showTips(res.msg, "", 1);
+            } else {
+                alert(res.msg);
+            }
+        })
+    });
+
+    function status(id, item, obj){
+        var $_this = $(obj);
+        $.ajax({
+            url: "{:url('Logo/logoStatus')}",
+            type: "post",
+            dataType: "json",
+            data: {id:id,item:item},
+        }).done(function (data) {
+            if (data.data[item] == 1) {
+                $_this.css('color', '#0C0');
+                $_this.html('√');
+            } else {
+                $_this.css('color', '#c00');
+                $_this.html('×');
+            }
+        })
+
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        // $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green",})
+        $(".checkbox").on('click', function (event) {
+            var i = 1;
+            $(".checkbox").each(function(){
+                if(true != $(this).is(':checked')){
+                    i = 0;
+                }
+            });
+            if (i == 1) {
+                $('td.pro_lasttd input').prop('checked', true);
+            } else {
+                $('td.pro_lasttd input').prop('checked', false);
+            }
+        });
+        $('td.pro_lasttd input').on('click', function(event){
+            if(true == $(this).is(':checked')){
+                $('.checkbox').prop('checked', true);
+            } else {
+                $('.checkbox').prop('checked', false);
+            }
+        });
+    });
+
+    $("li").click(function(){
+        $a=$(this).find("a").attr("href");
+        // alert($a);
+        if ($a) { window.location=$a; }
+    })
+</script>
+
+</body>
+
+</html>
